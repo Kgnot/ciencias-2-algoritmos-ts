@@ -257,7 +257,7 @@ FLOYD-WARSHALL — O(V³)
     if (f.length >= 2) {
         const last  = f[f.length - 1]!;
         const prev  = f[f.length - 2]!;
-        const vRatio = last.n / prev.n;
+        const vRatio = last.n / prev.n
         const tRatio = last.avgTimeMs / prev.avgTimeMs;
         const expected = Math.pow(vRatio, 3);
         console.log(`Verificación de O(V³) en Floyd-Warshall:`);
