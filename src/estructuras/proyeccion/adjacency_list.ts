@@ -1,26 +1,14 @@
+import type { Edge } from "../edge.js";
 import type { Graph } from "../graph/graph.js";
-import { GraphIndexer } from "../graph/graph_indexer.js";
 
-export function toAdjacencyMatrix<T>(graph: Graph<T>): { matrix: number[][]; indexer: GraphIndexer<T> } {
-    const vertices = graph.getVertex();
-    const indexer = new GraphIndexer(vertices);
+export function toAdjacencyList<T>(graph: Graph<T>): Map<string, Edge<T>[]> {
+    const map = new Map<string, Edge<T>[]>();
 
-    const size = indexer.size();
-    const matrix: number[][] = Array.from({ length: size }, () =>
-        Array(size).fill(Infinity)
-    );
-
-    // diagonal en 0
-    for (let i = 0; i < size; i++) {
-        matrix[i]![i] = 0;
+    for (const v of graph.getVertex()) {
+        map.set(v.id, []);
     }
-
-    for (const edge of graph.getEdges()) {
-        const i = indexer.getIndex(edge.from.id);
-        const j = indexer.getIndex(edge.to.id);
-
-        matrix[i]![j] = edge.weight;
+    for (const e of graph.getEdges()) {
+        map.get(e.from.id)!.push(e);
     }
-
-    return { matrix, indexer };
+    return map;
 }

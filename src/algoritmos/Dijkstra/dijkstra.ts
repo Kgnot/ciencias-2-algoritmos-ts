@@ -6,7 +6,7 @@
 
 import type { Edge } from "../../estructuras/edge.js";
 import type { Graph } from "../../estructuras/graph/graph.js";
-import { toAdjacencyList } from "../../estructuras/proyeccion/adjacency_matrix.js";
+import { toAdjacencyList } from "../../estructuras/proyeccion/adjacency_list.js";
 
 export class Dijkstra<T> {
     private distances: Map<string, number>;

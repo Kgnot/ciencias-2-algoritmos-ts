@@ -8,8 +8,8 @@ import { toIncidenceList } from "../estructuras/proyeccion/incidence_list.js";
 import { Dijkstra } from "../algoritmos/Dijkstra/dijkstra.js";
 import { BellmanFord } from "../algoritmos/Bellman-ford/bellman_ford.js";
 import { FloydWarshall } from "../algoritmos/floyd-warshall/floyd_warshall.js";
-import { toAdjacencyMatrix } from "../estructuras/proyeccion/adjacency_list.js";
-import { toAdjacencyList } from "../estructuras/proyeccion/adjacency_matrix.js";
+import { toAdjacencyMatrix } from "../estructuras/proyeccion/adjacency_matrix.js";
+import { toAdjacencyList } from "../estructuras/proyeccion/adjacency_list.js";
 
 export function ejecutarEjemplo() {
     console.log("=".repeat(60));
