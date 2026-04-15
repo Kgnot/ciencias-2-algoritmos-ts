@@ -54,4 +54,12 @@ export class Graph<T> {
             return true;
         });
     }
+
+    get vertexCount(): number {
+        return this.vertex.size;
+    }
+
+    get edgeCount(): number {
+        return this.edges.length;
+    }
 }

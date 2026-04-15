@@ -67,13 +67,15 @@ export function ejecutarEjemplo() {
     const matrixIncidence = toIncidenceMatrix(graph);
     const incidenceList = toIncidenceList(graph);
 
+    console.log("\nLista de Adyacencia:");
+    console.log(listAdjacency);
     // ============================================================
     // DIJKSTRA
     // ============================================================
     console.log("\n" + "=".repeat(60));
     console.log("DIJKSTRA");
     console.log("=".repeat(60));
-    
+
     const dijkstra = new Dijkstra(graph, "A");
     console.log("\nDistancias desde 'A':");
     console.log("   A -> B:", dijkstra.getDistance("B"));
@@ -82,7 +84,7 @@ export function ejecutarEjemplo() {
     console.log("   A -> E:", dijkstra.getDistance("E"));
     console.log("   A -> F:", dijkstra.getDistance("F"));
     console.log("   A -> G:", dijkstra.getDistance("G"));
-    
+
     console.log("\nCamino A -> E:", dijkstra.getPath("E").join(" -> "));
     console.log("Camino A -> G:", dijkstra.getPath("G").join(" -> "));
 
@@ -92,7 +94,7 @@ export function ejecutarEjemplo() {
     console.log("\n" + "=".repeat(60));
     console.log("BELLMAN-FORD");
     console.log("=".repeat(60));
-    
+
     const bellmanFord = new BellmanFord(graph, "A");
     console.log("\nDistancias desde 'A':");
     console.log("   A -> B:", bellmanFord.getDistance("B"));
@@ -101,7 +103,7 @@ export function ejecutarEjemplo() {
     console.log("   A -> E:", bellmanFord.getDistance("E"));
     console.log("   A -> F:", bellmanFord.getDistance("F"));
     console.log("   A -> G:", bellmanFord.getDistance("G"));
-    
+
     console.log("\nCamino A -> E:", bellmanFord.getPath("E").join(" -> "));
     console.log("Camino A -> F:", bellmanFord.getPath("F").join(" -> "));
 
@@ -111,18 +113,18 @@ export function ejecutarEjemplo() {
     console.log("\n" + "=".repeat(60));
     console.log("FLOYD-WARSHALL");
     console.log("=".repeat(60));
-    
+
     const floyd = new FloydWarshall(graph);
     console.log(floyd.getAllDistances())
     console.log("\nDistancia A -> E:", floyd.getDistance("A", "E"));
     console.log("Camino A -> E:", floyd.getPath("A", "E").join(" -> "));
-    
+
     console.log("\nDistancia F -> G:", floyd.getDistance("F", "G"));
     console.log("Camino F -> G:", floyd.getPath("F", "G").join(" -> "));
-    
+
     console.log("\nDistancia G -> A:", floyd.getDistance("G", "A"));
     console.log("Camino G -> A:", floyd.getPath("G", "A").join(" -> "));
-    
+
     console.log("\n" + "=".repeat(60));
     console.log("EJECUCION COMPLETADA");
     console.log("=".repeat(60));

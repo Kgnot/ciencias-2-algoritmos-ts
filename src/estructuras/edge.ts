@@ -1,6 +1,7 @@
+import type { Comparable } from "./utils/Comparable.js";
 import type { Vertex } from "./vertex.js";
 
-export class Edge<T> {
+export class Edge<T> implements Comparable<Edge<T>> {
     public from: Vertex<T>;
     public to: Vertex<T>;
     public weight: number;
@@ -16,6 +17,11 @@ export class Edge<T> {
         this.to = to;
         this.weight = weight;
         this.directed = directed;
+    }
+    compareTo(other: Edge<T>): number {
+        if (this.weight < other.weight) return -1;
+        if (this.weight > other.weight) return 1;
+        return 0;
     }
 
     toString(): string {

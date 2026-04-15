@@ -1,7 +1,7 @@
 import type { Graph } from "../graph/graph.js";
 import { GraphIndexer } from "../graph/graph_indexer.js";
 
-export function toAdjacencyMatrix<T>(graph: Graph<T>) {
+export function toAdjacencyMatrix<T>(graph: Graph<T>): { matrix: number[][]; indexer: GraphIndexer<T> } {
     const vertices = graph.getVertex();
     const indexer = new GraphIndexer(vertices);
 
