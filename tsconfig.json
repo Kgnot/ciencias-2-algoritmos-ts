@@ -1,18 +1,17 @@
 {
-"compilerOptions": {
-"module": "nodenext",
-"target": "esnext",
-"moduleDetection": "force",
-"verbatimModuleSyntax": true,
-"isolatedModules": true,
-"strict": true,
-"noUncheckedIndexedAccess": true,
-"exactOptionalPropertyTypes": true,
-"skipLibCheck": true,
-"sourceMap": true,
-"declaration": true,
-"declarationMap": true
-},
-"include": ["src/**/*.ts"]
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "esnext",
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.ts"]
 }
 

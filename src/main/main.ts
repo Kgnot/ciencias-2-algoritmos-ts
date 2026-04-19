@@ -1,4 +1,5 @@
 import { createBogotaGraphInitializer } from "./graph_builder/initializeBogotaGraph.js";
+//npm run dev:graph-api
 
 async function main(): Promise<void> {
 	const initializer = createBogotaGraphInitializer({

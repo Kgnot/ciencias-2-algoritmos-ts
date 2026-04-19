@@ -7,13 +7,20 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",
-        "lab:shortest-paths": "tsx src/ejemplo/laboratorio_eficiencia_caminos_minimos.ts"
+        "lab:shortest-paths": "tsx src/ejemplo/laboratorio_eficiencia_caminos_minimos.ts",
+        "dev:graph-api": "tsx src/main/api/server.ts",
+        "start:graph-api": "node dist/main/api/server.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.6.0",
         "tsx": "^4.21.0",
         "typescript": "^6.0.2"
+    },
+    "dependencies": {
+        "express": "^5.2.1"
     }
 }
