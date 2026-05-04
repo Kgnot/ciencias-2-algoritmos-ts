@@ -39,16 +39,16 @@ export function ejecutarEjemplo() {
     graph.addVertex(G);
 
     // Crear aristas
-    const e1 = new Edge<string>(A, B, 50, false, 10);
-    const e2 = new Edge<string>(B, D, 40, false, 15);
-    const e3 = new Edge<string>(A, G, 70, false, 7);
-    const e4 = new Edge<string>(B, C, 20, false, 8);
-    const e5 = new Edge<string>(C, D, 15, false, 5);
-    const e6 = new Edge<string>(C, G, 12, false, 9);
-    const e7 = new Edge<string>(F, D, 27, false, 50);
-    const e8 = new Edge<string>(F, E, -10, false, 15);
-    const e9 = new Edge<string>(D, E, 15, false, 30);
-    const e10 = new Edge<string>(F, G, 30, false, 8);
+    const e1 = new Edge<string>(A, B, 50, true, 10);
+    const e2 = new Edge<string>(B, D, 40, true, 15);
+    const e3 = new Edge<string>(A, G, 70, true, 7);
+    const e4 = new Edge<string>(B, C, 20, true, 8);
+    const e5 = new Edge<string>(C, D, 15, true, 5);
+    const e6 = new Edge<string>(C, G, 12, true, 9);
+    const e7 = new Edge<string>(F, D, 27, true, 50);
+    const e8 = new Edge<string>(F, E, -10, true, 15);
+    const e9 = new Edge<string>(D, E, 15, true, 30);
+    const e10 = new Edge<string>(F, G, 30, true, 8);
 
     // Agregar aristas al grafo
     graph.addEdge(e1);

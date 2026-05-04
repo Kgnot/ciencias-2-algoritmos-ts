@@ -89,4 +89,8 @@ export class DFS<T> {
         return Array.from(this.visited);
     }
 
+    public setAdjacencyList(map: Map<string, Edge<T>[]>): void {
+        this.adjacencyList = map;
+    }
+
 }

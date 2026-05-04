@@ -1,13 +1,13 @@
 import type { Graph } from "../graph/graph.js";
 import { GraphIndexer } from "../graph/graph_indexer.js";
 
-export function toAdjacencyMatrix<T>(graph: Graph<T>): { matrix: number[][]; indexer: GraphIndexer<T> } {
+export function toAdjacencyMatrix<T>(graph: Graph<T>, useFlow: boolean): { matrix: number[][]; indexer: GraphIndexer<T> } {
     const vertices = graph.getVertex();
     const indexer = new GraphIndexer(vertices);
 
     const size = indexer.size();
     const matrix: number[][] = Array.from({ length: size }, () =>
-        Array(size).fill(Infinity)
+        Array(size).fill(0)
     );
 
     // diagonal en 0
@@ -19,7 +19,7 @@ export function toAdjacencyMatrix<T>(graph: Graph<T>): { matrix: number[][]; ind
         const i = indexer.getIndex(edge.from.id);
         const j = indexer.getIndex(edge.to.id);
 
-        matrix[i]![j] = edge.weight;
+        matrix[i]![j] = useFlow ? edge.getMaxFlow() : edge.weight;
     }
 
     return { matrix, indexer };
