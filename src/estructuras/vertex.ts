@@ -1,16 +1,20 @@
-import type { Comparable } from "./utils/Comparable.js";
+import type {Comparable} from "./utils/Comparable.js";
 
 export class Vertex<T> implements Comparable<Vertex<T>> {
+
     constructor(
         public id: string,
-        private value: T // wiehgt
-    ) { }
-    compareTo(other: Vertex<T>): number {
+        private value: T, // value
+    ) {}
+
+    compareTo(other: Vertex<T>):
+        number {
         // hacemos el tema de la comparacion jiji
         if (this.value < other.value) return -1;
         if (this.value > other.value) return 1;
         return 0;
     }
+
     getValue(): T {
         return this.value;
     }

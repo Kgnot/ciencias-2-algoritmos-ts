@@ -28,7 +28,7 @@ export function toUndirectedAdjacency<T>(graph: Graph<T>): Map<string, Edge<T>[]
     for (const e of graph.getUniqueEdges()) {
         normalized.get(e.from.id)?.push(e);
         normalized.get(e.to.id)?.push(
-            new Edge(e.to, e.from, e.weight, false)
+            new Edge(e.to, e.from, e.weight, false, e.maxFlow)
         );
     }
 

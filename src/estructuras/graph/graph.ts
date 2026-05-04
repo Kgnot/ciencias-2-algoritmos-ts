@@ -8,7 +8,8 @@ export class Graph<T> {
 
     constructor(
         public directed: boolean = false
-    ) { }
+    ) {
+    }
 
     addVertex(vertex: Vertex<T>): void {
         if (this.vertex.has(vertex.id)) {
@@ -24,13 +25,16 @@ export class Graph<T> {
 
         this.edges.push(edge);
 
-        if (!this.directed && edge.directed === false) {
+        if (!this.directed && !edge.directed) {
             this.edges.push(
-                new Edge(edge.to, edge.from, edge.weight, false)
+                new Edge(edge.to, edge.from, edge.weight, false, edge.maxFlow)
             );
         }
     }
 
+    isDirected(): boolean {
+        return this.directed;
+    }
     getVertex(): Vertex<T>[] {
         return Array.from(this.vertex.values());
     }
