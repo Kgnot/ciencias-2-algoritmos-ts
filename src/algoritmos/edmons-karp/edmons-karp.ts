@@ -1,7 +1,7 @@
 import type { Graph } from "../../estructuras/graph/graph.js";
 import { GraphIndexer } from "../../estructuras/graph/graph_indexer.js";
 import { toAdjacencyMatrix } from "../../estructuras/proyeccion/adjacency_matrix.js";
-import { BFS } from "../bfs/bfs.js";
+import { BFS } from "../dfs/bfs.js";
 
 export class EdmonsKarp<T> {
 	private residualMatrix: number[][];
