@@ -1,0 +1,121 @@
+/* ─── Design tokens ─────────────────────────────────────── */
+:root {
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "DM Mono", monospace;
+
+  --bg-base:   #f9f8f6;
+  --bg-card:   #ffffff;
+  --bg-label:  #f3f2f0;
+  --bg-hover:  #f0eeeb;
+  --bg-count:  #ebebeb;
+
+  --text-primary:   #111110;
+  --text-secondary: #5a5955;
+  --text-muted:     #9c9a96;
+
+  --border: #d8d5cf;
+
+  --accent-lab: #c0392b;
+  --accent-teo: #2980b9;
+}
+
+/* ─── App shell ─────────────────────────────────────────── */
+.schedule-app {
+  max-width: 1100px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  background: var(--bg-base);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+.schedule-app--state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+}
+
+/* ─── Header ────────────────────────────────────────────── */
+.schedule-app__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.schedule-app__title-block {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.schedule-app__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.schedule-app__meta {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.schedule-app__refresh {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.schedule-app__refresh:hover {
+  background: var(--bg-hover);
+}
+
+/* ─── Body ──────────────────────────────────────────────── */
+.schedule-app__body {
+  border-top: 1px solid var(--border);
+}
+
+.schedule-app__empty {
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+}
+
+/* ─── States ────────────────────────────────────────────── */
+.schedule-app__status {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.schedule-app__status--error {
+  color: var(--accent-lab);
+}
+
+.schedule-app__retry {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 6px 14px;
+  border: 1px solid var(--accent-lab);
+  color: var(--accent-lab);
+  background: none;
+  cursor: pointer;
+}
+
+.schedule-app__retry:hover {
+  background: var(--accent-lab);
+  color: white;
+}

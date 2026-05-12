@@ -8,7 +8,8 @@
         "build": "tsc",
         "start": "node dist/main.js",
         "lab:shortest-paths": "tsx src/ejemplo/laboratorio_eficiencia_caminos_minimos.ts",
-        "dev:graph-api": "tsx src/main/api/server.ts",
+        "dev:graph-api": "tsx src/proyecto1/api/server.ts",
+        "dev:scheduler": "tsx src/universidad-proyecto/index.ts",
         "start:graph-api": "node dist/main/api/server.js"
     },
     "keywords": [],

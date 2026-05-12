@@ -1,15 +1,27 @@
-import type {Comparable} from "./utils/Comparable.js";
+import type { Comparable } from "./utils/Comparable.js";
+
+export enum COLOR {
+    RED = "red",
+    GREEN = "green",
+    BLUE = "blue",
+    YELLOW = "yellow",
+    ORANGE = "orange",
+    PURPLE = "purple",
+    CYAN = "cyan",
+    MAGENTA = "magenta",
+    BLACK = "black",
+    WHITE = "white",
+}
 
 export class Vertex<T> implements Comparable<Vertex<T>> {
 
     constructor(
         public id: string,
-        private value: T, // value
-    ) {}
+        private value: T,
+        private color: COLOR | string = COLOR.WHITE
+    ) { }
 
-    compareTo(other: Vertex<T>):
-        number {
-        // hacemos el tema de la comparacion jiji
+    compareTo(other: Vertex<T>): number {
         if (this.value < other.value) return -1;
         if (this.value > other.value) return 1;
         return 0;
@@ -18,7 +30,16 @@ export class Vertex<T> implements Comparable<Vertex<T>> {
     getValue(): T {
         return this.value;
     }
+
     toString(): string {
         return `Vertex(${this.id}, ${this.value})`;
+    }
+
+    setColor(color: COLOR | string): void {
+        this.color = color;
+    }
+
+    getColor(): COLOR | string {
+        return this.color;
     }
 }
