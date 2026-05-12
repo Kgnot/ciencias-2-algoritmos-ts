@@ -22,8 +22,8 @@ const COLORES_DISPONIBLES: COLOR[] = [
  * @param graph - Grafo para asignar colores a vértices
  */
 export function aplicarColoresAlGrafo<T>(
-    coloresMap: Map<COLOR | string, number>,
-    graph: Graph<T>
+    coloresMap: Map<string, COLOR | string>,
+    graph: Graph<string>
 ): void {
     for (const [vertexId, numeroColor] of coloresMap) {
         const vertex = graph.getVertexById(vertexId);
@@ -62,7 +62,7 @@ export function obtenerRepresentacionColores<T>(graph: Graph<T>): string {
  * Proyección de coloración: convierte resultados de algoritmo a representación visual
  */
 export function toColoresVisuales<T>(
-    coloresMap: Map<string, number>,
+    coloresMap: Map<string, COLOR | string>,
 ): Map<number, string[]> {
     const grupos = new Map<number, string[]>();
 

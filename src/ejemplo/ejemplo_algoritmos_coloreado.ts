@@ -52,7 +52,7 @@ function crearGrafoEjemplo(): Graph<string> {
 function imprimirResultado(
     nombreAlgoritmo: string,
     numColores: number,
-    coloresMap: Map<COLOR | string, number>,
+    coloresMap: Map<string, COLOR | string>,
     esValido: boolean
 ): void {
     console.log(`\n${"═".repeat(60)}`);
@@ -133,13 +133,8 @@ export function ejemploColoreado(): void {
     const coloresDSatur: Map<COLOR | string, string> = dsatur.getColors();
     const numColoresDSatur = dsatur.getNumColors();
 
-    imprimirResultado(
-        "D-SATUR (Degree of Saturation)",
-        numColoresDSatur,
-        coloresDSatur,
-        dsatur.isValid
-        ()
-    );
+    imprimirResultado("D-SATUR (Degree of Saturation)", numColoresDSatur, coloresDSatur, dsatur.isValid
+    ());
 
     // Aplicar colores al grafo
     aplicarColoresAlGrafo(coloresDSatur, grafo);
@@ -154,12 +149,7 @@ export function ejemploColoreado(): void {
     const coloresWelshPowell = welshPowell.getColors();
     const numColoresWelshPowell = welshPowell.getNumColors();
 
-    imprimirResultado(
-        "WELSH-POWELL",
-        numColoresWelshPowell,
-        coloresWelshPowell,
-        welshPowell.isValid()
-    );
+    imprimirResultado("WELSH-POWELL", numColoresWelshPowell, coloresWelshPowell, welshPowell.isValid());
 
     // Aplicar colores al grafo
     aplicarColoresAlGrafo(coloresWelshPowell, grafo);
