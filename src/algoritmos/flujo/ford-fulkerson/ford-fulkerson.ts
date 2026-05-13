@@ -32,7 +32,7 @@ export class FordFulkerson<T> {
         let maxFlow = 0;
 
         const residualFilter = (edge: Edge<T>) =>
-            this._getResidualCapacity(edge.from.id, edge.to.id) > 0;
+            this._getResidualCapacity(edge.from.id.value, edge.to.id.value) > 0;
 
         this.dfs.reset();
         this.dfs.execute(sourceId, residualFilter);

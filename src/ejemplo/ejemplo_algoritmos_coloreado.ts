@@ -1,5 +1,5 @@
 import {Graph} from "../estructuras/graph/graph.js";
-import {Vertex, COLOR} from "../estructuras/vertex.js";
+import {Vertex, VertexID, COLOR} from "../estructuras/vertex.js";
 import {Edge} from "../estructuras/edge.js";
 import {ColoreadorVoraz} from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
 import {DSatur} from "../algoritmos/coloreado/D-Satur/d-satur.js";
@@ -15,13 +15,13 @@ function crearGrafoEjemplo(): Graph<string> {
     const grafo = new Graph<string>(false); // No dirigido
 
     // Crear vértices
-    const v1 = new Vertex("1", "Nodo 1");
-    const v2 = new Vertex("2", "Nodo 2");
-    const v3 = new Vertex("3", "Nodo 3");
-    const v4 = new Vertex("4", "Nodo 4");
-    const v5 = new Vertex("5", "Nodo 5");
-    const v6 = new Vertex("6", "Nodo 6");
-    const v7 = new Vertex("7", "Nodo 7");
+    const v1 = new Vertex(new VertexID("1"), "Nodo 1");
+    const v2 = new Vertex(new VertexID("2"), "Nodo 2");
+    const v3 = new Vertex(new VertexID("3"), "Nodo 3");
+    const v4 = new Vertex(new VertexID("4"), "Nodo 4");
+    const v5 = new Vertex(new VertexID("5"), "Nodo 5");
+    const v6 = new Vertex(new VertexID("6"), "Nodo 6");
+    const v7 = new Vertex(new VertexID("7"), "Nodo 7");
 
     // Agregar vértices
     grafo.addVertex(v1);
@@ -97,9 +97,9 @@ export function ejemploColoreado(): void {
     console.log("\nVértices y Grados:");
     for (const vertex of grafo.getVertex()) {
         const grado = grafo.getEdges().filter(
-            e => e.from.id === vertex.id || e.to.id === vertex.id
+            e => e.from.id.value === vertex.id.value || e.to.id.value === vertex.id.value
         ).length;
-        console.log(`   ${vertex.id}: grado = ${grado}`);
+        console.log(`   ${vertex.id.value}: grado = ${grado}`);
     }
 
     console.log("\n");

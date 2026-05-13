@@ -1,192 +1,113 @@
-import type { Edge } from "../../../estructuras/edge.js";
-import type { Graph } from "../../../estructuras/graph/graph.js";
-import type { Vertex } from "../../../estructuras/vertex.js";
-import { toUndirectedAdjacency } from "../../../estructuras/proyeccion/incidence_list.js";
 import { COLOR } from "../../../estructuras/vertex.js";
-import type {ColoredGraphAlgorithm} from "../coloreado.interface.js";
+import { ColoredGraphAlgorithm } from "../coloreado.interface.js";
 
-export class DSatur<T> implements ColoredGraphAlgorithm{
-    private colorMap: Map<string, COLOR | string> = new Map();
+export class DSatur<T> extends ColoredGraphAlgorithm<T> {
+
     private saturation: Map<string, Set<COLOR | string>> = new Map();
-    private adjList: Map<string, Edge<T>[]>;
-    private numColors: number = 0;
-    private ran: boolean = false;
 
-    private readonly availableColors: (COLOR | string)[];
-
-    constructor(
-        private graph: Graph<T>,
-        customColors?: (COLOR | string)[]
-    ) {
-        this.adjList = toUndirectedAdjacency(graph);
-
-        this.availableColors = (customColors && customColors.length > 0)
-            ? [...customColors] // copia para no mutar el array original
-            : [COLOR.RED, COLOR.GREEN, COLOR.BLUE, COLOR.YELLOW,
-                COLOR.ORANGE, COLOR.PURPLE, COLOR.CYAN, COLOR.MAGENTA, COLOR.BLACK];
-
+    constructor(graph: any, customColors?: (COLOR | string)[]) {
+        super(graph, customColors);
         this.run();
     }
 
-    private run(): void {
+    protected run(): void {
         if (this.ran) return;
         this.ran = true;
 
         const vertices = this.graph.getVertex();
         if (vertices.length === 0) return;
 
-        // Inicializar estructuras
-        for (const vertex of vertices) {
-            this.colorMap.set(vertex.id, COLOR.WHITE);
-            this.saturation.set(vertex.id, new Set());
+        // Inicializar saturación
+        for (const v of vertices) {
+            this.saturation.set(v.id.value, new Set());
         }
 
-        // Vértice con mayor grado → colorear primero
-        let maxDegreeVertexId = vertices[0]!.id;
-        let maxDegree = 0;
-        for (const vertex of vertices) {
-            const degree = this.adjList.get(vertex.id)?.length ?? 0;
+        // Elegir vértice de mayor grado
+        if (!vertices[0]) return;
+
+        let start = vertices[0].id.value;
+        let maxDegree = -1;
+
+        for (const v of vertices) {
+            const degree = this.adjList.get(v.id.value)?.length ?? 0;
             if (degree > maxDegree) {
                 maxDegree = degree;
-                maxDegreeVertexId = vertex.id;
+                start = v.id.value;
             }
         }
 
-        const firstColor = this.getColorByIndex(0);
-        this.colorMap.set(maxDegreeVertexId, firstColor);
-        this.numColors = 1;
-        this.graph.getVertexById(maxDegreeVertexId).setColor(firstColor);
-        this.updateSaturation(maxDegreeVertexId);
+        this.assignColor(start, this.getColorByIndex(0));
+        this.updateSaturation(start);
 
-        // Colorear el resto
-        while (this.hasUncoloredVertices()) {
-            const vertexToColor = this.findVertexWithMaxSaturation(vertices);
-            if (!vertexToColor) break;
+        while (this.hasUncolored()) {
+            const v = this.selectVertex(vertices);
+            if (!v) break;
 
-            const color = this.findAvailableColor(vertexToColor);
-            this.colorMap.set(vertexToColor, color);
-            this.graph.getVertexById(vertexToColor).setColor(color);
-
-            const colorIndex = this.getColorIndex(color);
-            this.numColors = Math.max(this.numColors, colorIndex + 1);
-
-            this.updateSaturation(vertexToColor);
+            const color = this.findAvailableColor(v);
+            this.assignColor(v, color);
+            this.updateSaturation(v);
         }
     }
 
-
-    private getColorByIndex(index: number): COLOR | string {
-        const color = this.availableColors[index];
-        if (color === undefined) {
-            throw new Error(
-                `DSatur: no hay suficientes colores/salones disponibles (se necesita índice ${index} ` +
-                `pero solo hay ${this.availableColors.length}). Agrega más salones al input.`
-            );
-        }
-        return color;
+    private assignColor(vertexId: string, color: COLOR | string) {
+        this.colorMap.set(vertexId, color);
+        this.graph.getVertexById(vertexId).setColor(color);
+        this.numColors = Math.max(this.numColors, this.getColorIndex(color) + 1);
     }
 
-    private getColorIndex(color: COLOR | string): number {
-        const index = this.availableColors.indexOf(color);
-        return index !== -1 ? index : this.availableColors.length;
-    }
-
-    private hasUncoloredVertices(): boolean {
-        for (const color of this.colorMap.values()) {
-            if (color === COLOR.WHITE) return true;
+    private hasUncolored(): boolean {
+        for (const c of this.colorMap.values()) {
+            if (c === COLOR.WHITE) return true;
         }
         return false;
     }
 
-    private findVertexWithMaxSaturation(vertices: Vertex<T>[]): string | null {
-        let maxSat    = -1;
-        let maxDegree = -1;
+    private selectVertex(vertices: any[]): string | null {
+        let maxSat = -1;
+        let maxDeg = -1;
         let selected: string | null = null;
 
-        for (const vertex of vertices) {
-            if (this.colorMap.get(vertex.id) !== COLOR.WHITE) continue;
+        for (const v of vertices) {
+            if (this.colorMap.get(v.id.value) !== COLOR.WHITE) continue;
 
-            const sat    = this.saturation.get(vertex.id)?.size ?? 0;
-            const degree = this.adjList.get(vertex.id)?.length ?? 0;
+            const sat = this.saturation.get(v.id.value)?.size ?? 0;
+            const deg = this.adjList.get(v.id.value)?.length ?? 0;
 
-            if (sat > maxSat || (sat === maxSat && degree > maxDegree)) {
-                maxSat    = sat;
-                maxDegree = degree;
-                selected  = vertex.id;
+            if (sat > maxSat || (sat === maxSat && deg > maxDeg)) {
+                maxSat = sat;
+                maxDeg = deg;
+                selected = v.id.value;
             }
         }
 
         return selected;
     }
 
-    /**
-     * Busca el primer color de availableColors que no usen los vecinos.
-     * Si todos están ocupados, genera un CUSTOM_ y lo agrega a la lista
-     * (esto indica que faltan salones — ScheduleSolver lo detectará y lanzará error).
-     */
     private findAvailableColor(vertexId: string): COLOR | string {
-        const usedByNeighbors = this.saturation.get(vertexId) ?? new Set();
+        const used = this.saturation.get(vertexId) ?? new Set();
 
         for (const color of this.availableColors) {
-            if (!usedByNeighbors.has(color)) return color;
+            if (!used.has(color)) return color;
         }
 
-        // Sin salones suficientes → CUSTOM_ para que ScheduleSolver lo detecte
+        // fallback dinámico
         const newColor = `CUSTOM_${this.availableColors.length}`;
         (this.availableColors as (COLOR | string)[]).push(newColor);
         return newColor;
     }
 
-    private updateSaturation(coloredVertex: string): void {
-        const assignedColor = this.colorMap.get(coloredVertex);
-        if (!assignedColor || assignedColor === COLOR.WHITE) return;
+    private updateSaturation(vertexId: string) {
+        const color = this.colorMap.get(vertexId);
+        if (!color || color === COLOR.WHITE) return;
 
-        const neighbors = this.adjList.get(coloredVertex) ?? [];
+        const neighbors = this.adjList.get(vertexId) ?? [];
+
         for (const edge of neighbors) {
-            const adjacentId = edge.from.id === coloredVertex ? edge.to.id : edge.from.id;
-            if (this.colorMap.get(adjacentId) === COLOR.WHITE) {
-                this.saturation.get(adjacentId)?.add(assignedColor);
+            const adj = edge.from.id.value === vertexId ? edge.to.id.value : edge.from.id.value;
+
+            if (this.colorMap.get(adj) === COLOR.WHITE) {
+                this.saturation.get(adj)?.add(color);
             }
         }
-    }
-
-    // ─── API pública ──────────────────────────────────────────────────────────
-
-    getVertexColor(vertexId: string): COLOR | string {
-        return this.colorMap.get(vertexId) ?? COLOR.WHITE;
-    }
-
-    getColors(): Map<string, COLOR | string> {
-        return new Map(this.colorMap);
-    }
-
-    getNumColors(): number {
-        return this.numColors;
-    }
-
-    getVertexByColor(): Map<COLOR | string, string[]> {
-        const groups = new Map<COLOR | string, string[]>();
-        for (const [vertexId, color] of this.colorMap) {
-            if (!groups.has(color)) groups.set(color, []);
-            groups.get(color)!.push(vertexId);
-        }
-        return groups;
-    }
-
-    isValid(): boolean {
-        for (const edge of this.graph.getEdges()) {
-            const c1 = this.colorMap.get(edge.from.id);
-            const c2 = this.colorMap.get(edge.to.id);
-            if (c1 && c2 && c1 === c2 && c1 !== COLOR.WHITE) return false;
-        }
-        return true;
-    }
-
-    toString(): string {
-        let result = `D-Satur:\nColores usados: ${this.numColors}\nVálido: ${this.isValid() ? "Sí" : "No"}\n\n`;
-        for (const [color, vertices] of this.getVertexByColor()) {
-            if (color !== COLOR.WHITE) result += `${color}: ${vertices.join(", ")}\n`;
-        }
-        return result;
     }
 }

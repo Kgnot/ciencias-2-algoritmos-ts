@@ -1,4 +1,4 @@
-import type { Comparable } from "./utils/Comparable.js";
+import type {Comparable} from "./utils/Comparable.js";
 
 export enum COLOR {
     RED = "red",
@@ -13,13 +13,23 @@ export enum COLOR {
     WHITE = "white",
 }
 
+export class VertexID {
+    constructor(public value: string) {
+    }
+
+    toString(): string {
+        return this.value;
+    }
+}
+
 export class Vertex<T> implements Comparable<Vertex<T>> {
 
     constructor(
-        public id: string,
+        public id: VertexID,
         private value: T,
         private color: COLOR | string = COLOR.WHITE
-    ) { }
+    ) {
+    }
 
     compareTo(other: Vertex<T>): number {
         if (this.value < other.value) return -1;

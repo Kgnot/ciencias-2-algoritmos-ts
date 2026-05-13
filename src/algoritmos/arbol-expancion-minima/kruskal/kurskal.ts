@@ -22,11 +22,11 @@ export class Kruskal<T> {
         const sorted = [...edges].sort((a, b) => a.weight - b.weight);
 
         // paso 2: inicializar union-find con todos los ids
-        const uf = new UnionFind(vertices.map(v => v.id));
+        const uf = new UnionFind(vertices.map(v => v.id.value));
 
         // paso 3: iterar aristas en orden
         for (const edge of sorted) {
-            const added = uf.union(edge.from.id, edge.to.id);
+            const added = uf.union(edge.from.id.value, edge.to.id.value);
             if (added) {
                 this.mstEdges.push(edge);
                 this.totalWeight += edge.weight;
@@ -58,11 +58,11 @@ export class Kruskal<T> {
 
         // construir lista de adyacencia del MST (no dirigida)
         const adj = new Map<string, string[]>();
-        for (const v of this.graph.getVertex()) adj.set(v.id, []);
+        for (const v of this.graph.getVertex()) adj.set(v.id.value, []);
 
         for (const e of this.mstEdges) {
-            adj.get(e.from.id)!.push(e.to.id);
-            adj.get(e.to.id)!.push(e.from.id);
+            adj.get(e.from.id.value)!.push(e.to.id.value);
+            adj.get(e.to.id.value)!.push(e.from.id.value);
         }
 
         // BFS

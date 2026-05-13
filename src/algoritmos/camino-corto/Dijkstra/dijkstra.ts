@@ -1,9 +1,3 @@
-/*
- Dijkstra:
- Para dijkstra la mejor representacion es la lista de adyacencia, 
- ya que nos permite acceder a los vecinos de cada vertice de manera eficiente.
-*/
-
 import type { Edge } from "../../../estructuras/edge.js";
 import type { Graph } from "../../../estructuras/graph/graph.js";
 import { toAdjacencyList } from "../../../estructuras/proyeccion/adjacency_list.js";
@@ -60,7 +54,7 @@ export class Dijkstra<T> {
             const neighbors = this.adjList.get(current) || [];
             
             for (const edge of neighbors) {
-                const neighbor = edge.to.id;
+                const neighbor = edge.to.id.value;
                 const newDist = this.distances.get(current)! + edge.weight;
                 
                 // Si encontramos una distancia mejor, actualizamos
@@ -91,7 +85,7 @@ export class Dijkstra<T> {
 
             const neighbors = this.adjList.get(current) || [];
             for (const edge of neighbors) {
-                const neighbor = edge.to.id;
+                const neighbor = edge.to.id.value;
                 const newDist = this.distances.get(current)! + edge.weight;
                 
                 if (newDist < this.distances.get(neighbor)!) {

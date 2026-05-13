@@ -31,5 +31,18 @@ export class GlobalContext {
         this.graph = graph;
     }
 
+    public getGraph() {
+        if (this.graph == null) {
+            throw new Error("Graph not found");
+        }
+        return this.graph;
+    }
+
+    public getSubGraph(type: CLASSROOM_TYPE) {
+        if (this.subGraphs == null) {
+            throw new Error("subgraph not found");
+        }
+        return this.subGraphs.get(type);
+    }
 
 }

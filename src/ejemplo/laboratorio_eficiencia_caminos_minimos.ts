@@ -3,7 +3,7 @@ import { Dijkstra } from "../algoritmos/camino-corto/Dijkstra/dijkstra.js";
 import { FloydWarshall } from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall.js";
 import { Edge } from "../estructuras/edge.js";
 import { Graph } from "../estructuras/graph/graph.js";
-import { Vertex } from "../estructuras/vertex.js";
+import { Vertex, VertexID } from "../estructuras/vertex.js";
 
 // ─────────────────────────────────────────────────────────────
 // TIPOS
@@ -27,7 +27,7 @@ type BenchmarkRow = {
 function createVertices(graph: Graph<string>, count: number): Vertex<string>[] {
     const vertices: Vertex<string>[] = [];
     for (let i = 0; i < count; i++) {
-        const v = new Vertex<string>(`V${i}`, `Vertex ${i}`);
+        const v = new Vertex<string>(new VertexID(`V${i}`), `Vertex ${i}`);
         graph.addVertex(v);
         vertices.push(v);
     }
@@ -44,10 +44,10 @@ function buildPositiveSparseGraph(n: number): Graph<string> {
     const v = createVertices(graph, n);
 
     for (let i = 0; i < n - 1; i++) {
-        graph.addEdge(new Edge(v[i]!, v[i + 1]!, 1 + (i % 9)));
+        graph.addEdge(new Edge(v[i]!, v[i + 1]!, 1 + (i % 9), false, 0));
     }
     for (let i = 0; i < n - 2; i++) {
-        graph.addEdge(new Edge(v[i]!, v[i + 2]!, 2 + (i % 7)));
+        graph.addEdge(new Edge(v[i]!, v[i + 2]!, 2 + (i % 7),false, 0));
     }
 
     return graph;
@@ -66,10 +66,10 @@ function buildNegativeSparseGraph(n: number): Graph<string> {
         // Cada 4 aristas una es negativa — garantiza que no hay ciclo negativo
         // porque la estructura es una cadena hacia adelante (DAG-like)
         const weight = i % 4 === 0 ? -(1 + (i % 3)) : 2 + (i % 5);
-        graph.addEdge(new Edge(v[i]!, v[i + 1]!, weight));
+        graph.addEdge(new Edge(v[i]!, v[i + 1]!, weight, false, 0));
     }
     for (let i = 0; i < n - 2; i++) {
-        graph.addEdge(new Edge(v[i]!, v[i + 2]!, 1 + (i % 6)));
+        graph.addEdge(new Edge(v[i]!, v[i + 2]!, 1 + (i % 6), false, 0));
     }
 
     return graph;
@@ -87,7 +87,7 @@ function buildDenseGraph(n: number): Graph<string> {
     for (let from = 0; from < n; from++) {
         for (let to = 0; to < n; to++) {
             if (from !== to) {
-                graph.addEdge(new Edge(v[from]!, v[to]!, 1 + ((from + to) % 13)));
+                graph.addEdge(new Edge(v[from]!, v[to]!, 1 + ((from + to) % 13), false, 0));
             }
         }
     }

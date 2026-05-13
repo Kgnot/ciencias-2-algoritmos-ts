@@ -41,6 +41,6 @@ export class Edge<T> implements Comparable<Edge<T>> {
 
 
     toString(): string {
-        return `Edge(${this.from.id} -> ${this.to.id}, weight: ${this.weight}, directed: ${this.directed})`;
+        return `Edge(${this.from.id.value} -> ${this.to.id.value}, weight: ${this.weight}, directed: ${this.directed})`;
     }
 }

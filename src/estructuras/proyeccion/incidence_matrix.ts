@@ -14,8 +14,8 @@ export function toIncidenceMatrix<T>(graph: Graph<T>) {
 
     edges.forEach((edge, idx) => {
         // obtemoes los indices de los vertices de origen y destino
-        const from: number = indexer.getIndex(edge.from.id);
-        const to: number = indexer.getIndex(edge.to.id);
+        const from: number = indexer.getIndex(edge.from.id.value);
+        const to: number = indexer.getIndex(edge.to.id.value);
 
         if (graph.directed) {
             matrix[from]![idx] = -edge.weight; // salida

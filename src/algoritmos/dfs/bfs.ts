@@ -48,7 +48,7 @@ export class BFS<T> {
 
 		while (currentIndex !== sourceIndex) {
 			const vertex = this.indexer.getVertex(currentIndex);
-			path.push(vertex.id);
+			path.push(vertex.id.value);
 
 			currentIndex = parent[currentIndex] ?? -1;
 			if (currentIndex === -1) {

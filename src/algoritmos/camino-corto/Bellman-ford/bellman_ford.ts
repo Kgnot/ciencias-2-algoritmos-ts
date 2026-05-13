@@ -1,14 +1,3 @@
-/*
- Bellman-Ford:
- Al igual que Dijkstra es un algoritmo de single-source shortest path.
- Diferencias:
- - Soporta pesos negativos
- - Detecta ciclos negativos
- - No es greedy, es de programación dinámica
- - Complejidad: O(V * E)
- - Usa un arreglo de vértices y aristas (no lista de adyacencia)
-*/
-
 import type { Edge } from "../../../estructuras/edge.js";
 import type { Graph } from "../../../estructuras/graph/graph.js";
 import type { Vertex } from "../../../estructuras/vertex.js";
@@ -35,8 +24,8 @@ export class BellmanFord<T> {
     // ------------------------
     private initialize(startId: string) {
         for (const v of this.vertices) {
-            this.distances.set(v.id, Infinity);
-            this.previous.set(v.id, null);
+            this.distances.set(v.id.value, Infinity);
+            this.previous.set(v.id.value, null);
         }
         this.distances.set(startId, 0);
     }
@@ -52,8 +41,8 @@ export class BellmanFord<T> {
             let relaxed = false; // optimización: si no hay cambios, terminamos temprano
             
             for (const edge of this.edges) {
-                const fromId = edge.from.id;
-                const toId = edge.to.id;
+                const fromId = edge.from.id.value;
+                const toId = edge.to.id.value;
                 
                 const distFrom = this.distances.get(fromId);
                 
@@ -80,8 +69,8 @@ export class BellmanFord<T> {
     // ------------------------
     private detectNegativeCycle() {
         for (const edge of this.edges) {
-            const fromId = edge.from.id;
-            const toId = edge.to.id;
+            const fromId = edge.from.id.value;
+            const toId = edge.to.id.value;
             
             const distFrom = this.distances.get(fromId);
             if (distFrom === Infinity) continue;

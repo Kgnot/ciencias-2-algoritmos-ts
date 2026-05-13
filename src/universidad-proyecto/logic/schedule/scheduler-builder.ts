@@ -28,7 +28,7 @@ export class ScheduleBuilder {
     ) {
     }
 
-    public buildHorario(algorithm: ColoredGraphAlgorithm): HorarioSemanal {
+    public buildHorario(algorithm: ColoredGraphAlgorithm<GrupoData>): HorarioSemanal {
         const solver = new ScheduleSolver(this.graph, this.salones, algorithm);
         const salonMap = solver.execute();
         const salonById = new Map(this.salones.map(salon => [salon.id, salon] as const));
@@ -43,7 +43,7 @@ export class ScheduleBuilder {
             const franja = data.franja;
             if (!franja) continue;
 
-            const salonId = salonMap.get(vertex.id) ?? "Sin asignar";
+            const salonId = salonMap.get(vertex.id.value) ?? "Sin asignar";
             const salonDetalle = salonById.get(salonId);
             const horaKey = `${franja.inicio}-${franja.fin}`;
             const dia = franja.dia;
@@ -52,7 +52,7 @@ export class ScheduleBuilder {
             if (!horario[dia]![horaKey]) horario[dia]![horaKey] = [];
 
             horario[dia]![horaKey]!.push({
-                vertexId: vertex.id,
+                vertexId: vertex.id.value,
                 materia: data.nombre,
                 grupo: data.grupo,
                 dia,

@@ -5,6 +5,9 @@ import {Vertex} from "../../../estructuras/vertex.js";
 import {Edge} from "../../../estructuras/edge.js";
 import {GlobalContext} from "../global.context.js";
 import {CLASSROOM_TYPE} from "../models/classroom.types.js";
+import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur.js";
+import {WelshPowell} from "../../../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
+import {ColoreadorVoraz} from "../../../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
 import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.interface.js";
 
 
@@ -15,7 +18,7 @@ export class ScheduleSolver {
     constructor(
         private readonly graph: Graph<GrupoData>,
         private readonly salones: SalonInput[],
-        private readonly algorithm: ColoredGraphAlgorithm
+        private readonly algorithm: ColoredGraphAlgorithm<GrupoData>
     ) {
     }
 
@@ -67,12 +70,12 @@ export class ScheduleSolver {
             if (v.getValue().tipoSalon !== tipo) continue;
             const copy = new Vertex<GrupoData>(v.id, v.getValue());
             subgraph.addVertex(copy);
-            vertexMap.set(copy.id, copy);
+            vertexMap.set(copy.id.value, copy);
         }
 
         for (const e of this.graph.getUniqueEdges()) {
-            const fromV = vertexMap.get(e.from.id);
-            const toV = vertexMap.get(e.to.id);
+            const fromV = vertexMap.get(e.from.id.value);
+            const toV = vertexMap.get(e.to.id.value);
             if (!fromV || !toV) continue;
             subgraph.addEdge(new Edge(fromV, toV, e.weight, e.directed, e.maxFlow));
         }
@@ -82,18 +85,30 @@ export class ScheduleSolver {
 
     private colorear(
         graph: Graph<GrupoData>,
-        salones: string[],
+        salones: string[]
     ): Map<string, string> {
-        let colorMap: Map<string, string | import("../../../estructuras/vertex.js").COLOR>; // esto sobra, creo yo
+        let algorithmInstance: ColoredGraphAlgorithm<GrupoData>;
 
-        colorMap = this.algorithm.getColors();
+        // Detectar el tipo de algoritmo usando instanceof
+        if (this.algorithm instanceof DSatur) {
+            algorithmInstance = new DSatur(graph, salones);
+        } else if (this.algorithm instanceof WelshPowell) {
+            algorithmInstance = new WelshPowell(graph, salones);
+        } else if (this.algorithm instanceof ColoreadorVoraz) {
+            algorithmInstance = new ColoreadorVoraz(graph, salones);
+        } else {
+            algorithmInstance = new DSatur(graph, salones);
+        }
 
-        const result = new Map<string, string>(); // este es verice id y color o salon en este caso
+        const colorMap = algorithmInstance.getColors();
+        const result = new Map<string, string>();
+
         for (const [id, color] of colorMap) {
             if (color !== "white" && color !== "WHITE") {
                 result.set(id, color as string);
             }
         }
+
         return result;
     }
 }

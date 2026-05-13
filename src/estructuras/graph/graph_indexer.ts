@@ -1,4 +1,4 @@
-import type { Vertex } from "../vertex.js";
+import type { Vertex, VertexID } from "../vertex.js";
 
 export class GraphIndexer<T> {
     private indexMap: Map<string, number> = new Map();
@@ -6,13 +6,14 @@ export class GraphIndexer<T> {
 
     constructor(vertices: Vertex<T>[]) {
         vertices.forEach((v, i) => {
-            this.indexMap.set(v.id, i);
+            this.indexMap.set(v.id.value, i);
             this.reverseMap[i] = v;
         });
     }
 
-    getIndex(id: string): number {
-        const idx = this.indexMap.get(id);
+    getIndex(id: string | VertexID): number {
+        const key = typeof id === "string" ? id : id.value;
+        const idx = this.indexMap.get(key);
         if (idx === undefined) throw new Error("Vertex not indexed");
         return idx;
     }

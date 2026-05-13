@@ -20,7 +20,7 @@ export class DFS<T> {
         const vertices: Vertex<T>[] = this.graph.getVertex();
         // iniciamos todos los padres null
         for (const vertex of vertices) {
-            this.parent.set(vertex.id, null);
+            this.parent.set(vertex.id.value, null);
         }
         const startVertex: Vertex<T> = this.graph.getVertexById(startVertexId);
         this._loop(startVertex, edgeFilter);
@@ -28,15 +28,15 @@ export class DFS<T> {
 
     private _loop(vertex: Vertex<T>, edgeFilter?: (edge: Edge<T>) => boolean) {
         // marcamos el vértice como visitado:
-        this.visited.add(vertex.id);
+        this.visited.add(vertex.id.value);
         //obtenemos los vertices adyacentes
-        const adjacentEdges = this.adjacencyList.get(vertex.id) || [];
+        const adjacentEdges = this.adjacencyList.get(vertex.id.value) || [];
         // e iteramos xd
         for (const edge of adjacentEdges) {
             const allowed = edgeFilter ? edgeFilter(edge) : true;
-            if (!this.visited.has(edge.to.id) && allowed) {
-                this.parent.set(edge.to.id, vertex.id); // establecemos el padre del nodo adyacente
-                console.log(this.parent.get(edge.to.id), "->", edge.to.id);
+            if (!this.visited.has(edge.to.id.value) && allowed) {
+                this.parent.set(edge.to.id.value, vertex.id.value); // establecemos el padre del nodo adyacente
+                console.log(this.parent.get(edge.to.id.value), "->", edge.to.id.value);
                 this._loop(edge.to, edgeFilter); // y seguimos con el nodo adyacente
             }
         }

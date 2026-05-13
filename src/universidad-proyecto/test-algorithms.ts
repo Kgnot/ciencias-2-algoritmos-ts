@@ -28,10 +28,10 @@ function buildFreshSubgraphs() {
         const copy = new Vertex<GrupoData>(v.id, v.getValue());
         if (v.getValue().tipoSalon === "laboratorio") {
             labGraph.addVertex(copy);
-            labMap.set(copy.id, copy);
+            labMap.set(copy.id.value, copy);
         } else {
             normalGraph.addVertex(copy);
-            normalMap.set(copy.id, copy);
+            normalMap.set(copy.id.value, copy);
         }
     }
 
@@ -41,12 +41,12 @@ function buildFreshSubgraphs() {
         if (fromType !== toType) continue;
 
         if (fromType === "laboratorio") {
-            const f = labMap.get(e.from.id)!;
-            const t = labMap.get(e.to.id)!;
+            const f = labMap.get(e.from.id.value)!;
+            const t = labMap.get(e.to.id.value)!;
             labGraph.addEdge(new Edge(f, t, e.weight, e.directed, e.maxFlow));
         } else {
-            const f = normalMap.get(e.from.id)!;
-            const t = normalMap.get(e.to.id)!;
+            const f = normalMap.get(e.from.id.value)!;
+            const t = normalMap.get(e.to.id.value)!;
             normalGraph.addEdge(new Edge(f, t, e.weight, e.directed, e.maxFlow));
         }
     }

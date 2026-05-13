@@ -1,7 +1,7 @@
 // Ejemplo completo de uso de los algoritmos de caminos mínimos
 
 import {Graph} from "../estructuras/graph/graph.js";
-import {Vertex} from "../estructuras/vertex.js";
+import {Vertex, VertexID} from "../estructuras/vertex.js";
 import {Edge} from "../estructuras/edge.js";
 import {toIncidenceMatrix} from "../estructuras/proyeccion/incidence_matrix.js";
 import {toIncidenceList} from "../estructuras/proyeccion/incidence_list.js";
@@ -21,13 +21,13 @@ export function ejecutarEjemplo() {
     const graph = new Graph<string>(true);
 
     // Crear vértices
-    const A = new Vertex<string>("A", "Vertex A");
-    const B = new Vertex<string>("B", "Vertex B");
-    const C = new Vertex<string>("C", "Vertex C");
-    const D = new Vertex<string>("D", "Vertex D");
-    const E = new Vertex<string>("E", "Vertex E");
-    const F = new Vertex<string>("F", "Vertex F");
-    const G = new Vertex<string>("G", "Vertex G");
+    const A = new Vertex<string>(new VertexID("A"), "Vertex A");
+    const B = new Vertex<string>(new VertexID("B"), "Vertex B");
+    const C = new Vertex<string>(new VertexID("C"), "Vertex C");
+    const D = new Vertex<string>(new VertexID("D"), "Vertex D");
+    const E = new Vertex<string>(new VertexID("E"), "Vertex E");
+    const F = new Vertex<string>(new VertexID("F"), "Vertex F");
+    const G = new Vertex<string>(new VertexID("G"), "Vertex G");
 
     // Agregar vértices al grafo
     graph.addVertex(A);

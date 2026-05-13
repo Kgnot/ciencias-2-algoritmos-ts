@@ -45,23 +45,23 @@ export class Prim<T> {
         const primPriorityQueue = new PrimPriorityQueue<T>();
 
         const start = this.getStartVertex(vertices);
-        visitados.add(start.id);
-        primPriorityQueue.addEdges(adjacency.get(start.id) ?? []);
+        visitados.add(start.id.value);
+        primPriorityQueue.addEdges(adjacency.get(start.id.value) ?? []);
 
         while (!primPriorityQueue.isEmpty() && this.mstEdges.length < vertices.length - 1) {
             const nextEdge = primPriorityQueue.getNextEdge();
             if (!nextEdge) break;
 
-            if (visitados.has(nextEdge.to.id)) {
+            if (visitados.has(nextEdge.to.id.value)) {
                 continue;
             }
 
             this.mstEdges.push(nextEdge);
             this.totalWeight += nextEdge.weight;
-            visitados.add(nextEdge.to.id);
+            visitados.add(nextEdge.to.id.value);
 
-            for (const edge of adjacency.get(nextEdge.to.id) ?? []) {
-                if (!visitados.has(edge.to.id)) {
+            for (const edge of adjacency.get(nextEdge.to.id.value) ?? []) {
+                if (!visitados.has(edge.to.id.value)) {
                     primPriorityQueue.addEdge(edge);
                 }
             }
@@ -84,11 +84,11 @@ export class Prim<T> {
         if (!this.isConnected()) return [];
 
         const adj = new Map<string, string[]>();
-        for (const v of this.graph.getVertex()) adj.set(v.id, []);
+        for (const v of this.graph.getVertex()) adj.set(v.id.value, []);
 
         for (const e of this.mstEdges) {
-            adj.get(e.from.id)?.push(e.to.id);
-            adj.get(e.to.id)?.push(e.from.id);
+            adj.get(e.from.id.value)?.push(e.to.id.value);
+            adj.get(e.to.id.value)?.push(e.from.id.value);
         }
 
         const visited = new Set<string>();
@@ -133,9 +133,9 @@ export function prim<T>(graph: Graph<T>, startVertexId?: string): Graph<T> {
     }
 
     for (const e of result.getMSTEdges()) {
-        const from = mst.getVertexById(e.from.id);
-        const to = mst.getVertexById(e.to.id);
-        mst.addEdge(new Edge(from, to, e.weight, false));
+        const from = mst.getVertexById(e.from.id.value);
+        const to = mst.getVertexById(e.to.id.value);
+        mst.addEdge(new Edge(from, to, e.weight, false,0));
     }
 
     return mst;

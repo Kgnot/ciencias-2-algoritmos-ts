@@ -48,7 +48,7 @@ export function obtenerRepresentacionColores<T>(graph: Graph<T>): string {
         if (!porColor.has(color)) {
             porColor.set(color, []);
         }
-        porColor.get(color)!.push(vertex.id);
+        porColor.get(color)!.push(vertex.id.value);
     }
 
     for (const [color, vertexIds] of porColor) {

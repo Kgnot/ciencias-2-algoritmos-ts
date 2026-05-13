@@ -8,7 +8,7 @@ export class FloydWarshall<T> {
     private indexer: GraphIndexer<T>;
 
     constructor(graph: Graph<T>) {
-        const { matrix, indexer } = toAdjacencyMatrix(graph);
+        const { matrix, indexer } = toAdjacencyMatrix(graph, false);
 
         this.dist = matrix.map(row => [...row]);
         this.indexer = indexer;
@@ -93,7 +93,7 @@ export class FloydWarshall<T> {
 
         while (current !== j) {
             current = this.next[current]![j]!;
-            path.push(this.indexer.getVertex(current).id);
+            path.push(this.indexer.getVertex(current).id.value);
         }
 
         return path;

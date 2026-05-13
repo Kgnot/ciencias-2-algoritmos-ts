@@ -16,8 +16,8 @@ export function toAdjacencyMatrix<T>(graph: Graph<T>, useFlow: boolean): { matri
     }
 
     for (const edge of graph.getEdges()) {
-        const i = indexer.getIndex(edge.from.id);
-        const j = indexer.getIndex(edge.to.id);
+        const i = indexer.getIndex(edge.from.id.value);
+        const j = indexer.getIndex(edge.to.id.value);
 
         matrix[i]![j] = useFlow ? edge.getMaxFlow() : edge.weight;
     }
