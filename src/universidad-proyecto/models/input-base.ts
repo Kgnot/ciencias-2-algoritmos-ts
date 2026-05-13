@@ -32,3 +32,7 @@ export interface ScheduleInput {
     salones: SalonInput[];
     franjas: FranjasInput;
 }
+
+export interface Sede {
+    id: string;
+}
