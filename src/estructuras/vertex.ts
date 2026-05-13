@@ -13,14 +13,8 @@ export enum COLOR {
     WHITE = "white",
 }
 
-export class VertexID {
-    constructor(public value: string) {
-    }
+export type VertexID = string;
 
-    toString(): string {
-        return this.value;
-    }
-}
 
 export class Vertex<T> implements Comparable<Vertex<T>> {
 

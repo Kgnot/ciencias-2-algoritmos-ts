@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
 
+export interface SalonDetalle {
+    id: string;
+    tipo: string;
+    capacidad: number;
+    piso: number;
+    sede: string;
+}
+
 export interface ClassItem {
+    vertexId: string;
     materia: string;
     grupo: string;
     dia: string;
     horaInicio: string;
     horaFin: string;
     salon: string;
-    tipo: "normal" | "laboratorio";
-    profesor: string;
+    tipo: string;
+    salonDetalle: SalonDetalle | null;
+    bloque: number;
+    profesor?: string;
 }
 
 export interface DaySchedule {

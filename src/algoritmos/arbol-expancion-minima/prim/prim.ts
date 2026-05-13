@@ -1,7 +1,7 @@
 import { Edge } from "../../../estructuras/edge.js";
 import { Graph } from "../../../estructuras/graph/graph.js";
 import { toUndirectedAdjacency } from "../../../estructuras/proyeccion/incidence_list.js";
-import { Vertex, VertexID } from "../../../estructuras/vertex.js";
+import { Vertex, type VertexID } from "../../../estructuras/vertex.js";
 import { PrimPriorityQueue } from "./prim_priority_queue.js";
 
 export class Prim<T> {

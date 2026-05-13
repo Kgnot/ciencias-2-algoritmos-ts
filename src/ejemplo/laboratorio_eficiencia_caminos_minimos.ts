@@ -3,7 +3,7 @@ import { Dijkstra } from "../algoritmos/camino-corto/Dijkstra/dijkstra.js";
 import { FloydWarshall } from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall.js";
 import { Edge } from "../estructuras/edge.js";
 import { Graph } from "../estructuras/graph/graph.js";
-import { Vertex, VertexID } from "../estructuras/vertex.js";
+import { Vertex } from "../estructuras/vertex.js";
 
 // ─────────────────────────────────────────────────────────────
 // TIPOS
@@ -27,7 +27,7 @@ type BenchmarkRow = {
 function createVertices(graph: Graph<string>, count: number): Vertex<string>[] {
     const vertices: Vertex<string>[] = [];
     for (let i = 0; i < count; i++) {
-        const v = new Vertex<string>(new VertexID(`V${i}`), `Vertex ${i}`);
+        const v = new Vertex<string>((`V${i}`), `Vertex ${i}`);
         graph.addVertex(v);
         vertices.push(v);
     }
@@ -131,7 +131,7 @@ function runDijkstraLab(): BenchmarkRow[] {
         const graph = buildPositiveSparseGraph(n);
         const edges = graph.getEdges().length;
         const avgTimeMs = measureAlgorithm(
-            () => new Dijkstra(graph, new VertexID("V0")),
+            () => new Dijkstra(graph,("V0")),
             repetitions
         );
         return { n, edges, avgTimeMs, repetitions, complexity: "O(V²) o O((V+E)logV)" };

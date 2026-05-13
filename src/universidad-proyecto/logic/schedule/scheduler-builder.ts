@@ -3,7 +3,7 @@ import type {GrupoData} from "../models/grupo-data.model.js";
 import type {DiaSemana} from "../models/franja-horaria.js";
 import type {SalonInput} from "../models/input-base.js";
 import {ScheduleSolver} from "./schedule-solver.js";
-import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.interface.js";
+import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract.js";
 
 export interface HorarioClase {
     vertexId: string;
@@ -52,7 +52,7 @@ export class ScheduleBuilder {
             if (!horario[dia]![horaKey]) horario[dia]![horaKey] = [];
 
             horario[dia]![horaKey]!.push({
-                vertexId: vertex.id.value,
+                vertexId: vertex.id,
                 materia: data.nombre,
                 grupo: data.grupo,
                 dia,

@@ -53,8 +53,8 @@ export class EdmonsKarp<T> {
 				}
 
 				const parentVertex = this.indexer.getVertex(parentIndex);
-				pathFlow = Math.min(pathFlow, this.getResidualCapacity(parentVertex.id.value, currentId));
-				currentId = parentVertex.id.value;
+				pathFlow = Math.min(pathFlow, this.getResidualCapacity(parentVertex.id, currentId));
+				currentId = parentVertex.id;
 			}
 
 			if (!Number.isFinite(pathFlow) || pathFlow <= 0) {
@@ -71,9 +71,9 @@ export class EdmonsKarp<T> {
 				}
 
 				const parentVertex = this.indexer.getVertex(parentIndex);
-				this.setResidualCapacity(parentVertex.id.value, vertexId, this.getResidualCapacity(parentVertex.id.value, vertexId) - pathFlow);
-				this.setResidualCapacity(vertexId, parentVertex.id.value, this.getResidualCapacity(vertexId, parentVertex.id.value) + pathFlow);
-				vertexId = parentVertex.id.value;
+				this.setResidualCapacity(parentVertex.id, vertexId, this.getResidualCapacity(parentVertex.id, vertexId) - pathFlow);
+				this.setResidualCapacity(vertexId, parentVertex.id, this.getResidualCapacity(vertexId, parentVertex.id) + pathFlow);
+				vertexId = parentVertex.id;
 			}
 
 			maxFlow += pathFlow;

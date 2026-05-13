@@ -1,7 +1,7 @@
-import {COLOR, VertexID} from "../../estructuras/vertex.js";
+import {COLOR, type VertexID} from "../../estructuras/vertex.js";
 import type {Graph} from "../../estructuras/graph/graph.js";
 import type {Edge} from "../../estructuras/edge.js";
-import {toUndirectedAdjacency} from "../../estructuras/proyeccion/incidence_list.js";
+import {toIncidenceList, toUndirectedAdjacency} from "../../estructuras/proyeccion/incidence_list.js";
 
 export abstract class ColoredGraphAlgorithm<T> {
     protected colorMap: Map<VertexID, COLOR | string> = new Map();
@@ -12,12 +12,12 @@ export abstract class ColoredGraphAlgorithm<T> {
     protected readonly graph: Graph<T>;
     protected readonly adjList: Map<VertexID, Edge<T>[]>;
 
-    constructor(
+    protected constructor(
         graph: Graph<T>,
         customColors?: (COLOR | string)[]
     ) {
         this.graph = graph;
-        this.adjList = toUndirectedAdjacency(graph);
+        this.adjList = toIncidenceList(graph);//toUndirectedAdjacency(graph);
 
         this.availableColors = (customColors && customColors.length > 0)
             ? customColors

@@ -24,8 +24,8 @@ export class BellmanFord<T> {
     // ------------------------
     private initialize(startId: string) {
         for (const v of this.vertices) {
-            this.distances.set(v.id.value, Infinity);
-            this.previous.set(v.id.value, null);
+            this.distances.set(v.id, Infinity);
+            this.previous.set(v.id, null);
         }
         this.distances.set(startId, 0);
     }
@@ -41,8 +41,8 @@ export class BellmanFord<T> {
             let relaxed = false; // optimización: si no hay cambios, terminamos temprano
             
             for (const edge of this.edges) {
-                const fromId = edge.from.id.value;
-                const toId = edge.to.id.value;
+                const fromId = edge.from.id;
+                const toId = edge.to.id;
                 
                 const distFrom = this.distances.get(fromId);
                 
@@ -69,8 +69,8 @@ export class BellmanFord<T> {
     // ------------------------
     private detectNegativeCycle() {
         for (const edge of this.edges) {
-            const fromId = edge.from.id.value;
-            const toId = edge.to.id.value;
+            const fromId = edge.from.id;
+            const toId = edge.to.id;
             
             const distFrom = this.distances.get(fromId);
             if (distFrom === Infinity) continue;

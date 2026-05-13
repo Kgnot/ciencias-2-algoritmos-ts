@@ -1,14 +1,14 @@
 import {Graph} from "../../../estructuras/graph/graph.js";
 import type {GrupoData} from "../models/grupo-data.model.js";
 import type {SalonInput} from "../models/input-base.js";
-import {COLOR, Vertex, VertexID} from "../../../estructuras/vertex.js";
+import {COLOR, Vertex, type VertexID} from "../../../estructuras/vertex.js";
 import {Edge} from "../../../estructuras/edge.js";
 import {GlobalContext} from "../global.context.js";
 import {CLASSROOM_TYPE} from "../models/classroom.types.js";
 import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur.js";
 import {WelshPowell} from "../../../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
 import {ColoreadorVoraz} from "../../../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
-import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.interface.js";
+import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract.js";
 
 
 export class ScheduleSolver {
@@ -32,12 +32,12 @@ export class ScheduleSolver {
         const colorMap = new Map<VertexID, string>();
 
         if (normalGraph.getVertex().length > 0) {
-            const colors = this.colorear(normalGraph, normalSalones);
+            const colors = this.colorear(normalGraph, normalSalones,CLASSROOM_TYPE.NORMAL);
             for (const [id, color] of colors) colorMap.set(id, color);
         }
 
         if (labGraph.getVertex().length > 0) {
-            const colors = this.colorear(labGraph, labSalones);
+            const colors = this.colorear(labGraph, labSalones,CLASSROOM_TYPE.LABORATORIO);
             for (const [id, color] of colors) colorMap.set(id, color);
         }
 
@@ -55,9 +55,10 @@ export class ScheduleSolver {
         }
         // ahora rellenamos el contex global:
         this.globalContext.setGraph(this.graph);
+        console.log("grafo: ", this.graph.getVertexById("SIS-MAT1-G1-B0"));
         this.globalContext.setSubGraph(CLASSROOM_TYPE.NORMAL, normalGraph);
         this.globalContext.setSubGraph(CLASSROOM_TYPE.LABORATORIO, labGraph);
-        // this.globalContext.setColorMap(colorMap);
+        this.globalContext.setColorMap(colorMap);
 
         return colorMap;
     }
@@ -70,12 +71,12 @@ export class ScheduleSolver {
             if (v.getValue().tipoSalon !== tipo) continue;
             const copy = new Vertex<GrupoData>(v.id, v.getValue());
             subgraph.addVertex(copy);
-            vertexMap.set(copy.id.value, copy);
+            vertexMap.set(copy.id, copy);
         }
 
         for (const e of this.graph.getUniqueEdges()) {
-            const fromV = vertexMap.get(e.from.id.value);
-            const toV = vertexMap.get(e.to.id.value);
+            const fromV = vertexMap.get(e.from.id);
+            const toV = vertexMap.get(e.to.id);
             if (!fromV || !toV) continue;
             subgraph.addEdge(new Edge(fromV, toV, e.weight, e.directed, e.maxFlow));
         }
@@ -85,7 +86,8 @@ export class ScheduleSolver {
 
     private colorear(
         graph: Graph<GrupoData>,
-        salones: string[]
+        salones: string[],
+        tipo: CLASSROOM_TYPE
     ): Map<VertexID, string> {
         let algorithmInstance: ColoredGraphAlgorithm<GrupoData>;
 
@@ -106,8 +108,21 @@ export class ScheduleSolver {
         for (const [id, color] of colorMap) {
             if (color !== "white" && color !== "WHITE") {
                 result.set(id, color as string);
+        // TODO, si hay error es aqui xd
+                // propagamos al grafo original
+                const originalVertex = this.graph.getVertexById(id);
+                // if (originalVertex.getValue().tipoSalon !== tipo) continue;
+                originalVertex.setColor(color);
+
+                // También puedes guardar el salón en los datos
+                const data = originalVertex.getValue();
+                const salon = this.salones.find(s => s.id === color);
+                if (salon) {
+                    data.salon = salon;
+                }
             }
         }
+        console.log("[RESULTADO] coloreado de grafos : " + result.get("SIS-CAL1-G1-B0"));
 
         return result;
     }

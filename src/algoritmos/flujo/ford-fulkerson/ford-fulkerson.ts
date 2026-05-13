@@ -7,7 +7,7 @@ import type { VertexID } from "../../../estructuras/vertex.js";
 
 export class FordFulkerson<T> {
     private dfs: DFS<T>;
-    private residualMatrix: number[][];
+    private readonly residualMatrix: number[][];
     private indexer: GraphIndexer<T>;
 
     constructor(private graph: Graph<T>) {

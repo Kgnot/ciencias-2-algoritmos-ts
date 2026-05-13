@@ -1,7 +1,7 @@
 import type { MateriaInput } from "../../models/input-base.js";
 import type { FranjaHoraria } from "../../models/franja-horaria.js";
 import type { GrupoData } from "../../models/grupo-data.model.js";
-import { Vertex, VertexID } from "../../../../estructuras/vertex.js";
+import { Vertex} from "../../../../estructuras/vertex.js";
 
 
 /*
@@ -30,6 +30,6 @@ export class VertexFactory {
         };
 
         const vertexId = `${materia.id}-G${grupo}-B${bloque}`;
-        return new Vertex<GrupoData>(new VertexID(vertexId), data);
+        return new Vertex<GrupoData>(vertexId, data);
     }
 }

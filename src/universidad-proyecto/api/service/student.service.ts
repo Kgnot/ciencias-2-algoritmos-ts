@@ -1,8 +1,7 @@
-import type {HorarioSemanal} from "../../logic/schedule/scheduler-builder.js";
-import type {SalonInput} from "../../logic/models/input-base.js";
-import type {StudentScheduleRequest, StudentScheduleResponse} from "../../logic/student/student.model.js";
-
-// import { StudentScheduleSolver } from "../../logic/student/student-schedule.solver.js";
+import type { HorarioSemanal } from "../../logic/schedule/scheduler-builder.js";
+import type { SalonInput } from "../../logic/models/input-base.js";
+import type { StudentScheduleRequest, StudentScheduleResponse } from "../../logic/student/student.model.js";
+import { StudentScheduleSolver } from "../../logic/student/student-schedule.solver.js";
 
 export class StudentService {
 
@@ -24,21 +23,9 @@ export class StudentService {
         salones: SalonInput[],
         request: StudentScheduleRequest
     ): Promise<StudentScheduleResponse> {
-        // const solver = new StudentScheduleSolver(horario, salones);
-        // const resultado = solver.solve(request);
-
-        // Placeholder hasta que tengas el solver
-        const resultado: StudentScheduleResponse = {
-            estudianteId: request.estudianteId,
-            bloques: [],
-            metricas: {
-                totalBloques: 0,
-                cambiosDeSede: 0,
-                costoTotal: 0,
-                sedesUsadas: [],
-                materiasNoAsignadas: request.materias
-            }
-        };
+        // El solver ahora recibe solo el request, y usa GlobalContext internamente
+        const solver = new StudentScheduleSolver(request);
+        const resultado = solver.execute();
 
         this.horariosEstudiantes.set(request.estudianteId, resultado);
         return resultado;

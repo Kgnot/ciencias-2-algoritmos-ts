@@ -93,7 +93,7 @@ export class FloydWarshall<T> {
 
         while (current !== j) {
             current = this.next[current]![j]!;
-            path.push(this.indexer.getVertex(current).id.value);
+            path.push(this.indexer.getVertex(current).id);
         }
 
         return path;

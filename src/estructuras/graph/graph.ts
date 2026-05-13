@@ -1,5 +1,5 @@
 import { Edge } from "../edge.js";
-import { Vertex, VertexID } from "../vertex.js";
+import { Vertex, type VertexID } from "../vertex.js";
 
 export class Graph<T> {
     // el vertice es un mapa para acceder O(1) a vertices
@@ -11,12 +11,12 @@ export class Graph<T> {
     ) {
     }
 
-    private normalizeId(id: string | VertexID): string {
-        return typeof id === "string" ? id : id.value;
+    private normalizeId(id: VertexID): string {
+        return typeof id === "string" ? id : id;
     }
 
     addVertex(vertex: Vertex<T>): void {
-        const id = vertex.id.value;
+        const id = vertex.id;
         if (this.vertex.has(id)) {
             throw new Error(`Vertex ${id} already exists`);
         }
@@ -24,8 +24,8 @@ export class Graph<T> {
     }
 
     addEdge(edge: Edge<T>): void {
-        const fromId = edge.from.id.value;
-        const toId = edge.to.id.value;
+        const fromId = edge.from.id;
+        const toId = edge.to.id;
         if (!this.vertex.has(fromId) || !this.vertex.has(toId)) {
             throw new Error("Both vertices must exist in graph");
         }
@@ -60,7 +60,7 @@ export class Graph<T> {
     getUniqueEdges(): Edge<T>[] {
         const seen = new Set<string>();
         return this.edges.filter(e => {
-            const key = [e.from.id.value, e.to.id.value].sort().join('-');
+            const key = [e.from.id, e.to.id].sort().join('-');
             if (seen.has(key)) return false;
             seen.add(key);
             return true;

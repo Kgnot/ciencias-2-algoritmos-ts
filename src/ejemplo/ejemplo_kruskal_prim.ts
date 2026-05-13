@@ -1,20 +1,20 @@
-import { Kruskal } from "../algoritmos/arbol-expancion-minima/kruskal/kurskal.js";
-import { Prim } from "../algoritmos/arbol-expancion-minima/prim/prim.js";
-import { Edge } from "../estructuras/edge.js";
-import { Graph } from "../estructuras/graph/graph.js";
-import { Vertex, VertexID } from "../estructuras/vertex.js";
+import {Kruskal} from "../algoritmos/arbol-expancion-minima/kruskal/kurskal.js";
+import {Prim} from "../algoritmos/arbol-expancion-minima/prim/prim.js";
+import {Edge} from "../estructuras/edge.js";
+import {Graph} from "../estructuras/graph/graph.js";
+import {Vertex} from "../estructuras/vertex.js";
 
 const crearGrafo = () => {
     const graph = new Graph<string>(true);
 
     // Crear vértices
-    const A = new Vertex<string>(new VertexID("A"), "Vertex A");
-    const B = new Vertex<string>(new VertexID("B"), "Vertex B");
-    const C = new Vertex<string>(new VertexID("C"), "Vertex C");
-    const D = new Vertex<string>(new VertexID("D"), "Vertex D");
-    const E = new Vertex<string>(new VertexID("E"), "Vertex E");
-    const F = new Vertex<string>(new VertexID("F"), "Vertex F");
-    const G = new Vertex<string>(new VertexID("G"), "Vertex G");
+    const A = new Vertex<string>(("A"), "Vertex A");
+    const B = new Vertex<string>(("B"), "Vertex B");
+    const C = new Vertex<string>(("C"), "Vertex C");
+    const D = new Vertex<string>(("D"), "Vertex D");
+    const E = new Vertex<string>(("E"), "Vertex E");
+    const F = new Vertex<string>(("F"), "Vertex F");
+    const G = new Vertex<string>(("G"), "Vertex G");
 
     // Agregar vértices al grafo
     graph.addVertex(A);
@@ -62,16 +62,16 @@ export function kruskal_ejemplo() {
     kruskal.getMSTEdges().forEach(e =>
         console.log(`  ${e.from.id} — ${e.to.id}: ${e.weight}`)
     );
-    console.log("Camino A → E en MST:", kruskal.getPath(new VertexID("A"), new VertexID("E")).join(" → "));
+    console.log("Camino A → E en MST:", kruskal.getPath("A", "E").join(" → "));
 }
 
 export function prim_ejemplo() {
-    const prim = new Prim(crearGrafo(), new VertexID("A"));
-    
+    const prim = new Prim(crearGrafo(), ("A"));
+
     console.log("¿Grafo conexo?", prim.isConnected());
     console.log("Peso total MST:", prim.getTotalWeight());
     prim.getMSTEdges().forEach(e =>
         console.log(`  ${e.from.id} — ${e.to.id}: ${e.weight}`)
     );
-    console.log("Camino A → E:", prim.getPath(new VertexID("A"), new VertexID("E")).join(" → "));
+    console.log("Camino A → E:", prim.getPath(("A"), ("E")).join(" → "));
 }

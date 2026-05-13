@@ -97,7 +97,7 @@ async function main() {
     console.log("🎓 GENERANDO HORARIOS PARA 20 ESTUDIANTES");
     console.log("=".repeat(80));
 
-    const students = generateStudents(20);
+    const students = generateStudents(700);
 
     console.log(`\n📊 Estudiantes a procesar: ${students.length}`);
     console.log("   Distribución por carrera:");

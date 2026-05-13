@@ -1,28 +1,76 @@
 import './ClassCard.css'
 import type {ClassItem} from "../../hooks/useSchedule.ts";
+import { extractCareerCode, getCareerColors } from "../../utils/careerColors";
 
 interface Props {
     item: ClassItem;
 }
 
 export default function ClassCard({ item }: Props) {
+    const careerCode = extractCareerCode(item.vertexId);
+    const colors = getCareerColors(item.vertexId);
+
+    const salonInfo = item.salonDetalle;
+    const isLaboratorio = item.tipo === "laboratorio";
+
     return (
-        <div className={`class-card class-card--${item.tipo}`}>
+        <div
+            className={`class-card class-card--${isLaboratorio ? 'laboratorio' : 'normal'}`}
+            style={{
+                borderLeft: `4px solid ${colors.border}`,
+                backgroundColor: colors.bg,
+            }}
+        >
+            {/* Career Badge */}
+            {careerCode && (
+                <span
+                    className="class-card__career"
+                    style={{ backgroundColor: colors.border, color: 'white' }}
+                >
+                    {careerCode}
+                </span>
+            )}
+
+            {/* Header */}
             <div className="class-card__header">
-                <span className="class-card__materia">{item.materia}</span>
-                <span className={`class-card__badge class-card__badge--${item.tipo}`}>
-          {item.tipo === "laboratorio" ? "LAB" : "TEO"}
-        </span>
+                <span className="class-card__materia" style={{ color: colors.text }}>
+                    {item.materia}
+                </span>
+                <span className={`class-card__badge class-card__badge--${isLaboratorio ? 'laboratorio' : 'normal'}`}>
+                    {isLaboratorio ? "LAB" : "TEO"}
+                </span>
             </div>
-            <div className="class-card__meta">
-                <span className="class-card__profesor">{item.profesor}</span>
-                <span className="class-card__salon">{item.salon}</span>
+
+            {/* Meta Information */}
+            {item.profesor && (
+                <div className="class-card__meta">
+                    <span className="class-card__profesor">👨‍🏫 {item.profesor}</span>
+                </div>
+            )}
+
+            {/* Room & Location */}
+            <div className="class-card__location">
+                <span className="class-card__salon">
+                    📍 {item.salon}
+                    {salonInfo && (
+                        <span className="class-card__salon-detail">
+                            {" "} • Piso {salonInfo.piso} • Sede {salonInfo.sede}
+                        </span>
+                    )}
+                </span>
+                {salonInfo && (
+                    <span className="class-card__capacity">
+                        👥 Cap. {salonInfo.capacidad}
+                    </span>
+                )}
             </div>
+
+            {/* Footer */}
             <div className="class-card__footer">
-                <span className="class-card__grupo">Grupo {item.grupo}</span>
+                <span className="class-card__grupo">G{item.grupo}</span>
                 <span className="class-card__hora">
-          {item.horaInicio} – {item.horaFin}
-        </span>
+                    ⏱ {item.horaInicio} – {item.horaFin}
+                </span>
             </div>
         </div>
     );

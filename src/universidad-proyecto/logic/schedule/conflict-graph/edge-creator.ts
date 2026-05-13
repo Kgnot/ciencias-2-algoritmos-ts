@@ -1,7 +1,7 @@
-import type { Graph } from "../../../../estructuras/graph/graph.js";
-import type { GrupoData } from "../../models/grupo-data.model.js";
-import { Edge } from "../../../../estructuras/edge.js";
-import { Vertex } from "../../../../estructuras/vertex.js";
+import type {Graph} from "../../../../estructuras/graph/graph.js";
+import type {GrupoData} from "../../models/grupo-data.model.js";
+import {Edge} from "../../../../estructuras/edge.js";
+import {Vertex} from "../../../../estructuras/vertex.js";
 
 /*
 * Clase estática que construye las aristas del grafo de conflictos.
@@ -37,6 +37,46 @@ export class EdgeCreator {
 
         for (const slotVertices of bySlot.values()) {
             this.createCompleteGraph(slotVertices, graph);
+        }
+    }
+
+    static connectSameGroupSameDay(
+        vertices: Vertex<GrupoData>[],
+        graph: Graph<GrupoData>
+    ): void {
+
+        const groups = new Map<string, Vertex<GrupoData>[]>();
+
+        // Agrupar por materia + grupo
+        for (const v of vertices) {
+            const data = v.getValue();
+            const key = `${data.materiaId}-${data.grupo}`;
+
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key)!.push(v);
+        }
+
+        // Crear conflictos dentro del grupo
+        for (const groupVertices of groups.values()) {
+            for (let i = 0; i < groupVertices.length; i++) {
+                for (let j = i + 1; j < groupVertices.length; j++) {
+
+                    const v1 = groupVertices[i];
+                    const v2 = groupVertices[j];
+
+                    if (!v1 || !v2) continue;
+
+                    const f1 = v1.getValue().franja;
+                    const f2 = v2.getValue().franja;
+
+                    if (!f1 || !f2) continue;
+
+
+                    if (f1.dia === f2.dia) {
+                        graph.addEdge(new Edge(v1, v2,1,false, 1));
+                    }
+                }
+            }
         }
     }
 }

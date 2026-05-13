@@ -1,5 +1,5 @@
-import { COLOR, VertexID } from "../../../estructuras/vertex.js";
-import { ColoredGraphAlgorithm } from "../coloreado.interface.js";
+import { COLOR, type VertexID } from "../../../estructuras/vertex.js";
+import {ColoredGraphAlgorithm} from "../coloreado.abstract.js";
 
 export class DSatur<T> extends ColoredGraphAlgorithm<T> {
 

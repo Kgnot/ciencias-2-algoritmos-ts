@@ -70,7 +70,7 @@ export class DFS<T> {
         const tree: Record<string, string> = {};
 
         for (const [child, parent] of this.parent.entries()) {
-            tree[child.value] = parent ? parent.value : "raíz";
+            tree[child] = parent ? parent : "raíz";
         }
 
         return tree;
