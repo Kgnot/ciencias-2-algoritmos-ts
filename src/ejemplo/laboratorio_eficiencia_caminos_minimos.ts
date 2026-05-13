@@ -1,6 +1,6 @@
-import { BellmanFord } from "../algoritmos/Bellman-ford/bellman_ford.js";
-import { Dijkstra } from "../algoritmos/Dijkstra/dijkstra.js";
-import { FloydWarshall } from "../algoritmos/floyd-warshall/floyd_warshall.js";
+import { BellmanFord } from "../algoritmos/camino-corto/Bellman-ford/bellman_ford.js";
+import { Dijkstra } from "../algoritmos/camino-corto/Dijkstra/dijkstra.js";
+import { FloydWarshall } from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall.js";
 import { Edge } from "../estructuras/edge.js";
 import { Graph } from "../estructuras/graph/graph.js";
 import { Vertex } from "../estructuras/vertex.js";

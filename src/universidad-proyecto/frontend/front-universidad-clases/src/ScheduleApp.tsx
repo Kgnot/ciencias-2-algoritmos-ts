@@ -2,10 +2,12 @@ import {useState} from "react";
 import {useSchedule} from "./hooks/useSchedule";
 import DayTabs from "./component/day-tabs/DayTabs.tsx";
 import TimeSlot from "./component/time-slot/TimeSlot.tsx";
+import StudentsPage from "./StudentsPage";
 
 export default function ScheduleApp() {
     const {data, loading, error, refetch} = useSchedule();
     const [activeDay, setActiveDay] = useState<string>("");
+    const [view, setView] = useState<'schedule'|'students'>('schedule');
 
     const days = data ? Object.keys(data.horario) : [];
 
@@ -43,40 +45,55 @@ export default function ScheduleApp() {
         <div className="schedule-app">
             {/* Header */}
             <header className="schedule-app__header">
-                <div className="schedule-app__title-block">
-                    <h1 className="schedule-app__title">Horario</h1>
-                    {data && (
+                <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+                    <h1 className="schedule-app__title">{view === 'schedule' ? 'Horario' : 'Estudiantes'}</h1>
+                    {view === 'schedule' && data && (
                         <span className="schedule-app__meta">
-              {data.grafo.vertices} materias · {data.grafo.aristas} relaciones
+              {data.grafo
+                  ? `${data.grafo.vertices} materias · ${data.grafo.aristas} relaciones`
+                  : `${Object.keys(data.horario).length} días cargados`}
             </span>
                     )}
                 </div>
-                <button className="schedule-app__refresh" onClick={refetch}>
-                    ↺ Actualizar
-                </button>
+
+                <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
+                    <button onClick={() => setView(view === 'schedule' ? 'students' : 'schedule')}>
+                        {view === 'schedule' ? 'Ver estudiantes' : 'Volver al horario'}
+                    </button>
+                    {view === 'schedule' && (
+                        <button className="schedule-app__refresh" onClick={refetch}>
+                            ↺ Actualizar
+                        </button>
+                    )}
+                </div>
             </header>
 
-            <DayTabs
-                days={days}
-                activeDay={resolvedDay}
-                onSelect={setActiveDay}
-            />
+            {view === 'students' ? (
+                <StudentsPage />
+            ) : (
+                <>
+                    <DayTabs
+                        days={days}
+                        activeDay={resolvedDay}
+                        onSelect={setActiveDay}
+                    />
 
-
-            {/* Content */}
-            <div className="schedule-app__body">
-                {timeSlots.length === 0 ? (
-                    <p className="schedule-app__empty">Sin clases este día.</p>
-                ) : (
-                    timeSlots.map((slot) => (
-                        <TimeSlot
-                            key={slot}
-                            timeRange={slot}
-                            classes={daySchedule[slot]}
-                        />
-                    ))
-                )}
-            </div>
+                    {/* Content */}
+                    <div className="schedule-app__body">
+                        {timeSlots.length === 0 ? (
+                            <p className="schedule-app__empty">Sin clases este día.</p>
+                        ) : (
+                            timeSlots.map((slot) => (
+                                <TimeSlot
+                                    key={slot}
+                                    timeRange={slot}
+                                    classes={daySchedule[slot]}
+                                />
+                            ))
+                        )}
+                    </div>
+                </>
+            )}
         </div>
     );
 }

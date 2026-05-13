@@ -5,12 +5,12 @@ import {Vertex} from "../estructuras/vertex.js";
 import {Edge} from "../estructuras/edge.js";
 import {toIncidenceMatrix} from "../estructuras/proyeccion/incidence_matrix.js";
 import {toIncidenceList} from "../estructuras/proyeccion/incidence_list.js";
-import {Dijkstra} from "../algoritmos/Dijkstra/dijkstra.js";
-import {BellmanFord} from "../algoritmos/Bellman-ford/bellman_ford.js";
-import {FloydWarshall} from "../algoritmos/floyd-warshall/floyd_warshall.js";
+import {Dijkstra} from "../algoritmos/camino-corto/Dijkstra/dijkstra.js";
+import {BellmanFord} from "../algoritmos/camino-corto/Bellman-ford/bellman_ford.js";
+import {FloydWarshall} from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall.js";
 import {toAdjacencyMatrix} from "../estructuras/proyeccion/adjacency_matrix.js";
 import {toAdjacencyList} from "../estructuras/proyeccion/adjacency_list.js";
-import {FordFulkerson} from "../algoritmos/ford-fulkerson/ford-fulkerson.js";
+import {FordFulkerson} from "../algoritmos/flujo/ford-fulkerson/ford-fulkerson.js";
 
 export function ejecutarEjemplo() {
     console.log("=".repeat(60));

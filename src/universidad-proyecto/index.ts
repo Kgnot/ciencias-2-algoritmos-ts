@@ -1,6 +1,5 @@
-import { SchedulerApiServer } from "./api/scheduler-api.js";
+import {SchedulerApiServer} from "./api/server.js";
 
-// Iniciar servidor de scheduling backend
 const port = parseInt(process.env.PORT || "3002", 10);
 const server = new SchedulerApiServer(port);
 server.start();

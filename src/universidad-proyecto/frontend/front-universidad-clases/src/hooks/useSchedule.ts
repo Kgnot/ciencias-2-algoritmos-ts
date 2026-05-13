@@ -20,9 +20,14 @@ export interface Schedule {
 }
 
 export interface ScheduleData {
-    grafo: { vertices: number; aristas: number };
     horario: Schedule;
-    validaciones: { esValido: boolean; violaciones: string[] };
+    grafo?: { vertices: number; aristas: number };
+    validaciones?: { esValido: boolean; violaciones: string[] };
+}
+
+interface ScheduleApiResponse {
+    success?: boolean;
+    data?: ScheduleData;
 }
 
 interface UseScheduleResult {
@@ -42,9 +47,17 @@ export function useSchedule(): UseScheduleResult {
         setError(null);
         try {
             const res = await fetch("http://localhost:3002/api/schedule");
-            if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-            const json = await res.json();
-            setData(json.data);
+            if (!res.ok) {
+                setData(null);
+                setError(`Error ${res.status}: ${res.statusText}`);
+                return;
+            }
+            const json = (await res.json()) as ScheduleApiResponse | ScheduleData;
+            const nextData =
+                json && typeof json === "object" && "data" in json && json.data
+                    ? json.data
+                    : (json as ScheduleData);
+            setData(nextData ?? null);
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : "Error desconocido");
         } finally {

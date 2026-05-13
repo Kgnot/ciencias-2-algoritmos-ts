@@ -1,5 +1,5 @@
-import { Kruskal } from "../algoritmos/kruskal/kurskal.js";
-import { Prim } from "../algoritmos/prim/prim.js";
+import { Kruskal } from "../algoritmos/arbol-expancion-minima/kruskal/kurskal.js";
+import { Prim } from "../algoritmos/arbol-expancion-minima/prim/prim.js";
 import { Edge } from "../estructuras/edge.js";
 import { Graph } from "../estructuras/graph/graph.js";
 import { Vertex } from "../estructuras/vertex.js";

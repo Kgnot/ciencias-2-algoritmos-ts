@@ -1,6 +1,6 @@
 // received from POST request
-import type { DiaSemana } from "../../models/franja-horaria.js";
-import type { TipoSalon } from "../../models/input-base.js";
+import type { DiaSemana } from "../models/franja-horaria.js";
+import type { TipoSalon } from "../models/input-base.js";
 
 export interface StudentScheduleRequest {
     estudianteId: string;

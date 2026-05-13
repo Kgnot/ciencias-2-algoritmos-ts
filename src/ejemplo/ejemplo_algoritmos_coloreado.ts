@@ -1,9 +1,9 @@
 import {Graph} from "../estructuras/graph/graph.js";
 import {Vertex, COLOR} from "../estructuras/vertex.js";
 import {Edge} from "../estructuras/edge.js";
-import {ColoreadorVoraz} from "../algoritmos/coloreado-voraz/coloreado-voraz.js";
-import {DSatur} from "../algoritmos/D-Satur/d-satur.js";
-import {WelshPowell} from "../algoritmos/Whelsh-Powell/whelsh-powell.js";
+import {ColoreadorVoraz} from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
+import {DSatur} from "../algoritmos/coloreado/D-Satur/d-satur.js";
+import {WelshPowell} from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
 import {
     aplicarColoresAlGrafo,
     obtenerRepresentacionColores,
