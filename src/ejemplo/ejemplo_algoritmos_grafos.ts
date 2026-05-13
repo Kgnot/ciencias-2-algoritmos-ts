@@ -132,6 +132,6 @@ export function ejecutarEjemplo() {
 
 // FORD FULKERSON
     const ford_fulkerson = new FordFulkerson(graph);
-    const flow = ford_fulkerson.execute("A", "E");
+    const flow = ford_fulkerson.execute( new VertexID("A"), new VertexID("E"));
     console.log("Flow: " + flow)
 }

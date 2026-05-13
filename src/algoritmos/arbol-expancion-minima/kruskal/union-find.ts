@@ -1,15 +1,17 @@
-export class UnionFind {
-    private parent: Map<string, string> = new Map();
-    private rank: Map<string, number> = new Map();
+import type { VertexID } from "../../../estructuras/vertex.js";
 
-    constructor(ids: string[]) {
+export class UnionFind {
+    private parent: Map<VertexID, VertexID> = new Map();
+    private rank: Map<VertexID, number> = new Map();
+
+    constructor(ids: VertexID[]) {
         for (const id of ids) {
             this.parent.set(id, id);
             this.rank.set(id, 0);
         }
     }
 
-    find(x: string): string {
+    find(x: VertexID): VertexID {
         if (this.parent.get(x) !== x) {
             // compresión de camino
             this.parent.set(x, this.find(this.parent.get(x)!));
@@ -17,7 +19,7 @@ export class UnionFind {
         return this.parent.get(x)!;
     }
 
-    union(a: string, b: string): boolean {
+    union(a: VertexID, b: VertexID): boolean {
         const ra = this.find(a);
         const rb = this.find(b);
 

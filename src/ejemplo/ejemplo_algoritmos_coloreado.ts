@@ -1,9 +1,9 @@
-import {Graph} from "../estructuras/graph/graph.js";
-import {Vertex, VertexID, COLOR} from "../estructuras/vertex.js";
-import {Edge} from "../estructuras/edge.js";
-import {ColoreadorVoraz} from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
-import {DSatur} from "../algoritmos/coloreado/D-Satur/d-satur.js";
-import {WelshPowell} from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
+import { Graph } from "../estructuras/graph/graph.js";
+import { Vertex, VertexID, COLOR } from "../estructuras/vertex.js";
+import { Edge } from "../estructuras/edge.js";
+import { ColoreadorVoraz } from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
+import { DSatur } from "../algoritmos/coloreado/D-Satur/d-satur.js";
+import { WelshPowell } from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
 import {
     aplicarColoresAlGrafo,
     obtenerRepresentacionColores,
@@ -52,7 +52,7 @@ function crearGrafoEjemplo(): Graph<string> {
 function imprimirResultado(
     nombreAlgoritmo: string,
     numColores: number,
-    coloresMap: Map<string, COLOR | string>,
+    coloresMap: Map<VertexID, COLOR | string>,
     esValido: boolean
 ): void {
     console.log(`\n${"═".repeat(60)}`);
@@ -63,9 +63,8 @@ function imprimirResultado(
 
     const porColor = toColoresVisuales(coloresMap);
     console.log("\nAsignación de colores:");
-    for (let i = 0; i < numColores; i++) {
-        const vertices = porColor.get(i) ?? [];
-        console.log(`  Color ${i}: ${vertices.join(", ")}`);
+    for (const [color, vertexIds] of porColor) {
+        console.log(`  Color ${color}: ${vertexIds.join(", ")}`);
     }
 }
 
@@ -130,11 +129,11 @@ export function ejemploColoreado(): void {
 
     reiniciarColoresGrafo(grafo);
     const dsatur = new DSatur(grafo);
-    const coloresDSatur: Map<COLOR | string, string> = dsatur.getColors();
+    const coloresDSatur: Map<VertexID, COLOR | string> = dsatur.getColors();
     const numColoresDSatur = dsatur.getNumColors();
 
     imprimirResultado("D-SATUR (Degree of Saturation)", numColoresDSatur, coloresDSatur, dsatur.isValid
-    ());
+        ());
 
     // Aplicar colores al grafo
     aplicarColoresAlGrafo(coloresDSatur, grafo);

@@ -1,7 +1,7 @@
 import { Edge } from "../../../estructuras/edge.js";
 import { Graph } from "../../../estructuras/graph/graph.js";
 import { toUndirectedAdjacency } from "../../../estructuras/proyeccion/incidence_list.js";
-import { Vertex } from "../../../estructuras/vertex.js";
+import { Vertex, VertexID } from "../../../estructuras/vertex.js";
 import { PrimPriorityQueue } from "./prim_priority_queue.js";
 
 export class Prim<T> {
@@ -10,8 +10,8 @@ export class Prim<T> {
     private ran = false;
 
     constructor(
-        private graph: Graph<T>,
-        private startVertexId?: string
+        public graph: Graph<T>,
+        private startVertexId?: VertexID    
     ) {
         this.run();
     }
@@ -41,27 +41,27 @@ export class Prim<T> {
         if (vertices.length === 0) return;
 
         const adjacency = toUndirectedAdjacency(this.graph);
-        const visitados = new Set<string>();
+        const visitados = new Set<VertexID>();
         const primPriorityQueue = new PrimPriorityQueue<T>();
 
         const start = this.getStartVertex(vertices);
-        visitados.add(start.id.value);
-        primPriorityQueue.addEdges(adjacency.get(start.id.value) ?? []);
+        visitados.add(start.id);
+        primPriorityQueue.addEdges(adjacency.get(start.id) ?? []);
 
         while (!primPriorityQueue.isEmpty() && this.mstEdges.length < vertices.length - 1) {
             const nextEdge = primPriorityQueue.getNextEdge();
             if (!nextEdge) break;
 
-            if (visitados.has(nextEdge.to.id.value)) {
+            if (visitados.has(nextEdge.to.id)) {
                 continue;
             }
 
             this.mstEdges.push(nextEdge);
             this.totalWeight += nextEdge.weight;
-            visitados.add(nextEdge.to.id.value);
+            visitados.add(nextEdge.to.id);
 
-            for (const edge of adjacency.get(nextEdge.to.id.value) ?? []) {
-                if (!visitados.has(edge.to.id.value)) {
+            for (const edge of adjacency.get(nextEdge.to.id) ?? []) {
+                if (!visitados.has(edge.to.id)) {
                     primPriorityQueue.addEdge(edge);
                 }
             }
@@ -80,20 +80,20 @@ export class Prim<T> {
         return this.mstEdges.length === this.graph.getVertex().length - 1;
     }
 
-    getPath(fromId: string, toId: string): string[] {
+    getPath(fromId: VertexID, toId: VertexID): VertexID[] {
         if (!this.isConnected()) return [];
 
-        const adj = new Map<string, string[]>();
-        for (const v of this.graph.getVertex()) adj.set(v.id.value, []);
+        const adj = new Map<VertexID, VertexID[]>();
+        for (const v of this.graph.getVertex()) adj.set(v.id, []);
 
         for (const e of this.mstEdges) {
-            adj.get(e.from.id.value)?.push(e.to.id.value);
-            adj.get(e.to.id.value)?.push(e.from.id.value);
+            adj.get(e.from.id)?.push(e.to.id);
+            adj.get(e.to.id)?.push(e.from.id);
         }
 
-        const visited = new Set<string>();
-        const prev = new Map<string, string | null>();
-        const queue: string[] = [fromId];
+        const visited = new Set<VertexID>();
+        const prev = new Map<VertexID, VertexID | null>();
+        const queue: VertexID[] = [fromId];
         visited.add(fromId);
         prev.set(fromId, null);
 
@@ -113,8 +113,8 @@ export class Prim<T> {
 
         if (!visited.has(toId)) return [];
 
-        const path: string[] = [];
-        let cur: string | null | undefined = toId;
+        const path: VertexID[] = [];
+        let cur: VertexID | null | undefined = toId;
         while (cur != null) {
             path.unshift(cur);
             cur = prev.get(cur);
@@ -124,7 +124,7 @@ export class Prim<T> {
     }
 }
 
-export function prim<T>(graph: Graph<T>, startVertexId?: string): Graph<T> {
+export function prim<T>(graph: Graph<T>, startVertexId?: VertexID): Graph<T> {
     const result = new Prim(graph, startVertexId);
     const mst = new Graph<T>(false);
 
@@ -133,8 +133,8 @@ export function prim<T>(graph: Graph<T>, startVertexId?: string): Graph<T> {
     }
 
     for (const e of result.getMSTEdges()) {
-        const from = mst.getVertexById(e.from.id.value);
-        const to = mst.getVertexById(e.to.id.value);
+        const from = mst.getVertexById(e.from.id);
+        const to = mst.getVertexById(e.to.id);
         mst.addEdge(new Edge(from, to, e.weight, false,0));
     }
 

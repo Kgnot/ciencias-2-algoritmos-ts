@@ -47,7 +47,7 @@ function buildPositiveSparseGraph(n: number): Graph<string> {
         graph.addEdge(new Edge(v[i]!, v[i + 1]!, 1 + (i % 9), false, 0));
     }
     for (let i = 0; i < n - 2; i++) {
-        graph.addEdge(new Edge(v[i]!, v[i + 2]!, 2 + (i % 7),false, 0));
+        graph.addEdge(new Edge(v[i]!, v[i + 2]!, 2 + (i % 7), false, 0));
     }
 
     return graph;
@@ -131,7 +131,7 @@ function runDijkstraLab(): BenchmarkRow[] {
         const graph = buildPositiveSparseGraph(n);
         const edges = graph.getEdges().length;
         const avgTimeMs = measureAlgorithm(
-            () => new Dijkstra(graph, "V0"),
+            () => new Dijkstra(graph, new VertexID("V0")),
             repetitions
         );
         return { n, edges, avgTimeMs, repetitions, complexity: "O(V²) o O((V+E)logV)" };
@@ -190,11 +190,11 @@ function printTable(title: string, rows: BenchmarkRow[]) {
     console.log("─".repeat(60));
     console.table(
         rows.map(row => ({
-            "V (vértices)":    row.n,
-            "E (aristas)":     row.edges,
-            "Complejidad":     row.complexity,
-            "Reps":            row.repetitions,
-            "Promedio (ms)":   row.avgTimeMs.toFixed(4),
+            "V (vértices)": row.n,
+            "E (aristas)": row.edges,
+            "Complejidad": row.complexity,
+            "Reps": row.repetitions,
+            "Promedio (ms)": row.avgTimeMs.toFixed(4),
         }))
     );
 }
@@ -255,8 +255,8 @@ FLOYD-WARSHALL — O(V³)
     // Crecimiento observado de Floyd: verifica que escala ~V³
     const f = floydRows;
     if (f.length >= 2) {
-        const last  = f[f.length - 1]!;
-        const prev  = f[f.length - 2]!;
+        const last = f[f.length - 1]!;
+        const prev = f[f.length - 2]!;
         const vRatio = last.n / prev.n
         const tRatio = last.avgTimeMs / prev.avgTimeMs;
         const expected = Math.pow(vRatio, 3);
@@ -274,9 +274,9 @@ FLOYD-WARSHALL — O(V³)
 function main() {
     printHeader();
 
-    const dijkstraRows   = runDijkstraLab();
+    const dijkstraRows = runDijkstraLab();
     const bellmanFordRows = runBellmanFordLab();
-    const floydRows      = runFloydWarshallLab();
+    const floydRows = runFloydWarshallLab();
 
     printTable(
         "1. DIJKSTRA — grafo disperso, pesos positivos, origen único",

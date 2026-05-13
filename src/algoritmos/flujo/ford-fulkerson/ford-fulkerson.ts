@@ -3,6 +3,7 @@ import type { Graph } from "../../../estructuras/graph/graph.js";
 import type { Edge } from "../../../estructuras/edge.js";
 import { GraphIndexer } from "../../../estructuras/graph/graph_indexer.js";
 import { toAdjacencyMatrix } from "../../../estructuras/proyeccion/adjacency_matrix.js";
+import type { VertexID } from "../../../estructuras/vertex.js";
 
 export class FordFulkerson<T> {
     private dfs: DFS<T>;
@@ -16,23 +17,23 @@ export class FordFulkerson<T> {
         this.indexer = indexer;
     }
 
-    private _getResidualCapacity(fromId: string, toId: string): number {
+    private _getResidualCapacity(fromId: VertexID, toId: VertexID): number {
         const i = this.indexer.getIndex(fromId);
         const j = this.indexer.getIndex(toId);
         return this.residualMatrix[i]![j]!;
     }
 
-    private _setResidualCapacity(fromId: string, toId: string, value: number): void {
+    private _setResidualCapacity(fromId: VertexID, toId: VertexID, value: number): void {
         const i = this.indexer.getIndex(fromId);
         const j = this.indexer.getIndex(toId);
         this.residualMatrix[i]![j] = value;
     }
 
-    public execute(sourceId: string, sinkId: string): number {
+    public execute(sourceId: VertexID, sinkId: VertexID): number {
         let maxFlow = 0;
 
         const residualFilter = (edge: Edge<T>) =>
-            this._getResidualCapacity(edge.from.id.value, edge.to.id.value) > 0;
+            this._getResidualCapacity(edge.from.id, edge.to.id) > 0;
 
         this.dfs.reset();
         this.dfs.execute(sourceId, residualFilter);

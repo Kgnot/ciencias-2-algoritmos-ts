@@ -1,16 +1,16 @@
-import {COLOR} from "../../estructuras/vertex.js";
+import {COLOR, VertexID} from "../../estructuras/vertex.js";
 import type {Graph} from "../../estructuras/graph/graph.js";
 import type {Edge} from "../../estructuras/edge.js";
 import {toUndirectedAdjacency} from "../../estructuras/proyeccion/incidence_list.js";
 
 export abstract class ColoredGraphAlgorithm<T> {
-    protected colorMap: Map<string, COLOR | string> = new Map();
+    protected colorMap: Map<VertexID, COLOR | string> = new Map();
     protected numColors: number = 0;
     protected ran: boolean = false;
 
     protected readonly availableColors: (COLOR | string)[];
     protected readonly graph: Graph<T>;
-    protected readonly adjList: Map<string, Edge<T>[]>;
+    protected readonly adjList: Map<VertexID, Edge<T>[]>;
 
     constructor(
         graph: Graph<T>,
@@ -33,7 +33,7 @@ export abstract class ColoredGraphAlgorithm<T> {
     // Template Method
     private init() {
         for (const v of this.graph.getVertex()) {
-            this.colorMap.set(v.id.value, COLOR.WHITE);
+            this.colorMap.set(v.id, COLOR.WHITE);
         }
     }
 
@@ -53,11 +53,11 @@ export abstract class ColoredGraphAlgorithm<T> {
 
     //  Implementación común
 
-    getVertexColor(vertexId: string): COLOR | string {
+    getVertexColor(vertexId: VertexID): COLOR | string {
         return this.colorMap.get(vertexId) ?? COLOR.WHITE;
     }
 
-    getColors(): Map<string, COLOR | string> {
+    getColors(): Map<VertexID, COLOR | string> {
         return new Map(this.colorMap);
     }
 
@@ -65,8 +65,8 @@ export abstract class ColoredGraphAlgorithm<T> {
         return this.numColors;
     }
 
-    getVertexByColor(): Map<COLOR | string, string[]> {
-        const groups = new Map<COLOR | string, string[]>();
+    getVertexByColor(): Map<COLOR | string, VertexID[]> {
+        const groups = new Map<COLOR | string, VertexID[]>();
 
         for (const [v, c] of this.colorMap) {
             if (c === COLOR.WHITE) continue;
@@ -79,8 +79,8 @@ export abstract class ColoredGraphAlgorithm<T> {
 
     isValid(): boolean {
         for (const edge of this.graph.getEdges()) {
-            const c1 = this.colorMap.get(edge.from.id.value);
-            const c2 = this.colorMap.get(edge.to.id.value);
+            const c1 = this.colorMap.get(edge.from.id);
+            const c2 = this.colorMap.get(edge.to.id);
             if (c1 === c2 && c1 !== COLOR.WHITE) return false;
         }
         return true;

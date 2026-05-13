@@ -1,13 +1,13 @@
 import type { Graph } from "../../estructuras/graph/graph.js";
-import type { Vertex } from "../../estructuras/vertex.js";
+import type { Vertex, VertexID } from "../../estructuras/vertex.js";
 import type { Edge } from "../../estructuras/edge.js";
 import { toAdjacencyList } from "../../estructuras/proyeccion/adjacency_list.js";
 
 export class DFS<T> {
 
-    private readonly visited: Set<string> = new Set();
-    private adjacencyList: Map<string, Edge<T>[]>;
-    private parent: Map<string, string | null> = new Map(); // representamos el padre de cada nodo (id) que puede ser nulo
+    private readonly visited: Set<VertexID> = new Set();
+    private adjacencyList: Map<VertexID, Edge<T>[]>;
+    private parent: Map<VertexID, VertexID | null> = new Map(); // representamos el padre de cada nodo (id) que puede ser nulo
 
     constructor(
         private graph: Graph<T>
@@ -16,11 +16,11 @@ export class DFS<T> {
     }
 
     // para ejecutar necesitamos un inicial, obligaremos a esto
-    public execute(startVertexId: string, edgeFilter?: (edge: Edge<T>) => boolean): void {
+    public execute(startVertexId: VertexID, edgeFilter?: (edge: Edge<T>) => boolean): void {
         const vertices: Vertex<T>[] = this.graph.getVertex();
         // iniciamos todos los padres null
         for (const vertex of vertices) {
-            this.parent.set(vertex.id.value, null);
+            this.parent.set(vertex.id, null);
         }
         const startVertex: Vertex<T> = this.graph.getVertexById(startVertexId);
         this._loop(startVertex, edgeFilter);
@@ -28,26 +28,26 @@ export class DFS<T> {
 
     private _loop(vertex: Vertex<T>, edgeFilter?: (edge: Edge<T>) => boolean) {
         // marcamos el vértice como visitado:
-        this.visited.add(vertex.id.value);
+        this.visited.add(vertex.id);
         //obtenemos los vertices adyacentes
-        const adjacentEdges = this.adjacencyList.get(vertex.id.value) || [];
+        const adjacentEdges = this.adjacencyList.get(vertex.id) || [];
         // e iteramos xd
         for (const edge of adjacentEdges) {
             const allowed = edgeFilter ? edgeFilter(edge) : true;
-            if (!this.visited.has(edge.to.id.value) && allowed) {
-                this.parent.set(edge.to.id.value, vertex.id.value); // establecemos el padre del nodo adyacente
-                console.log(this.parent.get(edge.to.id.value), "->", edge.to.id.value);
+            if (!this.visited.has(edge.to.id) && allowed) {
+                this.parent.set(edge.to.id, vertex.id); // establecemos el padre del nodo adyacente
+                console.log(this.parent.get(edge.to.id), "->", edge.to.id);
                 this._loop(edge.to, edgeFilter); // y seguimos con el nodo adyacente
             }
         }
     }
 
-    public getPath(fromId: string, toId: string): string[] {
+    public getPath(fromId: VertexID, toId: VertexID): VertexID[] {
         if (!this.visited.has(toId)) {
             return []; // el destino no fue visitado
         }
-        const path: string[] = [];
-        let current: string | null = toId;
+        const path: VertexID[] = [];
+        let current: VertexID | null = toId;
         // y vamos a recontruir  el camino desde el destino al inicio:
         while (current) {
             path.unshift(current); // agregamos al inicio
@@ -61,20 +61,18 @@ export class DFS<T> {
     }
 
     // obtener el parentMap:
-    public getParentMap(): Map<string, string | null> {
+    public getParentMap(): Map<VertexID, VertexID | null> {
         return new Map(this.parent);
     }
 
     // y como árbol:
-    public getDFSTree(): { [key: string]: string } {
-        const tree: { [key: string]: string } = {};
+    public getDFSTree(): Record<string, string> {
+        const tree: Record<string, string> = {};
+
         for (const [child, parent] of this.parent.entries()) {
-            if (parent !== null) {
-                tree[child] = parent;
-            } else {
-                tree[child] = "raíz"; // Nodos raíz del árbol DFS
-            }
+            tree[child.value] = parent ? parent.value : "raíz";
         }
+
         return tree;
     }
 
@@ -85,11 +83,11 @@ export class DFS<T> {
         console.log("DFS reset: visited cleared, parent map cleared, adjacency list rebuilt.");
     }
 
-    public getVisited(): string[] {
+    public getVisited(): VertexID[] {
         return Array.from(this.visited);
     }
 
-    public setAdjacencyList(map: Map<string, Edge<T>[]>): void {
+    public setAdjacencyList(map: Map<VertexID, Edge<T>[]>): void {
         this.adjacencyList = map;
     }
 

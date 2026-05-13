@@ -1,5 +1,6 @@
 import type { Edge } from "../../../estructuras/edge.js";
 import type { Graph } from "../../../estructuras/graph/graph.js";
+import type { VertexID } from "../../../estructuras/vertex.js";
 import { UnionFind } from "./union-find.js";
 
 export class Kruskal<T> {
@@ -22,11 +23,11 @@ export class Kruskal<T> {
         const sorted = [...edges].sort((a, b) => a.weight - b.weight);
 
         // paso 2: inicializar union-find con todos los ids
-        const uf = new UnionFind(vertices.map(v => v.id.value));
+        const uf = new UnionFind(vertices.map(v => v.id));
 
         // paso 3: iterar aristas en orden
         for (const edge of sorted) {
-            const added = uf.union(edge.from.id.value, edge.to.id.value);
+            const added = uf.union(edge.from.id, edge.to.id);
             if (added) {
                 this.mstEdges.push(edge);
                 this.totalWeight += edge.weight;
@@ -53,22 +54,22 @@ export class Kruskal<T> {
     }
 
     /** Camino entre dos nodos dentro del MST (BFS sobre el árbol) */
-    getPath(fromId: string, toId: string): string[] {
+    getPath(fromId: VertexID, toId: VertexID): VertexID[] {
         if (!this.isConnected()) return [];
 
         // construir lista de adyacencia del MST (no dirigida)
-        const adj = new Map<string, string[]>();
-        for (const v of this.graph.getVertex()) adj.set(v.id.value, []);
+        const adj = new Map<VertexID, VertexID[]>();
+        for (const v of this.graph.getVertex()) adj.set(v.id, []);
 
         for (const e of this.mstEdges) {
-            adj.get(e.from.id.value)!.push(e.to.id.value);
-            adj.get(e.to.id.value)!.push(e.from.id.value);
+            adj.get(e.from.id)!.push(e.to.id);
+            adj.get(e.to.id)!.push(e.from.id);
         }
 
         // BFS
-        const visited = new Set<string>();
-        const prev = new Map<string, string | null>();
-        const queue: string[] = [fromId];
+        const visited = new Set<VertexID>();
+        const prev = new Map<VertexID, VertexID | null>();
+        const queue: VertexID[] = [fromId];
         visited.add(fromId);
         prev.set(fromId, null);
 
@@ -85,8 +86,8 @@ export class Kruskal<T> {
         }
 
         // reconstruir camino
-        const path: string[] = [];
-        let cur: string | null | undefined = toId;
+        const path: VertexID[] = [];
+        let cur: VertexID | null | undefined = toId;
         while (cur != null) {
             path.unshift(cur);
             cur = prev.get(cur);

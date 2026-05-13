@@ -26,7 +26,7 @@ const crearGrafo = () => {
     graph.addVertex(G);
 
     // Crear aristas
-    const e1 = new Edge<string>(A, B, 50,false , 0);
+    const e1 = new Edge<string>(A, B, 50, false, 0);
     const e2 = new Edge<string>(B, D, 40, false, 0);
     const e3 = new Edge<string>(A, G, 70, false, 0);
     const e4 = new Edge<string>(B, C, 20, false, 0);
@@ -62,16 +62,16 @@ export function kruskal_ejemplo() {
     kruskal.getMSTEdges().forEach(e =>
         console.log(`  ${e.from.id} — ${e.to.id}: ${e.weight}`)
     );
-    console.log("Camino A → E en MST:", kruskal.getPath("A", "E").join(" → "));
+    console.log("Camino A → E en MST:", kruskal.getPath(new VertexID("A"), new VertexID("E")).join(" → "));
 }
 
 export function prim_ejemplo() {
-    const prim = new Prim(crearGrafo(), "A");
-
+    const prim = new Prim(crearGrafo(), new VertexID("A"));
+    
     console.log("¿Grafo conexo?", prim.isConnected());
     console.log("Peso total MST:", prim.getTotalWeight());
     prim.getMSTEdges().forEach(e =>
         console.log(`  ${e.from.id} — ${e.to.id}: ${e.weight}`)
     );
-    console.log("Camino A → E:", prim.getPath("A", "E").join(" → "));
+    console.log("Camino A → E:", prim.getPath(new VertexID("A"), new VertexID("E")).join(" → "));
 }

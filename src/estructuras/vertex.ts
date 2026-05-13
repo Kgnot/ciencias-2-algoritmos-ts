@@ -25,7 +25,7 @@ export class VertexID {
 export class Vertex<T> implements Comparable<Vertex<T>> {
 
     constructor(
-        public id: VertexID,
+        public readonly id: VertexID,
         private value: T,
         private color: COLOR | string = COLOR.WHITE
     ) {

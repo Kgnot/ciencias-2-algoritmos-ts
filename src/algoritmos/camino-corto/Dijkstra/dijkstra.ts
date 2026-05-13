@@ -1,21 +1,22 @@
 import type { Edge } from "../../../estructuras/edge.js";
 import type { Graph } from "../../../estructuras/graph/graph.js";
 import { toAdjacencyList } from "../../../estructuras/proyeccion/adjacency_list.js";
+import type { VertexID } from "../../../estructuras/vertex.js";
 
 export class Dijkstra<T> {
-    private distances: Map<string, number>;
-    private previous: Map<string, string | null>;
-    private visited: Set<string>;
-    private adjList: Map<string, Edge<T>[]>;
-    private startId: string;
+    private distances: Map<VertexID, number>;
+    private previous: Map<VertexID, VertexID | null>;
+    private visited: Set<VertexID>;
+    private adjList: Map<VertexID, Edge<T>[]>;
+    private startId: VertexID;
 
-    constructor(graph: Graph<T>, startId: string) {
+    constructor(graph: Graph<T>, startId: VertexID) {
         // Convertir grafo a lista de adyacencia
         this.adjList = toAdjacencyList(graph);
         this.startId = startId;
-        this.distances = new Map<string, number>();
-        this.previous = new Map<string, string | null>();
-        this.visited = new Set<string>();
+        this.distances = new Map<VertexID, number>();
+        this.previous = new Map<VertexID, VertexID | null>();
+        this.visited = new Set<VertexID>();
 
         this.initialize();
         this.run();
@@ -37,7 +38,7 @@ export class Dijkstra<T> {
     // ------------------------
     private run() {
         // Cola de prioridad simulada con array de tuplas [vértice, distancia]
-        const queue: [string, number][] = [[this.startId, 0]];
+        const queue: [VertexID, number][] = [[this.startId, 0]];
 
         while (queue.length > 0) {
             // Ordenar para simular cola de prioridad (menor distancia primero)
@@ -54,7 +55,7 @@ export class Dijkstra<T> {
             const neighbors = this.adjList.get(current) || [];
             
             for (const edge of neighbors) {
-                const neighbor = edge.to.id.value;
+                const neighbor = edge.to.id;
                 const newDist = this.distances.get(current)! + edge.weight;
                 
                 // Si encontramos una distancia mejor, actualizamos
@@ -70,8 +71,8 @@ export class Dijkstra<T> {
     // ------------------------
     // Con early stop (para un destino específico)
     // ------------------------
-    private runWithEarlyStop(targetId: string) {
-        const queue: [string, number][] = [[this.startId, 0]];
+    private runWithEarlyStop(targetId: VertexID) {
+        const queue: [VertexID, number][] = [[this.startId, 0]];
 
         while (queue.length > 0) {
             queue.sort((a, b) => a[1] - b[1]);
@@ -85,7 +86,7 @@ export class Dijkstra<T> {
 
             const neighbors = this.adjList.get(current) || [];
             for (const edge of neighbors) {
-                const neighbor = edge.to.id.value;
+                const neighbor = edge.to.id;
                 const newDist = this.distances.get(current)! + edge.weight;
                 
                 if (newDist < this.distances.get(neighbor)!) {
@@ -100,9 +101,9 @@ export class Dijkstra<T> {
     // ------------------------
     // Construcción de camino
     // ------------------------
-    private buildPath(targetId: string): string[] {
-        const path: string[] = [];
-        let current: string | null = targetId;
+    private buildPath(targetId: VertexID): VertexID[] {
+        const path: VertexID[] = [];
+        let current: VertexID | null = targetId;
 
         while (current !== null) {
             path.unshift(current);
@@ -120,37 +121,37 @@ export class Dijkstra<T> {
     // ------------------------
     
     // Obtener distancia a un vértice específico
-    getDistance(toId: string): number {
+    getDistance(toId: VertexID): number {
         const distance = this.distances.get(toId);
         return distance !== undefined ? distance : Infinity;
     }
 
     // Obtener camino a un vértice específico
-    getPath(toId: string): string[] {
+    getPath(toId: VertexID): VertexID[] {
         return this.buildPath(toId);
     }
 
     // Verificar si hay camino a un vértice
-    hasPath(toId: string): boolean {
+    hasPath(toId: VertexID): boolean {
         return this.distances.get(toId) !== Infinity;
     }
 
     // Obtener todas las distancias
-    getAllDistances(): Map<string, number> {
+    getAllDistances(): Map<VertexID, number> {
         return new Map(this.distances);
     }
 
     // Obtener el vértice anterior a cada uno
-    getAllPrevious(): Map<string, string | null> {
+    getAllPrevious(): Map<VertexID, VertexID | null> {
         return new Map(this.previous);
     }
 
     // Versión con early stop (para optimizar cuando solo interesa un destino)
     static findPath<T>(
         graph: Graph<T>, 
-        startId: string, 
-        targetId: string
-    ): { distance: number; path: string[] } {
+        startId: VertexID, 
+        targetId: VertexID
+    ): { distance: number; path: VertexID[] } {
         const dijkstra = new Dijkstra<T>(graph, startId);
         
         // Ejecutar con early stop

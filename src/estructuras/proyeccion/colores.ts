@@ -1,5 +1,5 @@
 import type {Graph} from "../graph/graph.js";
-import {COLOR} from "../vertex.js";
+import {COLOR, VertexID} from "../vertex.js";
 
 /**
  * Mapeo de números a colores disponibles
@@ -22,13 +22,12 @@ const COLORES_DISPONIBLES: COLOR[] = [
  * @param graph - Grafo para asignar colores a vértices
  */
 export function aplicarColoresAlGrafo<T>(
-    coloresMap: Map<string, COLOR | string>,
-    graph: Graph<string>
+    coloresMap: Map<VertexID, COLOR | string>,
+    graph: Graph<T>
 ): void {
-    for (const [vertexId, numeroColor] of coloresMap) {
+    for (const [vertexId, color] of coloresMap) {
         const vertex = graph.getVertexById(vertexId);
-        const color = COLORES_DISPONIBLES[numeroColor % COLORES_DISPONIBLES.length];
-        vertex.setColor(color || COLOR.WHITE); // Asignar color al vértice
+        vertex.setColor(color ?? COLOR.WHITE);
     }
 }
 
@@ -62,15 +61,16 @@ export function obtenerRepresentacionColores<T>(graph: Graph<T>): string {
  * Proyección de coloración: convierte resultados de algoritmo a representación visual
  */
 export function toColoresVisuales<T>(
-    coloresMap: Map<string, COLOR | string>,
-): Map<number, string[]> {
-    const grupos = new Map<number, string[]>();
+    coloresMap: Map<VertexID, COLOR | string>,
+): Map<COLOR | string, string[]> {
+
+    const grupos = new Map<COLOR | string, string[]>();
 
     for (const [vertexId, color] of coloresMap) {
         if (!grupos.has(color)) {
             grupos.set(color, []);
         }
-        grupos.get(color)!.push(vertexId);
+        grupos.get(color)!.push(vertexId.value);
     }
 
     return grupos;

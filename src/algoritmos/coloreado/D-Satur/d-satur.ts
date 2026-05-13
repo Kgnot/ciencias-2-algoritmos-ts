@@ -1,9 +1,9 @@
-import { COLOR } from "../../../estructuras/vertex.js";
+import { COLOR, VertexID } from "../../../estructuras/vertex.js";
 import { ColoredGraphAlgorithm } from "../coloreado.interface.js";
 
 export class DSatur<T> extends ColoredGraphAlgorithm<T> {
 
-    private saturation: Map<string, Set<COLOR | string>> = new Map();
+    private saturation: Map<VertexID, Set<COLOR | string>> = new Map();
 
     constructor(graph: any, customColors?: (COLOR | string)[]) {
         super(graph, customColors);
@@ -19,7 +19,7 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
 
         // Inicializar saturación
         for (const v of vertices) {
-            this.saturation.set(v.id.value, new Set());
+            this.saturation.set(v.id, new Set());
         }
 
         // Elegir vértice de mayor grado
@@ -49,7 +49,7 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
         }
     }
 
-    private assignColor(vertexId: string, color: COLOR | string) {
+    private assignColor(vertexId: VertexID, color: COLOR | string) {
         this.colorMap.set(vertexId, color);
         this.graph.getVertexById(vertexId).setColor(color);
         this.numColors = Math.max(this.numColors, this.getColorIndex(color) + 1);
@@ -62,7 +62,7 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
         return false;
     }
 
-    private selectVertex(vertices: any[]): string | null {
+    private selectVertex(vertices: any[]): VertexID | null {
         let maxSat = -1;
         let maxDeg = -1;
         let selected: string | null = null;
@@ -83,7 +83,7 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
         return selected;
     }
 
-    private findAvailableColor(vertexId: string): COLOR | string {
+    private findAvailableColor(vertexId: VertexID): COLOR | string {
         const used = this.saturation.get(vertexId) ?? new Set();
 
         for (const color of this.availableColors) {
@@ -96,14 +96,14 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
         return newColor;
     }
 
-    private updateSaturation(vertexId: string) {
+    private updateSaturation(vertexId: VertexID) {
         const color = this.colorMap.get(vertexId);
         if (!color || color === COLOR.WHITE) return;
 
         const neighbors = this.adjList.get(vertexId) ?? [];
 
         for (const edge of neighbors) {
-            const adj = edge.from.id.value === vertexId ? edge.to.id.value : edge.from.id.value;
+            const adj = edge.from.id === vertexId ? edge.to.id : edge.from.id;
 
             if (this.colorMap.get(adj) === COLOR.WHITE) {
                 this.saturation.get(adj)?.add(color);

@@ -17,10 +17,10 @@ export class ColoreadorVoraz<T> extends ColoredGraphAlgorithm<T> {
 
         for (const vertex of vertices) {
             const usedColors = new Set<COLOR | string>();
-            const neighbors = this.adjList.get(vertex.id.value) ?? [];
+            const neighbors = this.adjList.get(vertex.id) ?? [];
 
             for (const edge of neighbors) {
-                const adj = edge.from.id.value === vertex.id.value ? edge.to.id.value : edge.from.id.value;
+                const adj = edge.from.id === vertex.id ? edge.to.id : edge.from.id;
                 const c = this.colorMap.get(adj);
                 if (c && c !== COLOR.WHITE) {
                     usedColors.add(c);
@@ -35,7 +35,7 @@ export class ColoreadorVoraz<T> extends ColoredGraphAlgorithm<T> {
                 color = this.getColorByIndex(i);
             }
 
-            this.colorMap.set(vertex.id.value, color);
+            this.colorMap.set(vertex.id, color);
             vertex.setColor(color);
             this.numColors = Math.max(this.numColors, this.getColorIndex(color) + 1);
         }

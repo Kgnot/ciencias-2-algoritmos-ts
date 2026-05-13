@@ -1,7 +1,7 @@
 import {Graph} from "../../../estructuras/graph/graph.js";
 import type {GrupoData} from "../models/grupo-data.model.js";
 import type {SalonInput} from "../models/input-base.js";
-import {Vertex} from "../../../estructuras/vertex.js";
+import {COLOR, Vertex, VertexID} from "../../../estructuras/vertex.js";
 import {Edge} from "../../../estructuras/edge.js";
 import {GlobalContext} from "../global.context.js";
 import {CLASSROOM_TYPE} from "../models/classroom.types.js";
@@ -22,14 +22,14 @@ export class ScheduleSolver {
     ) {
     }
 
-    execute(): Map<string, string> {
+    execute(): Map<VertexID, string> {
         const normalSalones = this.salones.filter(s => s.tipo === "normal").map(s => s.id);
         const labSalones = this.salones.filter(s => s.tipo === "laboratorio").map(s => s.id);
 
         const normalGraph = this.buildSubgraph(CLASSROOM_TYPE.NORMAL);
         const labGraph = this.buildSubgraph(CLASSROOM_TYPE.LABORATORIO);
 
-        const colorMap = new Map<string, string>();
+        const colorMap = new Map<VertexID, string>();
 
         if (normalGraph.getVertex().length > 0) {
             const colors = this.colorear(normalGraph, normalSalones);
@@ -86,7 +86,7 @@ export class ScheduleSolver {
     private colorear(
         graph: Graph<GrupoData>,
         salones: string[]
-    ): Map<string, string> {
+    ): Map<VertexID, string> {
         let algorithmInstance: ColoredGraphAlgorithm<GrupoData>;
 
         // Detectar el tipo de algoritmo usando instanceof
@@ -100,8 +100,8 @@ export class ScheduleSolver {
             algorithmInstance = new DSatur(graph, salones);
         }
 
-        const colorMap = algorithmInstance.getColors();
-        const result = new Map<string, string>();
+        const colorMap: Map<VertexID, COLOR | string> = algorithmInstance.getColors();
+        const result = new Map<VertexID, string>();
 
         for (const [id, color] of colorMap) {
             if (color !== "white" && color !== "WHITE") {

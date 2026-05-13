@@ -43,7 +43,7 @@ export class ScheduleBuilder {
             const franja = data.franja;
             if (!franja) continue;
 
-            const salonId = salonMap.get(vertex.id.value) ?? "Sin asignar";
+            const salonId = salonMap.get(vertex.id) ?? "Sin asignar";
             const salonDetalle = salonById.get(salonId);
             const horaKey = `${franja.inicio}-${franja.fin}`;
             const dia = franja.dia;
