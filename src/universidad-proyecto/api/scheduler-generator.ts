@@ -1,99 +1,84 @@
-/**
- * Módulo para generar horarios de forma independiente sin servidor
- * Útil para testing o uso en CLI
- */
-
-import { SchedulerDataLoader } from "../data/scheduler-data-loader.js";
-import { ConflictGraphBuilder } from "../logic/conflict-graph.logic.js";
-import { ScheduleBuilder } from "../logic/scheduler-builder.js";
-import type { HorarioSemanal } from "../logic/scheduler-builder.js";
+import {SchedulerDataLoader} from "../data/scheduler-data-loader.js";
+import {ScheduleBuilder} from "../logic/scheduler-builder.js";
+import type {HorarioSemanal} from "../logic/scheduler-builder.js";
+import {ConflictGraphBuilder} from "../logic/conflict-graph/conflict-graph-builder.js";
 
 export interface GrafoStats {
-  vertices: number;
-  aristas: number;
+    vertices: number;
+    aristas: number;
 }
 
 export interface ValidacionesReporte {
-  esValido: boolean;
-  violaciones: string[];
-  totalViolaciones: number;
+    esValido: boolean;
+    violaciones: string[];
+    totalViolaciones: number;
 }
 
 export interface HorarioReporte {
-  grafo: GrafoStats;
-  horario: HorarioSemanal;
-  validaciones: ValidacionesReporte;
+    grafo: GrafoStats;
+    horario: HorarioSemanal;
+    validaciones: ValidacionesReporte;
+}
+
+function validarHorario(horario: HorarioSemanal): ValidacionesReporte {
+    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const violaciones: string[] = [];
+
+    for (const dia of dias) {
+        const diaObj = horario[dia];
+        if (!diaObj) continue;
+
+        //contar bloques, no horas
+        const bloquesPorGrupo = new Map<string, number>();
+        const salonEnFranja = new Map<string, number>();
+
+        for (const hora of Object.keys(diaObj)) {
+            const clases = diaObj[hora] ?? [];
+            for (const clase of clases) {
+                const grupoKey = `${clase.materia}-${clase.grupo}`;
+                const bloques = (bloquesPorGrupo.get(grupoKey) ?? 0) + 1;
+                bloquesPorGrupo.set(grupoKey, bloques);
+
+                if (bloques > 1) {
+                    violaciones.push(
+                        `${grupoKey} tiene ${bloques} bloques el ${dia} (máximo 1)`
+                    );
+                }
+
+                const salonKey = `${hora}-${clase.salon}`;
+                const ocurrencias = (salonEnFranja.get(salonKey) ?? 0) + 1;
+                salonEnFranja.set(salonKey, ocurrencias);
+                if (ocurrencias > 1) {
+                    violaciones.push(
+                        `Salón ${clase.salon} tiene ${ocurrencias} clases en franja ${hora} el ${dia}`
+                    );
+                }
+            }
+        }
+    }
+
+    return {
+        esValido: violaciones.length === 0,
+        violaciones,
+        totalViolaciones: violaciones.length,
+    };
 }
 
 export async function generarHorario(): Promise<HorarioReporte> {
-  const loader = SchedulerDataLoader.build();
-  const scheduleInput = loader.getData();
+    const loader = SchedulerDataLoader.build();
+    const scheduleInput = loader.getData();
 
-  const { graph } = new ConflictGraphBuilder(scheduleInput).build();
+    const {graph} = new ConflictGraphBuilder(scheduleInput).build();
 
-  const scheduleBuilder = new ScheduleBuilder(graph, scheduleInput.salones);
-  const horario = scheduleBuilder.buildHorario();
+    const scheduleBuilder = new ScheduleBuilder(graph, scheduleInput.salones);
+    const horario = scheduleBuilder.buildHorario();
 
-  // Generar validaciones
-  const violaciones: string[] = [];
-  const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-
-  for (const dia of dias) {
-    const horasPorMateria = new Map<string, number>();
-
-    for (const hora in horario[dia]) {
-      for (const clase of horario[dia]![hora]!) { //TODO: Tema de undefined
-        const key = `${clase.materia}-${clase.grupo}`;
-        const horasActual = horasPorMateria.get(key) || 0;
-        horasPorMateria.set(key, horasActual + 2);
-      }
-    }
-
-    for (const [materia, horas] of horasPorMateria) {
-      if (horas > 2) {
-        violaciones.push(`${materia} tiene ${horas} horas el ${dia} (máximo 2)`);
-      }
-    }
-  }
-
-  return {
-    grafo: {
-      vertices: graph.getVertex().length,
-      aristas: graph.getEdges().length
-    },
-    horario,
-    validaciones: {
-      esValido: violaciones.length === 0,
-      violaciones,
-      totalViolaciones: violaciones.length
-    }
-  };
+    return {
+        grafo: {
+            vertices: graph.getVertex().length,
+            aristas: graph.getEdges().length,
+        },
+        horario,
+        validaciones: validarHorario(horario),
+    };
 }
-
-export async function imprimirHorario(): Promise<void> {
-  const reporte = await generarHorario();
-
-  console.log("\n" + "=".repeat(100));
-  console.log("📋 REPORTE DE HORARIO");
-  console.log("=".repeat(100));
-
-  console.log("\n📊 Grafo de conflictos:");
-  console.log(`   ✓ Vértices: ${reporte.grafo.vertices}`);
-  console.log(`   ✓ Aristas: ${reporte.grafo.aristas}`);
-
-  console.log("\n✅ Validaciones:");
-  console.log(`   Estado: ${reporte.validaciones.esValido ? "✓ VÁLIDO" : "✗ INVÁLIDO"}`);
-  console.log(`   Violaciones totales: ${reporte.validaciones.totalViolaciones}`);
-
-  if (reporte.validaciones.violaciones.length > 0) {
-    console.log("\n⚠️  Violaciones encontradas:");
-    reporte.validaciones.violaciones.forEach((v, i) => {
-      console.log(`   ${i + 1}. ${v}`);
-    });
-  } else {
-    console.log("\n   ✓ No hay violaciones de restricciones");
-  }
-
-  console.log("\n" + "=".repeat(100));
-}
-

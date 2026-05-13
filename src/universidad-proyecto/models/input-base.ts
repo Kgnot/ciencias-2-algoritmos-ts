@@ -18,6 +18,8 @@ export interface SalonInput {
     id: string;
     tipo: TipoSalon;
     capacidad: number;
+    piso: number;
+    sede: string;
 }
 
 export interface FranjasInput {

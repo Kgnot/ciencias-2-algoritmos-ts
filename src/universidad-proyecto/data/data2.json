@@ -37,27 +37,239 @@
     {"id": "IND-PROD1", "nombre": "Procesos de Produccion I", "semestre": 2, "creditos": 4, "grupos": 4, "profesor": "Dr. Fernández", "tipo": "laboratorio", "carrera": "Industrial"}
   ],
   "salones": [
-    {"id": "S001", "tipo": "normal", "capacidad": 38},
-    {"id": "S002", "tipo": "normal", "capacidad": 35},
-    {"id": "S003", "tipo": "normal", "capacidad": 40},
-    {"id": "S004", "tipo": "normal", "capacidad": 37},
-    {"id": "S005", "tipo": "normal", "capacidad": 36},
-    {"id": "S006", "tipo": "normal", "capacidad": 38},
-    {"id": "S007", "tipo": "normal", "capacidad": 35},
-    {"id": "S008", "tipo": "normal", "capacidad": 39},
-    {"id": "S009", "tipo": "normal", "capacidad": 37},
-    {"id": "S010", "tipo": "normal", "capacidad": 36},
-    {"id": "L201", "tipo": "laboratorio", "capacidad": 20},
-    {"id": "L202", "tipo": "laboratorio", "capacidad": 21},
-    {"id": "L203", "tipo": "laboratorio", "capacidad": 20},
-    {"id": "L204", "tipo": "laboratorio", "capacidad": 21},
-    {"id": "L205", "tipo": "laboratorio", "capacidad": 20},
-    {"id": "L206", "tipo": "laboratorio", "capacidad": 21},
-    {"id": "L207", "tipo": "laboratorio", "capacidad": 20},
-    {"id": "L208", "tipo": "laboratorio", "capacidad": 21},
-    {"id": "L209", "tipo": "laboratorio", "capacidad": 20},
-    {"id": "L210", "tipo": "laboratorio", "capacidad": 21}
-  ],
+    {
+      "id": "S001",
+      "tipo": "normal",
+      "capacidad": 38,
+      "piso": 1,
+      "sede": "A"
+    },
+    {
+      "id": "S002",
+      "tipo": "normal",
+      "capacidad": 35,
+      "piso": 1,
+      "sede": "A"
+    },
+    {
+      "id": "S003",
+      "tipo": "normal",
+      "capacidad": 40,
+      "piso": 2,
+      "sede": "A"
+    },
+    {
+      "id": "S004",
+      "tipo": "normal",
+      "capacidad": 37,
+      "piso": 2,
+      "sede": "A"
+    },
+    {
+      "id": "S005",
+      "tipo": "normal",
+      "capacidad": 36,
+      "piso": 3,
+      "sede": "A"
+    },
+    {
+      "id": "S006",
+      "tipo": "normal",
+      "capacidad": 38,
+      "piso": 3,
+      "sede": "A"
+    },
+    {
+      "id": "S007",
+      "tipo": "normal",
+      "capacidad": 35,
+      "piso": 4,
+      "sede": "A"
+    },
+    {
+      "id": "S008",
+      "tipo": "normal",
+      "capacidad": 39,
+      "piso": 4,
+      "sede": "A"
+    },
+    {
+      "id": "S009",
+      "tipo": "normal",
+      "capacidad": 37,
+      "piso": 5,
+      "sede": "A"
+    },
+    {
+      "id": "S010",
+      "tipo": "normal",
+      "capacidad": 36,
+      "piso": 5,
+      "sede": "A"
+    },
+    {
+      "id": "S011",
+      "tipo": "normal",
+      "capacidad": 38,
+      "piso": 1,
+      "sede": "B"
+    },
+    {
+      "id": "S012",
+      "tipo": "normal",
+      "capacidad": 35,
+      "piso": 1,
+      "sede": "B"
+    },
+    {
+      "id": "S013",
+      "tipo": "normal",
+      "capacidad": 40,
+      "piso": 2,
+      "sede": "B"
+    },
+    {
+      "id": "S014",
+      "tipo": "normal",
+      "capacidad": 37,
+      "piso": 2,
+      "sede": "B"
+    },
+    {
+      "id": "S015",
+      "tipo": "normal",
+      "capacidad": 36,
+      "piso": 3,
+      "sede": "B"
+    },
+    {
+      "id": "S016",
+      "tipo": "normal",
+      "capacidad": 38,
+      "piso": 3,
+      "sede": "B"
+    },
+    {
+      "id": "S017",
+      "tipo": "normal",
+      "capacidad": 35,
+      "piso": 4,
+      "sede": "B"
+    },
+    {
+      "id": "S018",
+      "tipo": "normal",
+      "capacidad": 39,
+      "piso": 5,
+      "sede": "B"
+    },
+    {
+      "id": "S019",
+      "tipo": "normal",
+      "capacidad": 37,
+      "piso": 6,
+      "sede": "B"
+    },
+    {
+      "id": "S020",
+      "tipo": "normal",
+      "capacidad": 36,
+      "piso": 7,
+      "sede": "B"
+    },
+    {
+      "id": "S021",
+      "tipo": "normal",
+      "capacidad": 38,
+      "piso": 1,
+      "sede": "C"
+    },
+    {
+      "id": "S022",
+      "tipo": "normal",
+      "capacidad": 35,
+      "piso": 2,
+      "sede": "C"
+    },
+    {
+      "id": "S023",
+      "tipo": "normal",
+      "capacidad": 40,
+      "piso": 3,
+      "sede": "C"
+    },
+    {
+      "id": "L201",
+      "tipo": "laboratorio",
+      "capacidad": 20,
+      "piso": 1,
+      "sede": "A"
+    },
+    {
+      "id": "L202",
+      "tipo": "laboratorio",
+      "capacidad": 21,
+      "piso": 2,
+      "sede": "A"
+    },
+    {
+      "id": "L203",
+      "tipo": "laboratorio",
+      "capacidad": 20,
+      "piso": 3,
+      "sede": "A"
+    },
+    {
+      "id": "L204",
+      "tipo": "laboratorio",
+      "capacidad": 21,
+      "piso": 4,
+      "sede": "A"
+    },
+    {
+      "id": "L205",
+      "tipo": "laboratorio",
+      "capacidad": 20,
+      "piso": 1,
+      "sede": "B"
+    },
+    {
+      "id": "L206",
+      "tipo": "laboratorio",
+      "capacidad": 21,
+      "piso": 2,
+      "sede": "B"
+    },
+    {
+      "id": "L207",
+      "tipo": "laboratorio",
+      "capacidad": 20,
+      "piso": 3,
+      "sede": "B"
+    },
+    {
+      "id": "L208",
+      "tipo": "laboratorio",
+      "capacidad": 21,
+      "piso": 4,
+      "sede": "B"
+    },
+    {
+      "id": "L209",
+      "tipo": "laboratorio",
+      "capacidad": 20,
+      "piso": 1,
+      "sede": "C"
+    },
+    {
+      "id": "L210",
+      "tipo": "laboratorio",
+      "capacidad": 21,
+      "piso": 2,
+      "sede": "C"
+    }
+  ]
+,
   "franjas": {
     "tipoA": 8,
     "tipoB": 0

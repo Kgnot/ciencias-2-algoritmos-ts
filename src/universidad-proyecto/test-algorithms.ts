@@ -1,5 +1,4 @@
 import { SchedulerDataLoader } from "./data/scheduler-data-loader.js";
-import { ConflictGraphBuilder } from "./logic/conflict-graph.logic.js";
 import { DSatur } from "../algoritmos/D-Satur/d-satur.js";
 import { ColoreadorVoraz } from "../algoritmos/coloreado-voraz/coloreado-voraz.js";
 import { WelshPowell } from "../algoritmos/Whelsh-Powell/whelsh-powell.js";
@@ -7,95 +6,93 @@ import { Graph } from "../estructuras/graph/graph.js";
 import { Vertex } from "../estructuras/vertex.js";
 import { Edge } from "../estructuras/edge.js";
 import type { GrupoData } from "./models/grupo-data.model.js";
+import {ConflictGraphBuilder} from "./logic/conflict-graph/conflict-graph-builder.js";
 
-const loader = SchedulerDataLoader.build();
+const loader        = SchedulerDataLoader.build();
 const scheduleInput = loader.getData();
-const { graph } = new ConflictGraphBuilder(scheduleInput).build();
 
-const salones = scheduleInput.salones;
-const normalSalones = salones.filter(s => s.tipo === "normal").map(s => s.id);
-const labSalones = salones.filter(s => s.tipo === "laboratorio").map(s => s.id);
+// Grafo fresco por cada algoritmo para evitar que setColor() contamine entre ejecuciones
+function buildFreshSubgraphs() {
+    const { graph } = new ConflictGraphBuilder(scheduleInput).build();
 
-// Separar grafos por tipo
-const normalGraph = new Graph<GrupoData>(false);
-const labGraph = new Graph<GrupoData>(false);
-const normalVertexMap = new Map<string, Vertex<GrupoData>>();
-const labVertexMap = new Map<string, Vertex<GrupoData>>();
+    const salones      = scheduleInput.salones;
+    const normalSalones = salones.filter(s => s.tipo === "normal").map(s => s.id);
+    const labSalones    = salones.filter(s => s.tipo === "laboratorio").map(s => s.id);
 
-for (const v of graph.getVertex()) {
-    const data = v.getValue();
-    const copy = new Vertex<GrupoData>(v.id, data);
-    if (data.tipoSalon === "laboratorio") {
-        labGraph.addVertex(copy);
-        labVertexMap.set(copy.id, copy);
-    } else {
-        normalGraph.addVertex(copy);
-        normalVertexMap.set(copy.id, copy);
-    }
-}
+    const normalGraph = new Graph<GrupoData>(false);
+    const labGraph    = new Graph<GrupoData>(false);
+    const normalMap   = new Map<string, Vertex<GrupoData>>();
+    const labMap      = new Map<string, Vertex<GrupoData>>();
 
-for (const e of graph.getUniqueEdges()) {
-    const fromType = e.from.getValue().tipoSalon;
-    const toType = e.to.getValue().tipoSalon;
-    if (fromType === toType) {
-        if (fromType === "laboratorio") {
-            labGraph.addEdge(new Edge(labVertexMap.get(e.from.id)!, labVertexMap.get(e.to.id)!, e.weight, e.directed, e.maxFlow));
+    for (const v of graph.getVertex()) {
+        const copy = new Vertex<GrupoData>(v.id, v.getValue());
+        if (v.getValue().tipoSalon === "laboratorio") {
+            labGraph.addVertex(copy);
+            labMap.set(copy.id, copy);
         } else {
-            normalGraph.addEdge(new Edge(normalVertexMap.get(e.from.id)!, normalVertexMap.get(e.to.id)!, e.weight, e.directed, e.maxFlow));
+            normalGraph.addVertex(copy);
+            normalMap.set(copy.id, copy);
         }
     }
+
+    for (const e of graph.getUniqueEdges()) {
+        const fromType = e.from.getValue().tipoSalon;
+        const toType   = e.to.getValue().tipoSalon;
+        if (fromType !== toType) continue;
+
+        if (fromType === "laboratorio") {
+            const f = labMap.get(e.from.id)!;
+            const t = labMap.get(e.to.id)!;
+            labGraph.addEdge(new Edge(f, t, e.weight, e.directed, e.maxFlow));
+        } else {
+            const f = normalMap.get(e.from.id)!;
+            const t = normalMap.get(e.to.id)!;
+            normalGraph.addEdge(new Edge(f, t, e.weight, e.directed, e.maxFlow));
+        }
+    }
+
+    return { graph, normalGraph, labGraph, normalSalones, labSalones };
 }
+
+// ─── Stats iniciales (un solo grafo de referencia) ───────────────────────────
+const { graph: refGraph, normalSalones: ns, labSalones: ls } = buildFreshSubgraphs();
 
 console.log("\n🔬 COMPARACIÓN DE ALGORITMOS");
 console.log("=".repeat(60));
-console.log(`📊 Grafo original: ${graph.getVertex().length} vértices, ${graph.getEdges().length} aristas`);
-console.log(`📊 Normales: ${normalGraph.getVertex().length} vértices`);
-console.log(`📊 Laboratorios: ${labGraph.getVertex().length} vértices`);
+console.log(`📊 Grafo: ${refGraph.getVertex().length} vértices, ${refGraph.getEdges().length} aristas`);
 console.log("=".repeat(60));
 
-// Voraz
+// ─── Voraz ────────────────────────────────────────────────────────────────────
 console.log("\n🟢 COLORACIÓN VORAZ");
-const vorazNormal = new ColoreadorVoraz(normalGraph, normalSalones);
-const vorazLab = new ColoreadorVoraz(labGraph, labSalones);
-const vorazColors = new Map<string, string>();
-for (const [id, c] of vorazNormal.getColors()) vorazColors.set(id, c as string);
-for (const [id, c] of vorazLab.getColors()) vorazColors.set(id, c as string);
-console.log(`   Colores usados: ${new Set(vorazColors.values()).size}`);
-console.log(`   Válido: ${vorazNormal.isValid() && vorazLab.isValid() ? "✅ Sí" : "❌ No"}`);
+{
+    const { normalGraph, labGraph, normalSalones, labSalones } = buildFreshSubgraphs();
+    const vorazNormal = new ColoreadorVoraz(normalGraph, normalSalones);
+    const vorazLab    = new ColoreadorVoraz(labGraph, labSalones);
+    const colors      = new Map([...vorazNormal.getColors(), ...vorazLab.getColors()]);
+    console.log(`   Colores usados: ${new Set(colors.values()).size}`);
+    console.log(`   Válido: ${vorazNormal.isValid() && vorazLab.isValid() ? "✅ Sí" : "❌ No"}`);
+}
 
-// Welsh-Powell
+// ─── Welsh-Powell ─────────────────────────────────────────────────────────────
 console.log("\n🟡 WELSH-POWELL");
-const wpNormal = new WelshPowell(normalGraph, normalSalones);
-const wpLab = new WelshPowell(labGraph, labSalones);
-const wpColors = new Map<string, string>();
-for (const [id, c] of wpNormal.getColors()) wpColors.set(id, c as string);
-for (const [id, c] of wpLab.getColors()) wpColors.set(id, c as string);
-console.log(`   Colores usados: ${new Set(wpColors.values()).size}`);
-console.log(`   Válido: ${wpNormal.isValid() && wpLab.isValid() ? "✅ Sí" : "❌ No"}`);
+{
+    const { normalGraph, labGraph, normalSalones, labSalones } = buildFreshSubgraphs();
+    const wpNormal = new WelshPowell(normalGraph, normalSalones);
+    const wpLab    = new WelshPowell(labGraph, labSalones);
+    const colors   = new Map([...wpNormal.getColors(), ...wpLab.getColors()]);
+    console.log(`   Colores usados: ${new Set(colors.values()).size}`);
+    console.log(`   Válido: ${wpNormal.isValid() && wpLab.isValid() ? "✅ Sí" : "❌ No"}`);
+}
 
-// D-Satur
+// ─── D-Satur ──────────────────────────────────────────────────────────────────
 console.log("\n🔵 D-SATUR");
-const dsaturNormal = new DSatur(normalGraph, normalSalones);
-const dsaturLab = new DSatur(labGraph, labSalones);
-const dsaturColors = new Map<string, string>();
-for (const [id, c] of dsaturNormal.getColors()) dsaturColors.set(id, c as string);
-for (const [id, c] of dsaturLab.getColors()) dsaturColors.set(id, c as string);
-console.log(`   Colores usados: ${new Set(dsaturColors.values()).size}`);
-console.log(`   Válido: ${dsaturNormal.isValid() && dsaturLab.isValid() ? "✅ Sí" : "❌ No"}`);
+{
+    const { normalGraph, labGraph, normalSalones, labSalones } = buildFreshSubgraphs();
+    const dsNormal = new DSatur(normalGraph, normalSalones);
+    const dsLab    = new DSatur(labGraph, labSalones);
+    const colors   = new Map([...dsNormal.getColors(), ...dsLab.getColors()]);
+    console.log(`   Colores usados: ${new Set(colors.values()).size}`);
+    console.log(`   Válido: ${dsNormal.isValid() && dsLab.isValid() ? "✅ Sí" : "❌ No"}`);
+}
 
 console.log("\n" + "=".repeat(60));
-console.log("📈 RESUMEN:");
-console.log(`   Voraz:        ${new Set(vorazColors.values()).size} salones`);
-console.log(`   Welsh-Powell: ${new Set(wpColors.values()).size} salones`);
-console.log(`   D-Satur:      ${new Set(dsaturColors.values()).size} salones`);
-
-if (new Set(vorazColors.values()).size === new Set(wpColors.values()).size &&
-    new Set(wpColors.values()).size === new Set(dsaturColors.values()).size) {
-    console.log("\n⚠️ ADVERTENCIA: Los tres algoritmos dieron el MISMO resultado.");
-    console.log("   Posibles causas:");
-    console.log("   1. El grafo tiene componentes desconectadas");
-    console.log("   2. Hay suficientes colores (salones) para todos");
-    console.log("   3. Los algoritmos no están implementados correctamente");
-} else {
-    console.log("\n✅ Los algoritmos dan resultados DIFERENTES - Está funcionando bien!");
-}

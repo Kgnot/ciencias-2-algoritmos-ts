@@ -11,9 +11,10 @@ export interface HorarioClase {
     dia: DiaSemana;
     horaInicio: string;
     horaFin: string;
-     salon: string;
-     tipo: string;
-     bloque: number;
+    salon: string;
+    salonDetalle: SalonInput | null;
+    tipo: string;
+    bloque: number;
 }
 
 export type HorarioSemanal = Record<string, Record<string, HorarioClase[]>>;
@@ -28,17 +29,20 @@ export class ScheduleBuilder {
     public buildHorario(algoritmo: AlgoritmoColoreado = "d-satur"): HorarioSemanal {
         const solver   = new ScheduleSolver(this.graph, this.salones);
         const salonMap = solver.execute(algoritmo);
+        const salonById = new Map(this.salones.map(salon => [salon.id, salon] as const));
 
-        const horario: HorarioSemanal = {
-            Lunes: {}, Martes: {}, "Miércoles": {}, Jueves: {}, Viernes: {}, Sábado: {},
-        };
+        const horario = {} as HorarioSemanal;
+        for (const dia of ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"] as DiaSemana[]) {
+            horario[dia] = {};
+        }
 
         for (const vertex of this.graph.getVertex()) {
             const data   = vertex.getValue();
             const franja = data.franja;
             if (!franja) continue;
 
-            const salon  = salonMap.get(vertex.id) ?? "Sin asignar";
+            const salonId = salonMap.get(vertex.id) ?? "Sin asignar";
+            const salonDetalle = salonById.get(salonId);
             const horaKey = `${franja.inicio}-${franja.fin}`;
             const dia     = franja.dia;
 
@@ -52,9 +56,10 @@ export class ScheduleBuilder {
                 dia,
                 horaInicio: franja.inicio,
                 horaFin:    franja.fin,
-                 salon,
-                 tipo:       data.tipoSalon,
-                 bloque:     data.bloque,
+                salon:      salonId,
+                salonDetalle: salonDetalle ?? null,
+                tipo:       data.tipoSalon,
+                bloque:     data.bloque,
             });
         }
 
