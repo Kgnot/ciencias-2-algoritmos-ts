@@ -25,14 +25,14 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
         // Elegir vértice de mayor grado
         if (!vertices[0]) return;
 
-        let start = vertices[0].id.value;
+        let start = vertices[0].id;
         let maxDegree = -1;
 
         for (const v of vertices) {
-            const degree = this.adjList.get(v.id.value)?.length ?? 0;
+            const degree = this.adjList.get(v.id)?.length ?? 0;
             if (degree > maxDegree) {
                 maxDegree = degree;
-                start = v.id.value;
+                start = v.id;
             }
         }
 
@@ -65,18 +65,18 @@ export class DSatur<T> extends ColoredGraphAlgorithm<T> {
     private selectVertex(vertices: any[]): VertexID | null {
         let maxSat = -1;
         let maxDeg = -1;
-        let selected: string | null = null;
+        let selected: VertexID | null = null;
 
         for (const v of vertices) {
-            if (this.colorMap.get(v.id.value) !== COLOR.WHITE) continue;
+            if (this.colorMap.get(v.id) !== COLOR.WHITE) continue;
 
-            const sat = this.saturation.get(v.id.value)?.size ?? 0;
-            const deg = this.adjList.get(v.id.value)?.length ?? 0;
+            const sat = this.saturation.get(v.id)?.size ?? 0;
+            const deg = this.adjList.get(v.id)?.length ?? 0;
 
             if (sat > maxSat || (sat === maxSat && deg > maxDeg)) {
                 maxSat = sat;
                 maxDeg = deg;
-                selected = v.id.value;
+                selected = v.id;
             }
         }
 
