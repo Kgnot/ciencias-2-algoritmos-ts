@@ -1,8 +1,8 @@
-import type {AsignacionResultado} from "../../models/resultado.model.js";
-import {GlobalContext} from "../../global.context.js";
-import type {GrupoData} from "../../models/grupo-data.model.js";
-import type {Graph} from "../../../../estructuras/graph/graph.js";
-import type {VertexID} from "../../../../estructuras/vertex.js";
+import type {AsignacionResultado} from "../../models/resultado.model";
+import {GlobalContext} from "../../global.context";
+import type {GrupoData} from "../../models/grupo-data.model";
+import type {Graph} from "../../../../estructuras/graph/graph";
+import type {VertexID} from "../../../../estructuras/vertex";
 
 
 // obtiene bloques disponibles

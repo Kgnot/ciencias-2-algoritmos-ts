@@ -1,7 +1,7 @@
-import type {Graph} from "../../../../estructuras/graph/graph.js";
-import type {GrupoData} from "../../models/grupo-data.model.js";
-import {Edge} from "../../../../estructuras/edge.js";
-import {Vertex} from "../../../../estructuras/vertex.js";
+import type {Graph} from "../../../../estructuras/graph/graph";
+import type {GrupoData} from "../../models/grupo-data.model";
+import {Edge} from "../../../../estructuras/edge";
+import {Vertex} from "../../../../estructuras/vertex";
 
 /*
 * Clase estática que construye las aristas del grafo de conflictos.

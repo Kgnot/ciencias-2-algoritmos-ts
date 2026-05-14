@@ -1,9 +1,9 @@
-import { DFS } from "../../dfs/dfs.js";
-import type { Graph } from "../../../estructuras/graph/graph.js";
-import type { Edge } from "../../../estructuras/edge.js";
-import { GraphIndexer } from "../../../estructuras/graph/graph_indexer.js";
-import { toAdjacencyMatrix } from "../../../estructuras/proyeccion/adjacency_matrix.js";
-import type { VertexID } from "../../../estructuras/vertex.js";
+import { DFS } from "../../dfs/dfs";
+import type { Graph } from "../../../estructuras/graph/graph";
+import type { Edge } from "../../../estructuras/edge";
+import { GraphIndexer } from "../../../estructuras/graph/graph_indexer";
+import { toAdjacencyMatrix } from "../../../estructuras/proyeccion/adjacency_matrix";
+import type { VertexID } from "../../../estructuras/vertex";
 
 export class FordFulkerson<T> {
     private dfs: DFS<T>;

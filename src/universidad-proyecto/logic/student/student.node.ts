@@ -1,4 +1,4 @@
-import type {AsignacionResultado} from "../models/resultado.model.js";
+import type {AsignacionResultado} from "../models/resultado.model";
 
 export interface StudentNode {
     asignacion: AsignacionResultado | null;

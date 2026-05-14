@@ -1,5 +1,5 @@
-import { Graph } from "../graph/graph.js";
-import { GraphIndexer } from "../graph/graph_indexer.js";
+import { Graph } from "../graph/graph";
+import { GraphIndexer } from "../graph/graph_indexer";
 
 export function toIncidenceMatrix<T>(graph: Graph<T>) {
     const vertices = graph.getVertex();

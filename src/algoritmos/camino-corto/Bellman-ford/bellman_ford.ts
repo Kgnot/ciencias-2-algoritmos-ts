@@ -1,6 +1,6 @@
-import type { Edge } from "../../../estructuras/edge.js";
-import type { Graph } from "../../../estructuras/graph/graph.js";
-import type { Vertex } from "../../../estructuras/vertex.js";
+import type { Edge } from "../../../estructuras/edge";
+import type { Graph } from "../../../estructuras/graph/graph";
+import type { Vertex } from "../../../estructuras/vertex";
 
 export class BellmanFord<T> {
     private distances: Map<string, number>;

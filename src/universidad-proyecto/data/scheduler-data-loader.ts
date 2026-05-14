@@ -1,5 +1,5 @@
-import rawData from "./data2.json" with {type: "json"};
-import type {MateriaInput, SalonInput, ScheduleInput} from "../logic/models/input-base.js";
+import rawData from "./data2.json";
+import type {MateriaInput, SalonInput, ScheduleInput} from "../logic/models/input-base";
 
 
 export class SchedulerDataLoader {

@@ -5,6 +5,7 @@
     "target": "esnext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "strict": true,

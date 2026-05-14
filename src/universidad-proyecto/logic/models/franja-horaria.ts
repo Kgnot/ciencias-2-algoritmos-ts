@@ -1,4 +1,4 @@
-import type { FranjasInput, TipoFranja } from "./input-base.js";
+import type { FranjasInput, TipoFranja } from "./input-base";
 
 export type DiaSemana = "Lunes" | "Martes" | "Miércoles" | "Jueves" | "Viernes" | "Sábado";
 

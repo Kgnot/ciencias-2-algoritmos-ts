@@ -1,12 +1,12 @@
-import type {StudentScheduleRequest, StudentScheduleResponse, BloqueEstudiante} from "./student.model.js";
-import type {AsignacionResultado} from "../models/resultado.model.js";
-import type {DiaSemana} from "../models/franja-horaria.js";
-import {BlockCollector} from "./collectors/block.collector.js";
-import {DaySubgraphBuilder} from "./builders/day-subgraph.builder.js";
-import {ScheduleMetrics} from "./metrics/schedule.metrics.js";
-import type {ScheduleStrategy} from "./strategies/schedule.strategy.js";
-import {DijkstraStrategy} from "./strategies/dijkstra.strategy.js";
-import {BacktrackingStrategy} from "./strategies/back-tracking.strategy.js";
+import type {StudentScheduleRequest, StudentScheduleResponse, BloqueEstudiante} from "./student.model";
+import type {AsignacionResultado} from "../models/resultado.model";
+import type {DiaSemana} from "../models/franja-horaria";
+import {BlockCollector} from "./collectors/block.collector";
+import {DaySubgraphBuilder} from "./builders/day-subgraph.builder";
+import {ScheduleMetrics} from "./metrics/schedule.metrics";
+import type {ScheduleStrategy} from "./strategies/schedule.strategy";
+import {DijkstraStrategy} from "./strategies/dijkstra.strategy";
+import {BacktrackingStrategy} from "./strategies/back-tracking.strategy";
 
 
 export class StudentScheduleSolver {

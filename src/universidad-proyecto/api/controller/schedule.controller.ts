@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { ScheduleService } from "../service/schedule.service.js";
+import { ScheduleService } from "../service/schedule.service";
 
 const scheduleService = ScheduleService.getInstance();
 

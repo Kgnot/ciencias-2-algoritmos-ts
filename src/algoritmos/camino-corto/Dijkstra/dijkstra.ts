@@ -1,7 +1,7 @@
-import type { Edge } from "../../../estructuras/edge.js";
-import type { Graph } from "../../../estructuras/graph/graph.js";
-import { toAdjacencyList } from "../../../estructuras/proyeccion/adjacency_list.js";
-import type { VertexID } from "../../../estructuras/vertex.js";
+import type { Edge } from "../../../estructuras/edge";
+import type { Graph } from "../../../estructuras/graph/graph";
+import { toAdjacencyList } from "../../../estructuras/proyeccion/adjacency_list";
+import type { VertexID } from "../../../estructuras/vertex";
 
 export class Dijkstra<T> {
     private distances: Map<VertexID, number>;

@@ -1,8 +1,8 @@
-import { Edge } from "../../../estructuras/edge.js";
-import { Graph } from "../../../estructuras/graph/graph.js";
-import { toUndirectedAdjacency } from "../../../estructuras/proyeccion/incidence_list.js";
-import { Vertex, type VertexID } from "../../../estructuras/vertex.js";
-import { PrimPriorityQueue } from "./prim_priority_queue.js";
+import { Edge } from "../../../estructuras/edge";
+import { Graph } from "../../../estructuras/graph/graph";
+import { toUndirectedAdjacency } from "../../../estructuras/proyeccion/incidence_list";
+import { Vertex, type VertexID } from "../../../estructuras/vertex";
+import { PrimPriorityQueue } from "./prim_priority_queue";
 
 export class Prim<T> {
     private mstEdges: Edge<T>[] = [];

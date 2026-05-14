@@ -1,6 +1,6 @@
-import type { Graph } from "../../../estructuras/graph/graph.js";
-import type { GraphIndexer } from "../../../estructuras/graph/graph_indexer.js";
-import { toAdjacencyMatrix } from "../../../estructuras/proyeccion/adjacency_matrix.js";
+import type { Graph } from "../../../estructuras/graph/graph";
+import type { GraphIndexer } from "../../../estructuras/graph/graph_indexer";
+import { toAdjacencyMatrix } from "../../../estructuras/proyeccion/adjacency_matrix";
 
 export class FloydWarshall<T> {
     private dist: number[][];

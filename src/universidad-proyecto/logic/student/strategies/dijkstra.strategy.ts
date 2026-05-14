@@ -1,16 +1,16 @@
-import {ScheduleStrategy, type StrategyResult} from "./schedule.strategy.js";
-import type {DaySubgraphBuilder} from "../builders/day-subgraph.builder.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
-import {WEEKDAY} from "../../models/dias-semana.js";
-import {Dijkstra} from "../../../../algoritmos/camino-corto/Dijkstra/dijkstra.js";
-import type {StudentNode} from "../student.node.js";
-import {ConstraintChecker} from "../contraints/constraint-checker.js";
-import {ConsistentGroupConstraint} from "../contraints/consistent-group.constraint.js";
-import {NoGroupRepetitionConstraint} from "../contraints/no-group-repetition.constraint.js";
-import {NoOverlapConstraint} from "../contraints/no-overlap.constraint.js";
-import {MaxFatigueConstraint} from "../contraints/max-fatigue.constraint.js";
-import {NoImmediateSedeChangeConstraint} from "../contraints/no-immediate-sede-change.constraint.js";
-import {MaxSubjectsPerDayConstraint} from "../contraints/max-subjects-per-day.constraint.js";
+import {ScheduleStrategy, type StrategyResult} from "./schedule.strategy";
+import type {DaySubgraphBuilder} from "../builders/day-subgraph.builder";
+import type {AsignacionResultado} from "../../models/resultado.model";
+import {WEEKDAY} from "../../models/dias-semana";
+import {Dijkstra} from "../../../../algoritmos/camino-corto/Dijkstra/dijkstra";
+import type {StudentNode} from "../student.node";
+import {ConstraintChecker} from "../contraints/constraint-checker";
+import {ConsistentGroupConstraint} from "../contraints/consistent-group.constraint";
+import {NoGroupRepetitionConstraint} from "../contraints/no-group-repetition.constraint";
+import {NoOverlapConstraint} from "../contraints/no-overlap.constraint";
+import {MaxFatigueConstraint} from "../contraints/max-fatigue.constraint";
+import {NoImmediateSedeChangeConstraint} from "../contraints/no-immediate-sede-change.constraint";
+import {MaxSubjectsPerDayConstraint} from "../contraints/max-subjects-per-day.constraint";
 
 export class DijkstraStrategy extends ScheduleStrategy {
 

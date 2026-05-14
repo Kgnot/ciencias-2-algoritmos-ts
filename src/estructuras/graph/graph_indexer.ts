@@ -1,4 +1,4 @@
-import type { Vertex, VertexID } from "../vertex.js";
+import type { Vertex, VertexID } from "../vertex";
 
 export class GraphIndexer<T> {
     private indexMap: Map<string, number> = new Map();

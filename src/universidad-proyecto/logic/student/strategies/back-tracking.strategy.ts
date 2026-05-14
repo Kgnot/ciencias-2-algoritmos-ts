@@ -1,10 +1,10 @@
-import {ScheduleStrategy, type StrategyResult} from "./schedule.strategy.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
-import {ConstraintChecker} from "../contraints/constraint-checker.js";
-import {ConsistentGroupConstraint} from "../contraints/consistent-group.constraint.js";
-import {NoOverlapConstraint} from "../contraints/no-overlap.constraint.js";
-import {NoImmediateSedeChangeConstraint} from "../contraints/no-immediate-sede-change.constraint.js";
-import {MaxSubjectsPerDayConstraint} from "../contraints/max-subjects-per-day.constraint.js";
+import {ScheduleStrategy, type StrategyResult} from "./schedule.strategy";
+import type {AsignacionResultado} from "../../models/resultado.model";
+import {ConstraintChecker} from "../contraints/constraint-checker";
+import {ConsistentGroupConstraint} from "../contraints/consistent-group.constraint";
+import {NoOverlapConstraint} from "../contraints/no-overlap.constraint";
+import {NoImmediateSedeChangeConstraint} from "../contraints/no-immediate-sede-change.constraint";
+import {MaxSubjectsPerDayConstraint} from "../contraints/max-subjects-per-day.constraint";
 
 export class BacktrackingStrategy extends ScheduleStrategy {
 

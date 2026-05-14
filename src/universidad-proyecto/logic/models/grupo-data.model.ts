@@ -1,5 +1,5 @@
-import type { SalonInput, TipoSalon, Carrera } from "./input-base.js";
-import type { FranjaHoraria } from "./franja-horaria.js";
+import type { SalonInput, TipoSalon, Carrera } from "./input-base";
+import type { FranjaHoraria } from "./franja-horaria";
 
 export interface GrupoData {
     materiaId: string;

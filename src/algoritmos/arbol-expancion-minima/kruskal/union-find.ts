@@ -1,4 +1,4 @@
-import type { VertexID } from "../../../estructuras/vertex.js";
+import type { VertexID } from "../../../estructuras/vertex";
 
 export class UnionFind {
     private parent: Map<VertexID, VertexID> = new Map();

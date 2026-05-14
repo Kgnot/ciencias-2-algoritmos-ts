@@ -1,7 +1,7 @@
-import type { Graph } from "../../estructuras/graph/graph.js";
-import type { Vertex, VertexID } from "../../estructuras/vertex.js";
-import type { Edge } from "../../estructuras/edge.js";
-import { toAdjacencyList } from "../../estructuras/proyeccion/adjacency_list.js";
+import type { Graph } from "../../estructuras/graph/graph";
+import type { Vertex, VertexID } from "../../estructuras/vertex";
+import type { Edge } from "../../estructuras/edge";
+import { toAdjacencyList } from "../../estructuras/proyeccion/adjacency_list";
 
 export class DFS<T> {
 

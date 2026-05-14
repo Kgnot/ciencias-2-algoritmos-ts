@@ -1,5 +1,5 @@
-import {ScheduleConstraint} from "./schedule-constraint.abstract.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
+import {ScheduleConstraint} from "./schedule-constraint.abstract";
+import type {AsignacionResultado} from "../../models/resultado.model";
 
 // No se puede cambiar de sede en bloques consecutivos (inmediatos)
 export class NoImmediateSedeChangeConstraint extends ScheduleConstraint {

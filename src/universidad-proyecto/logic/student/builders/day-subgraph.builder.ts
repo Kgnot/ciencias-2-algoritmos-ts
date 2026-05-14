@@ -1,9 +1,9 @@
-import type {AsignacionResultado} from "../../models/resultado.model.js";
-import {Graph} from "../../../../estructuras/graph/graph.js";
-import {Vertex} from "../../../../estructuras/vertex.js";
-import {Edge} from "../../../../estructuras/edge.js";
-import type {StudentNode} from "../student.node.js";
-import type {WEEKDAY} from "../../models/dias-semana.js";
+import type {AsignacionResultado} from "../../models/resultado.model";
+import {Graph} from "../../../../estructuras/graph/graph";
+import {Vertex} from "../../../../estructuras/vertex";
+import {Edge} from "../../../../estructuras/edge";
+import type {StudentNode} from "../student.node";
+import type {WEEKDAY} from "../../models/dias-semana";
 
 const PESO_CAMBIO_SEDE = 1000;
 const SOURCE_ID = "__SOURCE__";

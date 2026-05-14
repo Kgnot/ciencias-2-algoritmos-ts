@@ -1,9 +1,9 @@
-import { BellmanFord } from "../algoritmos/camino-corto/Bellman-ford/bellman_ford.js";
-import { Dijkstra } from "../algoritmos/camino-corto/Dijkstra/dijkstra.js";
-import { FloydWarshall } from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall.js";
-import { Edge } from "../estructuras/edge.js";
-import { Graph } from "../estructuras/graph/graph.js";
-import { Vertex } from "../estructuras/vertex.js";
+import { BellmanFord } from "../algoritmos/camino-corto/Bellman-ford/bellman_ford";
+import { Dijkstra } from "../algoritmos/camino-corto/Dijkstra/dijkstra";
+import { FloydWarshall } from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall";
+import { Edge } from "../estructuras/edge";
+import { Graph } from "../estructuras/graph/graph";
+import { Vertex } from "../estructuras/vertex";
 
 // ─────────────────────────────────────────────────────────────
 // TIPOS

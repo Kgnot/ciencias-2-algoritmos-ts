@@ -1,5 +1,5 @@
-import type {ScheduleConstraint} from "./schedule-constraint.abstract.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
+import type {ScheduleConstraint} from "./schedule-constraint.abstract";
+import type {AsignacionResultado} from "../../models/resultado.model";
 
 export class ConstraintChecker {
     constructor(private readonly constraints: ScheduleConstraint[]) {}

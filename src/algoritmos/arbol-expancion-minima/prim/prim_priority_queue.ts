@@ -1,5 +1,5 @@
-import type { Edge } from "../../../estructuras/edge.js";
-import { PriorityQueue } from "../../../estructuras/utils/PriorityQueue.js";
+import type { Edge } from "../../../estructuras/edge";
+import { PriorityQueue } from "../../../estructuras/utils/PriorityQueue";
 
 export class PrimPriorityQueue<T> {
     private priorityQueue: PriorityQueue<Edge<T>> = new PriorityQueue();

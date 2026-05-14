@@ -1,4 +1,4 @@
-import type { Comparable } from "./Comparable.js";
+import type { Comparable } from "./Comparable";
 
 export class PriorityQueue<T extends Comparable<T>> {
     private queue: T[] = [];

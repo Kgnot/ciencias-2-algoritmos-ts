@@ -1,7 +1,7 @@
-import { Edge } from "../edge.js";
-import type { Graph } from "../graph/graph.js";
-import type { VertexID } from "../vertex.js";
-import { toAdjacencyList } from "./adjacency_list.js";
+import { Edge } from "../edge";
+import type { Graph } from "../graph/graph";
+import type { VertexID } from "../vertex";
+import { toAdjacencyList } from "./adjacency_list";
 
 export function toIncidenceList<T>(graph: Graph<T>) {
     const map = new Map<VertexID, Edge<T>[]>();

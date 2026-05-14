@@ -1,5 +1,5 @@
-import { Edge } from "../edge.js";
-import { Vertex, type VertexID } from "../vertex.js";
+import { Edge } from "../edge";
+import { Vertex, type VertexID } from "../vertex";
 
 export class Graph<T> {
     // el vertice es un mapa para acceder O(1) a vertices

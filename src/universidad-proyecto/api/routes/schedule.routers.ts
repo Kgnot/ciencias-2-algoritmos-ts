@@ -1,6 +1,6 @@
 import {Router} from "express";
-import {trycatch} from "../helpers/trycath.helper.js";
-import {ScheduleController} from "../controller/schedule.controller.js";
+import {trycatch} from "../helpers/trycath.helper";
+import {ScheduleController} from "../controller/schedule.controller";
 
 const router = Router();
 

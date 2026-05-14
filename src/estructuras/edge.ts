@@ -1,5 +1,5 @@
-import type {Comparable} from "./utils/Comparable.js";
-import type {Vertex} from "./vertex.js";
+import type {Comparable} from "./utils/Comparable";
+import type {Vertex} from "./vertex";
 
 export class Edge<T> implements Comparable<Edge<T>> {
     private tupleFlow: [number, number]; // [flowGiven, maxFlow]

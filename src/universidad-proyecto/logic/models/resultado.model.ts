@@ -1,4 +1,4 @@
-import type {SalonInput, TipoSalon} from "./input-base.js";
+import type {SalonInput, TipoSalon} from "./input-base";
 
 export interface AsignacionResultado {
     grupo: string;

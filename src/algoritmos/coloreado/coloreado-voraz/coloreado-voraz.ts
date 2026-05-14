@@ -1,5 +1,5 @@
-import { ColoredGraphAlgorithm } from "../coloreado.abstract.js";
-import { COLOR } from "../../../estructuras/vertex.js";
+import { ColoredGraphAlgorithm } from "../coloreado.abstract";
+import { COLOR } from "../../../estructuras/vertex";
 
 export class ColoreadorVoraz<T> extends ColoredGraphAlgorithm<T> {
 

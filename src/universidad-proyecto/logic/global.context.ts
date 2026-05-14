@@ -1,7 +1,7 @@
-import type {Graph} from "../../estructuras/graph/graph.js";
-import type {GrupoData} from "./models/grupo-data.model.js";
-import {CLASSROOM_TYPE} from "./models/classroom.types.js";
-import {type VertexID} from "../../estructuras/vertex.js";
+import type {Graph} from "../../estructuras/graph/graph";
+import type {GrupoData} from "./models/grupo-data.model";
+import {CLASSROOM_TYPE} from "./models/classroom.types";
+import {type VertexID} from "../../estructuras/vertex";
 
 export class GlobalContext {
 

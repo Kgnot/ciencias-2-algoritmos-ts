@@ -1,7 +1,7 @@
-import type { MateriaInput } from "../../../models/input-base.js";
-import type { FranjaHoraria } from "../../../models/franja-horaria.js";
-import type { GrupoData } from "../../../models/grupo-data.model.js";
-import { Vertex} from "../../../../../estructuras/vertex.js";
+import type { MateriaInput } from "../../../models/input-base";
+import type { FranjaHoraria } from "../../../models/franja-horaria";
+import type { GrupoData } from "../../../models/grupo-data.model";
+import { Vertex} from "../../../../../estructuras/vertex";
 
 
 /*

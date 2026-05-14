@@ -1,4 +1,4 @@
-import { GraphIndexer } from "../../estructuras/graph/graph_indexer.js";
+import { GraphIndexer } from "../../estructuras/graph/graph_indexer";
 
 export class BFS<T> {
 	constructor(

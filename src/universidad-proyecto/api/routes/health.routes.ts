@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {trycatch} from "../helpers/trycath.helper.js";
+import {trycatch} from "../helpers/trycath.helper";
 
 const router = Router();
 

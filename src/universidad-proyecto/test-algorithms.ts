@@ -1,12 +1,12 @@
-import { SchedulerDataLoader } from "./data/scheduler-data-loader.js";
-import { DSatur } from "../algoritmos/coloreado/D-Satur/d-satur.js";
-import { ColoreadorVoraz } from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
-import { WelshPowell } from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
-import { Graph } from "../estructuras/graph/graph.js";
-import { Vertex } from "../estructuras/vertex.js";
-import { Edge } from "../estructuras/edge.js";
-import type { GrupoData } from "./logic/models/grupo-data.model.js";
-import {ConflictGraphBuilder} from "./logic/schedule/conflict-graph/conflict-graph-builder.js";
+import { SchedulerDataLoader } from "./data/scheduler-data-loader";
+import { DSatur } from "../algoritmos/coloreado/D-Satur/d-satur";
+import { ColoreadorVoraz } from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz";
+import { WelshPowell } from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell";
+import { Graph } from "../estructuras/graph/graph";
+import { Vertex } from "../estructuras/vertex";
+import { Edge } from "../estructuras/edge";
+import type { GrupoData } from "./logic/models/grupo-data.model";
+import {ConflictGraphBuilder} from "./logic/schedule/conflict-graph/conflict-graph-builder";
 
 const loader        = SchedulerDataLoader.build();
 const scheduleInput = loader.getData();

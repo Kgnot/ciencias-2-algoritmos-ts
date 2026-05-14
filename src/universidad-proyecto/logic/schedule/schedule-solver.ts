@@ -1,14 +1,14 @@
-import {Graph} from "../../../estructuras/graph/graph.js";
-import type {GrupoData} from "../models/grupo-data.model.js";
-import type {SalonInput} from "../models/input-base.js";
-import {COLOR, Vertex, type VertexID} from "../../../estructuras/vertex.js";
-import {Edge} from "../../../estructuras/edge.js";
-import {GlobalContext} from "../global.context.js";
-import {CLASSROOM_TYPE} from "../models/classroom.types.js";
-import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur.js";
-import {WelshPowell} from "../../../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
-import {ColoreadorVoraz} from "../../../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
-import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract.js";
+import {Graph} from "../../../estructuras/graph/graph";
+import type {GrupoData} from "../models/grupo-data.model";
+import type {SalonInput} from "../models/input-base";
+import {COLOR, Vertex, type VertexID} from "../../../estructuras/vertex";
+import {Edge} from "../../../estructuras/edge";
+import {GlobalContext} from "../global.context";
+import {CLASSROOM_TYPE} from "../models/classroom.types";
+import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur";
+import {WelshPowell} from "../../../algoritmos/coloreado/Whelsh-Powell/whelsh-powell";
+import {ColoreadorVoraz} from "../../../algoritmos/coloreado/coloreado-voraz/coloreado-voraz";
+import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract";
 
 
 export class ScheduleSolver {

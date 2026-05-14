@@ -1,5 +1,5 @@
-import {StudentController} from "../controller/student.controller.js";
-import {trycatch} from "../helpers/trycath.helper.js";
+import {StudentController} from "../controller/student.controller";
+import {trycatch} from "../helpers/trycath.helper";
 import {Router} from "express";
 
 const router = Router();

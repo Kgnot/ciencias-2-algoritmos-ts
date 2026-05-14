@@ -1,7 +1,7 @@
-import type { Edge } from "../../../estructuras/edge.js";
-import type { Graph } from "../../../estructuras/graph/graph.js";
-import type { VertexID } from "../../../estructuras/vertex.js";
-import { UnionFind } from "./union-find.js";
+import type { Edge } from "../../../estructuras/edge";
+import type { Graph } from "../../../estructuras/graph/graph";
+import type { VertexID } from "../../../estructuras/vertex";
+import { UnionFind } from "./union-find";
 
 export class Kruskal<T> {
     private mstEdges: Edge<T>[] = [];

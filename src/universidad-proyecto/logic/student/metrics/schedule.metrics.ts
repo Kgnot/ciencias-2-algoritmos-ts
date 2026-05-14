@@ -1,5 +1,5 @@
-import type {BloqueEstudiante} from "../student.model.js";
-import type {DiaSemana} from "../../models/franja-horaria.js";
+import type {BloqueEstudiante} from "../student.model";
+import type {DiaSemana} from "../../models/franja-horaria";
 
 export class ScheduleMetrics {
 

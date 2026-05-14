@@ -1,14 +1,14 @@
-import { Graph } from "../estructuras/graph/graph.js";
-import {Vertex, COLOR, type VertexID} from "../estructuras/vertex.js";
-import { Edge } from "../estructuras/edge.js";
-import { ColoreadorVoraz } from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz.js";
-import { DSatur } from "../algoritmos/coloreado/D-Satur/d-satur.js";
-import { WelshPowell } from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell.js";
+import { Graph } from "../estructuras/graph/graph";
+import {Vertex, COLOR, type VertexID} from "../estructuras/vertex";
+import { Edge } from "../estructuras/edge";
+import { ColoreadorVoraz } from "../algoritmos/coloreado/coloreado-voraz/coloreado-voraz";
+import { DSatur } from "../algoritmos/coloreado/D-Satur/d-satur";
+import { WelshPowell } from "../algoritmos/coloreado/Whelsh-Powell/whelsh-powell";
 import {
     aplicarColoresAlGrafo,
     obtenerRepresentacionColores,
     toColoresVisuales
-} from "../estructuras/proyeccion/colores.js";
+} from "../estructuras/proyeccion/colores";
 
 // creamos cualquier grafo
 function crearGrafoEjemplo(): Graph<string> {

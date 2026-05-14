@@ -1,5 +1,5 @@
-import {ScheduleConstraint} from "./schedule-constraint.abstract.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
+import {ScheduleConstraint} from "./schedule-constraint.abstract";
+import type {AsignacionResultado} from "../../models/resultado.model";
 
 const MAX_FATIGA_PISOS = 10;
 

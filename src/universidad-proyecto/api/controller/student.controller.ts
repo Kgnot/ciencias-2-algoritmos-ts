@@ -1,7 +1,7 @@
 import type {Request, Response} from "express";
-import {SchedulerDataLoader} from "../../data/scheduler-data-loader.js";
-import {StudentService} from "../service/student.service.js";
-import {ScheduleService} from "../service/schedule.service.js";
+import {SchedulerDataLoader} from "../../data/scheduler-data-loader";
+import {StudentService} from "../service/student.service";
+import {ScheduleService} from "../service/schedule.service";
 
 const studentService = StudentService.getInstance();
 const scheduleService = ScheduleService.getInstance();

@@ -1,10 +1,10 @@
-import type {Vertex} from "../../../../estructuras/vertex.js";
-import {type FranjaHoraria, generarFranjas} from "../../models/franja-horaria.js";
-import {Graph} from "../../../../estructuras/graph/graph.js";
-import type {GrupoData} from "../../models/grupo-data.model.js";
-import type {ScheduleInput} from "../../models/input-base.js";
+import type {Vertex} from "../../../../estructuras/vertex";
+import {type FranjaHoraria, generarFranjas} from "../../models/franja-horaria";
+import {Graph} from "../../../../estructuras/graph/graph";
+import type {GrupoData} from "../../models/grupo-data.model";
+import type {ScheduleInput} from "../../models/input-base";
 import {TimeSlotAllocator} from "./allocator/time-slot-allocator";
-import {EdgeCreator} from "./edge-creator.js";
+import {EdgeCreator} from "./edge-creator";
 import {TimeSlotOccupancy} from "./allocator/time-slot-occupancy";
 
 

@@ -1,16 +1,16 @@
 // Ejemplo completo de uso de los algoritmos de caminos mínimos
 
-import {Graph} from "../estructuras/graph/graph.js";
-import {Vertex} from "../estructuras/vertex.js";
-import {Edge} from "../estructuras/edge.js";
-import {toIncidenceMatrix} from "../estructuras/proyeccion/incidence_matrix.js";
-import {toIncidenceList} from "../estructuras/proyeccion/incidence_list.js";
-import {Dijkstra} from "../algoritmos/camino-corto/Dijkstra/dijkstra.js";
-import {BellmanFord} from "../algoritmos/camino-corto/Bellman-ford/bellman_ford.js";
-import {FloydWarshall} from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall.js";
-import {toAdjacencyMatrix} from "../estructuras/proyeccion/adjacency_matrix.js";
-import {toAdjacencyList} from "../estructuras/proyeccion/adjacency_list.js";
-import {FordFulkerson} from "../algoritmos/flujo/ford-fulkerson/ford-fulkerson.js";
+import {Graph} from "../estructuras/graph/graph";
+import {Vertex} from "../estructuras/vertex";
+import {Edge} from "../estructuras/edge";
+import {toIncidenceMatrix} from "../estructuras/proyeccion/incidence_matrix";
+import {toIncidenceList} from "../estructuras/proyeccion/incidence_list";
+import {Dijkstra} from "../algoritmos/camino-corto/Dijkstra/dijkstra";
+import {BellmanFord} from "../algoritmos/camino-corto/Bellman-ford/bellman_ford";
+import {FloydWarshall} from "../algoritmos/camino-corto/floyd-warshall/floyd_warshall";
+import {toAdjacencyMatrix} from "../estructuras/proyeccion/adjacency_matrix";
+import {toAdjacencyList} from "../estructuras/proyeccion/adjacency_list";
+import {FordFulkerson} from "../algoritmos/flujo/ford-fulkerson/ford-fulkerson";
 
 export function ejecutarEjemplo() {
     console.log("=".repeat(60));

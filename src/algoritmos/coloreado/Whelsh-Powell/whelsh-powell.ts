@@ -1,6 +1,6 @@
-import type { Vertex, VertexID } from "../../../estructuras/vertex.js";
-import { COLOR } from "../../../estructuras/vertex.js";
-import { ColoredGraphAlgorithm } from "../coloreado.abstract.js";
+import type { Vertex, VertexID } from "../../../estructuras/vertex";
+import { COLOR } from "../../../estructuras/vertex";
+import { ColoredGraphAlgorithm } from "../coloreado.abstract";
 
 export class WelshPowell<T> extends ColoredGraphAlgorithm<T> {
 

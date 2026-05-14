@@ -1,7 +1,7 @@
-import type { HorarioSemanal } from "../../logic/schedule/scheduler-builder.js";
-import type { SalonInput } from "../../logic/models/input-base.js";
-import type { StudentScheduleRequest, StudentScheduleResponse } from "../../logic/student/student.model.js";
-import { StudentScheduleSolver } from "../../logic/student/student-schedule.solver.js";
+import type { HorarioSemanal } from "../../logic/schedule/scheduler-builder";
+import type { SalonInput } from "../../logic/models/input-base";
+import type { StudentScheduleRequest, StudentScheduleResponse } from "../../logic/student/student.model";
+import { StudentScheduleSolver } from "../../logic/student/student-schedule.solver";
 
 export class StudentService {
 

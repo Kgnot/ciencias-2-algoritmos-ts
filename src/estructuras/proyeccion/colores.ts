@@ -1,5 +1,5 @@
-import type {Graph} from "../graph/graph.js";
-import {COLOR, VertexID} from "../vertex.js";
+import type {Graph} from "../graph/graph";
+import {COLOR, VertexID} from "../vertex";
 
 /**
  * Mapeo de números a colores disponibles

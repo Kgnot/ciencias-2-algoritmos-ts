@@ -1,5 +1,5 @@
-import {ScheduleConstraint} from "./schedule-constraint.abstract.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
+import {ScheduleConstraint} from "./schedule-constraint.abstract";
+import type {AsignacionResultado} from "../../models/resultado.model";
 
 // Si ya se eligió un grupo para una materia, solo aceptar ese grupo
 export class ConsistentGroupConstraint extends ScheduleConstraint {

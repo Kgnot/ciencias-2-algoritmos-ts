@@ -1,4 +1,4 @@
-import type {Comparable} from "./utils/Comparable.js";
+import type {Comparable} from "./utils/Comparable";
 
 export enum COLOR {
     RED = "red",

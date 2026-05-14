@@ -1,6 +1,6 @@
-import {ScheduleConstraint} from "./schedule-constraint.abstract.js";
-import type {AsignacionResultado} from "../../models/resultado.model.js";
-import {seSolapan, type DiaSemana} from "../../models/franja-horaria.js";
+import {ScheduleConstraint} from "./schedule-constraint.abstract";
+import type {AsignacionResultado} from "../../models/resultado.model";
+import {seSolapan, type DiaSemana} from "../../models/franja-horaria";
 
 // Dos bloques en el mismo día no pueden solaparse en horario
 export class NoOverlapConstraint extends ScheduleConstraint {

@@ -1,9 +1,9 @@
-import type {Graph} from "../../../estructuras/graph/graph.js";
-import type {GrupoData} from "../models/grupo-data.model.js";
-import type {DiaSemana} from "../models/franja-horaria.js";
-import type {SalonInput} from "../models/input-base.js";
-import {ScheduleSolver} from "./schedule-solver.js";
-import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract.js";
+import type {Graph} from "../../../estructuras/graph/graph";
+import type {GrupoData} from "../models/grupo-data.model";
+import type {DiaSemana} from "../models/franja-horaria";
+import type {SalonInput} from "../models/input-base";
+import {ScheduleSolver} from "./schedule-solver";
+import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract";
 
 export interface HorarioClase {
     vertexId: string;

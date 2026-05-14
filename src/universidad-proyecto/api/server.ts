@@ -1,8 +1,8 @@
 import express from "express";
-import { corsMiddleware } from "./middleware/cors.middleware.js";
-import studentRoutes from "./routes/student.routes.js";
-import healthRoutes from "./routes/health.routes.js";
-import scheduleRouters from "./routes/schedule.routers.js";
+import { corsMiddleware } from "./middleware/cors.middleware";
+import studentRoutes from "./routes/student.routes";
+import healthRoutes from "./routes/health.routes";
+import scheduleRouters from "./routes/schedule.routers";
 
 export class SchedulerApiServer {
     private readonly app = express();

@@ -1,7 +1,7 @@
-import {SchedulerDataLoader} from "../../data/scheduler-data-loader.js";
-import {ConflictGraphBuilder} from "../../logic/schedule/conflict-graph/conflict-graph-builder.js";
-import {type HorarioSemanal, ScheduleBuilder} from "../../logic/schedule/scheduler-builder.js";
-import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur.js";
+import {SchedulerDataLoader} from "../../data/scheduler-data-loader";
+import {ConflictGraphBuilder} from "../../logic/schedule/conflict-graph/conflict-graph-builder";
+import {type HorarioSemanal, ScheduleBuilder} from "../../logic/schedule/scheduler-builder";
+import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur";
 
 export interface GrafoStats {
     vertices: number;

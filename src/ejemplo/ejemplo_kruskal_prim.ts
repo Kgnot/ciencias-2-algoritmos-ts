@@ -1,8 +1,8 @@
-import {Kruskal} from "../algoritmos/arbol-expancion-minima/kruskal/kurskal.js";
-import {Prim} from "../algoritmos/arbol-expancion-minima/prim/prim.js";
-import {Edge} from "../estructuras/edge.js";
-import {Graph} from "../estructuras/graph/graph.js";
-import {Vertex} from "../estructuras/vertex.js";
+import {Kruskal} from "../algoritmos/arbol-expancion-minima/kruskal/kurskal";
+import {Prim} from "../algoritmos/arbol-expancion-minima/prim/prim";
+import {Edge} from "../estructuras/edge";
+import {Graph} from "../estructuras/graph/graph";
+import {Vertex} from "../estructuras/vertex";
 
 const crearGrafo = () => {
     const graph = new Graph<string>(true);

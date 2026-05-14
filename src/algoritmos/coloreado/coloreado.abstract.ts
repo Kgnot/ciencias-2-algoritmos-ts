@@ -1,7 +1,7 @@
-import {COLOR, type VertexID} from "../../estructuras/vertex.js";
-import type {Graph} from "../../estructuras/graph/graph.js";
-import type {Edge} from "../../estructuras/edge.js";
-import {toIncidenceList, toUndirectedAdjacency} from "../../estructuras/proyeccion/incidence_list.js";
+import {COLOR, type VertexID} from "../../estructuras/vertex";
+import type {Graph} from "../../estructuras/graph/graph";
+import type {Edge} from "../../estructuras/edge";
+import {toIncidenceList, toUndirectedAdjacency} from "../../estructuras/proyeccion/incidence_list";
 
 export abstract class ColoredGraphAlgorithm<T> {
     protected colorMap: Map<VertexID, COLOR | string> = new Map();
