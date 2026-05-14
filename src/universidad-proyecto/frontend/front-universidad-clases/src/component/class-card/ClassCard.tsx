@@ -1,31 +1,31 @@
 import './ClassCard.css'
 import type {ClassItem} from "../../hooks/useSchedule.ts";
-import { extractCareerCode, getCareerColors } from "../../utils/careerColors";
+import {extractCareerCode, getCareerColors} from "../../utils/careerColors";
 
 interface Props {
     item: ClassItem;
 }
 
-export default function ClassCard({ item }: Props) {
+export default function ClassCard({item}: Props) {
     const careerCode = extractCareerCode(item.vertexId);
     const colors = getCareerColors(item.vertexId);
 
     const salonInfo = item.salonDetalle;
     const isLaboratorio = item.tipo === "laboratorio";
 
+    const careerClass = item.vertexId.startsWith("SIS") ? "class-card--sis"
+        : item.vertexId.startsWith("ELE") ? "class-card--ele"
+            : item.vertexId.startsWith("IND") ? "class-card--ind"
+                : "";
+
+
     return (
-        <div
-            className={`class-card class-card--${isLaboratorio ? 'laboratorio' : 'normal'}`}
-            style={{
-                borderLeft: `4px solid ${colors.border}`,
-                backgroundColor: colors.bg,
-            }}
-        >
+        <div className={`class-card ${careerClass} ${isLaboratorio ? "class-card--laboratorio" : ""}`}>
             {/* Career Badge */}
             {careerCode && (
                 <span
                     className="class-card__career"
-                    style={{ backgroundColor: colors.border, color: 'white' }}
+                    style={{backgroundColor: colors.border, color: 'white'}}
                 >
                     {careerCode}
                 </span>
@@ -33,7 +33,7 @@ export default function ClassCard({ item }: Props) {
 
             {/* Header */}
             <div className="class-card__header">
-                <span className="class-card__materia" style={{ color: colors.text }}>
+                <span className="class-card__materia" style={{color: colors.text}}>
                     {item.materia}
                 </span>
                 <span className={`class-card__badge class-card__badge--${isLaboratorio ? 'laboratorio' : 'normal'}`}>
