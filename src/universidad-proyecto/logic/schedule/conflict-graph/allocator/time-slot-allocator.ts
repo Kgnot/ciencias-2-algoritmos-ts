@@ -1,10 +1,10 @@
-import type {MateriaInput} from "../../models/input-base.js";
-import type {FranjaHoraria} from "../../models/franja-horaria.js";
-import {Graph} from "../../../../estructuras/graph/graph.js";
-import type {GrupoData} from "../../models/grupo-data.model.js";
-import {Vertex} from "../../../../estructuras/vertex.js";
-import type {TimeSlotOccupancy} from "./time-slot-occupancy.js";
-import {VertexFactory} from "./vertex-factory.js";
+import type {MateriaInput} from "../../../models/input-base.js";
+import type {FranjaHoraria} from "../../../models/franja-horaria.js";
+import {Graph} from "../../../../../estructuras/graph/graph.js";
+import type {GrupoData} from "../../../models/grupo-data.model.js";
+import {Vertex} from "../../../../../estructuras/vertex.js";
+import type {TimeSlotOccupancy} from "./time-slot-occupancy";
+import {VertexFactory} from "./vertex-factory";
 
 /*
  * TimeSlotAllocator — núcleo de asignación de franjas horarias.

@@ -3,9 +3,9 @@ import {type FranjaHoraria, generarFranjas} from "../../models/franja-horaria.js
 import {Graph} from "../../../../estructuras/graph/graph.js";
 import type {GrupoData} from "../../models/grupo-data.model.js";
 import type {ScheduleInput} from "../../models/input-base.js";
-import {TimeSlotAllocator} from "./time-slot-allocator.js";
+import {TimeSlotAllocator} from "./allocator/time-slot-allocator";
 import {EdgeCreator} from "./edge-creator.js";
-import {TimeSlotOccupancy} from "./time-slot-occupancy.js";
+import {TimeSlotOccupancy} from "./allocator/time-slot-occupancy";
 
 
 /*

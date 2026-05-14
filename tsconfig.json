@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "target": "esnext",
-    "moduleDetection": "force",
-    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,

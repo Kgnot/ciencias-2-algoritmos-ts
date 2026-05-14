@@ -1,4 +1,4 @@
-import type {FranjaHoraria} from "../../models/franja-horaria.js";
+import type {FranjaHoraria} from "../../../models/franja-horaria.js";
 
 export interface SlotUsage {
     normal: number;
