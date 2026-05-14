@@ -1,4 +1,4 @@
-import rawData from "./data2.json";
+import rawData from "./data.json";
 import type {MateriaInput, SalonInput, ScheduleInput} from "../logic/models/input-base";
 
 
