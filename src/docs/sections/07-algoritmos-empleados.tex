@@ -1,0 +1,22 @@
+\chapter{Algoritmos empleados}
+
+\section{Ruta principal del proyecto}
+
+La solución usa dos algoritmos en la ruta principal:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item \textbf{Coloreo de grafos}: se usa para asignar salones al horario global. El solucionador global recibe el grafo de conflictos y produce una asignación compatible con el tipo de salón.
+  \item \textbf{Dijkstra}: se usa en la planificación estudiantil para construir un horario personalizado cuando se necesita minimizar el costo de desplazamiento y la fatiga.
+\end{itemize}
+
+\section{Coloreo global}
+
+El horario global se construye con el solucionador que opera sobre el grafo de conflictos. En el código se utiliza D-Satur como estrategia principal dentro de la capa de servicio global.
+
+\section{Planificación estudiantil}
+
+El horario de estudiante se genera a partir del horario global y del conjunto de materias solicitado. La estructura de costos se resuelve con un solver que puede encadenar estrategias, pero la lógica central documentada aquí es la búsqueda de menor costo sobre las alternativas disponibles.
+
+\section{Otras heurísticas presentes en el repositorio}
+
+También existen implementaciones de Welsh‑Powell y coloreo voraz en la carpeta de algoritmos. Permanecen en el repositorio como alternativas de código, pero esta documentación se concentra en la ruta que usa el sistema al generar el horario.

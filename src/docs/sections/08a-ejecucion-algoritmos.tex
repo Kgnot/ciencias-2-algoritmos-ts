@@ -1,0 +1,57 @@
+\chapter{Ejecución de algoritmos}
+
+\section{Construcción del horario global}
+
+El horario global se construye a partir de los datos cargados, el grafo de conflictos y el solucionador principal.
+
+\begin{lstlisting}[language=TypeScript,caption={Flujo principal del horario global}]
+const input = SchedulerDataLoader.build().getData();
+const { graph } = new ConflictGraphBuilder(input).build();
+const algoritmo = new DSatur<GrupoData>(graph, input.salones.map(s => s.id));
+const horario = new ScheduleBuilder(graph, input.salones).buildHorario(algoritmo);
+\end{lstlisting}
+
+\section{Uso de constraints durante la asignación}
+
+Antes de aceptar una franja o un bloque, el sistema consulta los verificadores de restricciones. Cada restricción concreta extiende una clase abstracta y devuelve si la asignación es válida.
+
+\begin{lstlisting}[language=TypeScript,caption={Consulta de restricciones}]
+const checker = new AllocatorConstraintChecker(dayConstraints, slotConstraints);
+const dayResult = checker.checkDay(dia, materia, asignadas, contexto);
+const slotResult = checker.checkSlot(franja, materia, asignadas, true);
+\end{lstlisting}
+
+\section{Planificación estudiantil}
+
+Cuando llega una solicitud de estudiante, el controlador valida el body, carga el horario global y delega la construcción al servicio de estudiantes.
+
+\begin{lstlisting}[language=TypeScript,caption={Controlador de horarios de estudiante}]
+async createSchedule(req: Request, res: Response): Promise<void> {
+  const body = req.body;
+  if (!body.estudianteId || !Array.isArray(body.materias) || body.materias.length === 0) {
+    res.status(400).json({success: false, error: "Se requiere estudianteId y materias[]."});
+    return;
+  }
+
+  const input = SchedulerDataLoader.build().getData();
+  const horario = await scheduleService.getHorarioGlobal();
+  const resultado = await studentService.createSchedule(horario, input.salones, body);
+  res.json({success: true, data: resultado});
+}
+\end{lstlisting}
+
+\section{Recuperación de datos ya calculados}
+
+El servicio de horario global mantiene caché en memoria y el servicio de estudiantes guarda el resultado por ID. Eso permite devolver el horario sin recalcular todo el grafo en cada solicitud.
+
+\begin{lstlisting}[language=TypeScript,caption={Caché de horario global}]
+async getHorarioGlobal(): Promise<HorarioSemanal> {
+  if (this.horarioGlobal) return this.horarioGlobal;
+  const input = SchedulerDataLoader.build().getData();
+  const { graph } = new ConflictGraphBuilder(input).build();
+  const algoritmo = new DSatur<GrupoData>(graph, input.salones.map(s => s.id));
+  const horario = new ScheduleBuilder(graph, input.salones).buildHorario(algoritmo);
+  this.horarioGlobal = horario;
+  return horario;
+}
+\end{lstlisting}

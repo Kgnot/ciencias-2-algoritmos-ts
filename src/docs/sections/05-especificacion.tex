@@ -1,0 +1,34 @@
+\chapter{Especificación técnica}
+
+\section{Problema seleccionado}
+
+Asignación de salones y franjas horarias a bloques académicos. Cada bloque necesita un salón compatible con su tipo y no puede coincidir con otros bloques que compartan estudiantes, profesor o franja horaria.
+
+\section{Cómo se modela en el código}
+
+El proyecto representa cada bloque como un vértice y cada conflicto como una arista. Los salones disponibles se usan como identificadores de asignación. El constructor del grafo recibe materias, grupos y salones, y devuelve la estructura que después consume el solucionador de horarios.
+
+La implementación que genera el horario global se apoya en tres piezas:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item el cargador de datos, que normaliza el JSON de entrada;
+  \item el constructor del grafo de conflictos, que detecta incompatibilidades;
+  \item el solucionador global, que asigna salones y produce el horario semanal.
+\end{itemize}
+
+\section{Algoritmos seleccionados}
+
+El proyecto usa dos familias de algoritmos en la ruta principal:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item coloreo de grafos para la asignación global de salones;
+  \item Dijkstra para construir horarios personalizados de estudiantes cuando se necesitan rutas de menor costo entre clases.
+\end{itemize}
+
+\section{Entrada y salida}
+
+Entrada: archivos JSON con materias, salones y franjas. Salida: horario semanal global y horarios individuales para estudiantes, ambos en estructuras JSON/TypeScript que pueden consumirse desde la API.
+
+\section{Validación básica}
+
+Con los datos incluidos en el repositorio se puede generar un horario global y recuperar la información del grafo. Para horarios estudiantiles, la validación consiste en revisar que el conjunto de materias solicitado tenga una asignación compatible y que no exista solapamiento entre bloques.

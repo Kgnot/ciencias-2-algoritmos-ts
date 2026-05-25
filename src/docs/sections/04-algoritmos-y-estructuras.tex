@@ -1,0 +1,230 @@
+\chapter{Algoritmos y estructuras de apoyo}
+
+\section{Propósito}
+
+Proveer una base estable y tipada para implementar algoritmos de grafos y construir el grafo de conflictos. El uso de \textbf{TypeScript} facilita genéricos, interfaces y trazabilidad de tipos.
+
+\section{Estructuras fundamentales}
+
+\subsection{\texttt{Vertex\textless T\textgreater}}
+\begin{lstlisting}[language=TypeScript,caption={Definición simplificada de Vertex\textless T\textgreater}]
+export class Vertex<T> {
+  constructor(public readonly id: string, private value: T, private color?: string) {}
+  getValue(): T { return this.value; }
+  setColor(c: string) { this.color = c; }
+  getColor(): string | undefined { return this.color; }
+    \subsection{Visión general y contrato base}
+
+    Las restricciones (constraints) del sistema se modelan como clases que implementan contratos abstractos. Para mantener claridad se separan dos ámbitos:
+
+    \begin{itemize}
+      \item Allocator (encargado de asignar franjas y días a las materias): restricciones de \textbf{día} y restricciones de \textbf{franja} (slot).
+      \item Student (encargado de verificar horarios por estudiante): restricciones aplicadas al horario final del estudiante.
+    \end{itemize}
+
+    Los contratos base son los siguientes:
+    \begin{lstlisting}[language=TypeScript,caption={Contratos base para restricciones de asignación}]
+    export abstract class DayConstraint {
+      abstract name: string;
+      abstract isSatisfied(day: string, materia: MateriaInput, assigned: FranjaHoraria[], ctx: DayConstraintContext): boolean;
+    }
+
+    export abstract class SlotConstraint {
+      abstract name: string;
+      abstract isSatisfied(franja: FranjaHoraria, materia: MateriaInput, assigned: FranjaHoraria[], strict: boolean): boolean;
+    }
+    \end{lstlisting}
+
+    Y para restricciones sobre horarios de estudiantes:
+    \begin{lstlisting}[language=TypeScript,caption={Contrato base para restricciones de horarios estudiantiles}]
+    export abstract class ScheduleConstraint {
+      abstract name: string;
+      abstract isSatisfied(candidate: AsignacionResultado, confirmed: AsignacionResultado[], grupoElegido: Map<string, string>): boolean;
+    }
+    \end{lstlisting}
+
+    \subsection{Listado de restricciones (resumen)}
+
+    Para facilitar la lectura listamos las restricciones agrupadas por ámbito y tipo. Las referencias entre corchetes corresponden a los códigos usados en el repositorio.
+
+    \paragraph{Allocator - Day constraints}
+    \begin{itemize}
+      \item \texttt{NoRepeatedDay [R2]}: Un mismo grupo no puede tener dos bloques el mismo día.
+      \item \texttt{NoConsecutiveDay [R3]}: Materias de 3 créditos no pueden tener días consecutivos.
+      \item \texttt{MinDayDistance [R5]}: Materias de 4 créditos requieren distancia mínima entre días.
+      \item \texttt{NoHeavyDaySaturation [R8]}: Evitar saturar un día con materias pesadas del mismo semestre/carrera.
+    \end{itemize}
+
+    \paragraph{Allocator - Slot constraints}
+    \begin{itemize}
+      \item \texttt{NoRepeatedSlotNumber [R4]}: Materias de 2 créditos no repiten número de franja.
+      \item \texttt{LabPrefersAfternoon [R7]}: Laboratorios prefieren franjas de tarde (aplicable en pasada estricta).
+      \item \texttt{HeavyHourRange [R6]}: Materias 3+ créditos solo entre horas permitidas (ej. 08:00-20:00).
+      \item \texttt{NoConsecutiveSlot [R9]}: No permitir franjas numéricamente consecutivas dentro del mismo día.
+    \end{itemize}
+
+    \paragraph{Student constraints}
+    \begin{itemize}
+      \item \texttt{NoOverlap}: Evitar solapamientos temporales entre bloques confirmados.
+      \item \texttt{NoGroupRepetition}: Un mismo grupo no puede aparecer dos veces en el mismo día.
+      \item \texttt{ConsistentGroup}: Si se eligió un grupo para una materia, aceptar sólo ese grupo.
+      \item \texttt{NoImmediateSedeChange}: No cambiar de sede en bloques inmediatamente consecutivos.
+      \item \texttt{MaxSubjectsPerDay}: Límite de materias distintas por día en el horario del estudiante.
+      \item \texttt{MaxFatigue}: Límite de "fatiga" (distancia) entre bloques según un mapa de distancias.
+    \end{itemize}
+
+\subsection{Diagrama de clases (restricciones)}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\textwidth]{images/constraints-class-diagram.png}
+  \caption{Diagrama de clases resumen de las restricciones (abstractas y concretas) — tanto para asignación (Allocator) como para horarios estudiantiles (Student)}
+  \label{fig:constraints-class-diagram}
+\end{figure}
+
+\subsection{Uso de imágenes (rutas y URLs)}
+
+El informe referencia diagramas e imágenes que pueden servirse desde rutas relativas locales o URLs remotas. En este repositorio utilizamos rutas relativas (referenciando la carpeta \texttt{images/}) para asegurar reproducibilidad; si requieres servirlas desde URLs remotas, basta cambiar las referencias de forma sistemática. Ejemplo de URL alternativa:
+
+\begin{verbatim}
+\includegraphics[width=0.9\textwidth]{https://mi-servidor.org/diagrams/constraints-class-diagram.png}
+\end{verbatim}
+
+    \subsection{Implementación: verificador (Allocator)}
+
+    El verificador de allocator agrupa reglas de día y de franja y las evalúa antes de aceptar una asignación:
+    \begin{lstlisting}[language=TypeScript,caption={Verificador de restricciones (Allocator)}]
+    export class AllocatorConstraintChecker {
+      constructor(private readonly dayConstraints: DayConstraint[], private readonly slotConstraints: SlotConstraint[]) {}
+
+      checkDay(day: string, materia: MateriaInput, assigned: FranjaHoraria[], ctx: DayConstraintContext) {
+        for (const c of this.dayConstraints) {
+          if (!c.isSatisfied(day, materia, assigned, ctx)) return { passes: false, failedConstraint: c.name };
+        }
+        return { passes: true };
+      }
+
+      checkSlot(franja: FranjaHoraria, materia: MateriaInput, assigned: FranjaHoraria[], strict: boolean): boolean {
+        return this.slotConstraints.every(c => c.isSatisfied(franja, materia, assigned, strict));
+      }
+    }
+    \end{lstlisting}
+
+    \subsection{Implementación: verificador (Student)}
+
+    El verificador de horarios estudiantiles evalúa restricciones que operan sobre el conjunto de asignaciones confirmadas del estudiante:
+    \begin{lstlisting}[language=TypeScript,caption={Verificador de restricciones (Student)}]
+    export class ConstraintChecker {
+      constructor(private readonly constraints: ScheduleConstraint[]) {}
+
+      check(candidate: AsignacionResultado, confirmed: AsignacionResultado[], grupoElegido: Map<string, string>) {
+        for (const constraint of this.constraints) {
+          if (!constraint.isSatisfied(candidate, confirmed, grupoElegido)) {
+            return { passes: false, failedConstraint: constraint.name };
+          }
+        }
+        return { passes: true };
+      }
+    }
+    \end{lstlisting}
+
+    \subsection{Ejemplos concretos}
+
+    Un par de implementaciones concretas, extraídas del código base, para ilustrar el patrón:
+
+    \begin{lstlisting}[language=TypeScript,caption={Restricción concreta: preferencia de laboratorio por la tarde}]
+    export class LabPrefersAfternoonConstraint extends SlotConstraint {
+      name = "LabPrefersAfternoon [R7]";
+
+      isSatisfied(franja: FranjaHoraria, materia: MateriaInput, _assigned: FranjaHoraria[], strict: boolean): boolean {
+        if (!strict || materia.tipo !== "laboratorio") return true;
+        const hora = parseInt(franja.inicio.split(":")[0] ?? "0", 10);
+        return hora >= 10;
+      }
+    }
+    \end{lstlisting}
+
+    \begin{lstlisting}[language=TypeScript,caption={Restricción concreta: no solapamiento (student)}]
+    export class NoOverlapConstraint extends ScheduleConstraint {
+      name = "NoOverlap";
+
+      isSatisfied(candidate: AsignacionResultado, confirmed: AsignacionResultado[]): boolean {
+        return !confirmed.some(c => this.sesolapan(c, candidate));
+      }
+    }
+    \end{lstlisting}
+
+    \subsection{Buenas prácticas y organización}
+
+    Para que el informe sea legible y útil en su conjunto sugiero:
+    \begin{itemize}
+      \item Mantener la distinción entre "allocator" y "student" en todos los ejemplos y diagramas.
+      \item Documentar cada restricción con su propósito, ejemplos de entrada/salida y código mínimo (como se hizo arriba).
+      \item Centralizar los diagramas en la carpeta \texttt{images/} y preferir rutas relativas para reproducibilidad; opcionalmente indicar URL alternativas.
+    \end{itemize}
+
+    Si quieres, puedo:
+    \begin{enumerate}
+      \item Cambiar todas las referencias de imágenes a URLs remotas.
+      \item Extraer los listados de restricciones a anexos individuales (uno por cada restricción) para mantener la sección principal más concisa.
+      \item Generar un índice detallado de clases/archivos del repositorio para que el lector pueda localizar la implementación exacta (por ejemplo: \texttt{src/universidad-proyecto/logic/schedule/...}).
+    \end{enumerate}
+
+    Dime cuál de estas opciones prefieres y la aplico.
+  }
+
+  checkSlot(franja: FranjaHoraria, materia: MateriaInput, assigned: FranjaHoraria[], strict: boolean): boolean {
+    return this.slotConstraints.every(c => c.isSatisfied(franja, materia, assigned, strict));
+  }
+}
+\end{lstlisting}
+
+\subsection{Ejemplo concreto: preferencia de laboratorio por la tarde}
+\begin{lstlisting}[language=TypeScript,caption={Restricción concreta de laboratorio}]
+export class LabPrefersAfternoonConstraint extends SlotConstraint {
+  name = "LabPrefersAfternoon [R7]";
+
+  isSatisfied(franja: FranjaHoraria, materia: MateriaInput, _assigned: FranjaHoraria[], strict: boolean): boolean {
+    if (!strict || materia.tipo !== "laboratorio") return true;
+    const hora = parseInt(franja.inicio.split(":")[0] ?? "0", 10);
+    return hora >= 10;
+  }
+}
+\end{lstlisting}
+
+\section{Constraints para horarios estudiantiles}
+
+Los horarios de estudiante usan un verificador separado. La estructura es equivalente: una clase abstracta, clases concretas y un chequeo central.
+
+\begin{lstlisting}[language=TypeScript,caption={Verificador de restricciones estudiantiles}]
+export abstract class ScheduleConstraint {
+  abstract name: string;
+  abstract isSatisfied(candidate: AsignacionResultado, confirmed: AsignacionResultado[], grupoElegido: Map<string, string>): boolean;
+}
+
+export class ConstraintChecker {
+  constructor(private readonly constraints: ScheduleConstraint[]) {}
+
+  check(candidate: AsignacionResultado, confirmed: AsignacionResultado[], grupoElegido: Map<string, string>) {
+    for (const constraint of this.constraints) {
+      if (!constraint.isSatisfied(candidate, confirmed, grupoElegido)) {
+        return { passes: false, failedConstraint: constraint.name };
+      }
+    }
+    return { passes: true };
+  }
+}
+\end{lstlisting}
+
+\subsection{Ejemplo concreto: no solapamiento}
+\begin{lstlisting}[language=TypeScript,caption={Restricción concreta de no solapamiento}]
+export class NoOverlapConstraint extends ScheduleConstraint {
+  name = "NoOverlap";
+
+  isSatisfied(candidate: AsignacionResultado, confirmed: AsignacionResultado[]): boolean {
+    return !confirmed.some(c => this.sesolapan(c, candidate));
+  }
+}
+\end{lstlisting}
+
+Con esta estructura, una nueva restricción se agrega creando una clase que implemente el contrato y registrándola en el verificador correspondiente.

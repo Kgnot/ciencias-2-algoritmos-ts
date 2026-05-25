@@ -1,0 +1,23 @@
+\chapter{Modelado del problema}
+
+\section{Descripción del conflicto}
+
+El sistema trabaja con bloques académicos que deben ubicarse en salones y franjas horarias. Un bloque no puede compartir franja con otro bloque que use los mismos recursos o que implique conflicto de estudiantes, profesor o tipo de salón.
+
+\section{Interpretación del grafo}
+
+Cada bloque se convierte en un nodo del grafo. Cuando dos bloques no pueden convivir en el mismo horario o en el mismo salón, se agrega una conexión de conflicto entre ellos. Los salones disponibles se usan como etiquetas de asignación para decidir dónde queda cada bloque.
+
+\section{Reglas que aplica el código}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item materias tipo laboratorio solo pueden ir a salones de laboratorio;
+  \item materias normales solo pueden ir a salones normales;
+  \item bloques con choque de horario se consideran incompatibles;
+  \item los bloques personalizados de estudiante no pueden superponerse;
+  \item el sistema mantiene en memoria el horario ya calculado para evitar recomputaciones innecesarias.
+\end{itemize}
+
+\section{Resultado esperado}
+
+El resultado es un horario válido que asigna un salón a cada bloque y permite recuperar tanto el horario global como el horario por estudiante desde la API.

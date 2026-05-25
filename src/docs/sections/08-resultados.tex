@@ -1,0 +1,23 @@
+\chapter{Verificación básica del horario}
+
+\section{Instancia utilizada}
+
+Se usa una de las instancias incluidas en el repositorio para construir el horario global y consultar la información del grafo. La validación consiste en comprobar que el sistema retorna un horario completo y que la API responde con datos estructurados en JSON.
+
+\section{Comprobación del horario global}
+
+El flujo esperado es:
+\begin{itemize}[leftmargin=1.5cm]
+  \item cargar datos desde el archivo JSON;
+  \item construir el grafo de conflictos;
+  \item asignar salones con el solucionador principal;
+  \item devolver el horario global desde \texttt{/schedule}.
+\end{itemize}
+
+\section{Comprobación del horario de estudiante}
+
+Con una solicitud válida a \texttt{/student/schedule}, el sistema devuelve los bloques asignados, el identificador del estudiante y las métricas internas del horario personal. Si el estudiante ya fue procesado, \texttt{/student/schedule/:estudianteId} recupera el resultado guardado en memoria.
+
+\section{Lectura de la validación}
+
+La verificación demuestra que el repositorio construye horarios funcionales y permite recuperarlos por API. No se documenta aquí una comparación entre estrategias; la documentación se centra en el comportamiento operativo del sistema.

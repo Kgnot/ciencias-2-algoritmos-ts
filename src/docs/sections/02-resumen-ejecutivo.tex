@@ -1,0 +1,13 @@
+\chapter{Resumen ejecutivo}
+
+Se presenta una solución técnica para asignación de salones y generación de horarios en la Facultad de Ingeniería basada en grafos. El enfoque combina:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item construcción de un grafo de conflictos a partir de datos institucionales;
+  \item aplicación de heurísticas de coloreo (D-Satur, Welsh‑Powell, voraz) para asignar salones;
+  \item uso de Dijkstra y estrategias de respaldo para generar horarios estudiantiles que minimicen fatiga y cambios de sede;
+  \item exposición de resultados mediante API REST y visualización en una SPA React.
+\end{itemize}
+
+Resultados claves: la pipeline permite comparar estrategias, validar soluciones y producir artefactos reproducibles (salidas JSON y métricas por escenario). Se proponen tres escenarios de evaluación: dos basados en datasets incluidos y uno simulado de mayor densidad conflictiva.
+

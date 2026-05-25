@@ -1,0 +1,91 @@
+\chapter{Desglose de \texttt{src/universidad-proyecto}}
+
+\section{Resumen funcional}
+
+La carpeta \texttt{src/universidad-proyecto} contiene la solución aplicada completa: cargadores de datos, construcción del grafo de conflictos, solucionadores, API y frontend. El flujo principal de ejecución es:
+
+\begin{enumerate}[leftmargin=1.5cm]
+  \item Carga y normalización de datos (\texttt{scheduler-data-loader.ts}).
+  \item Construcción del grafo de conflictos (\texttt{ConflictGraphBuilder}).
+  \item Separación por tipo de salón y ejecución de algoritmos de coloreo (\texttt{ScheduleSolver}).
+  \item Generación del horario semanal final (mapeo vértice→salón→franja).
+  \item Exposición por API (controladores y rutas) y visualización en frontend.
+\end{enumerate}
+
+\section{Punto de entrada}
+
+El archivo \texttt{index.ts} solo arranca la API:
+
+\begin{lstlisting}[language=TypeScript,caption={Entrada principal del módulo universitario}]
+import {SchedulerApiServer} from "./api/server";
+
+const port = parseInt(process.env.PORT || "3002", 10);
+const server = new SchedulerApiServer(port);
+server.start();
+\end{lstlisting}
+
+\section{Componentes clave}
+
+\subsection{Cargador de datos}
+Normaliza JSON de entrada en estructuras tipadas (materias, salones, franjas) para el resto del pipeline.
+
+\subsection{ConflictGraphBuilder}
+Convierte materias y grupos en vértices y añade aristas cuando existe conflicto (misma franja, docente, semestre compartido, tipo incompatible).
+
+\subsection{ScheduleSolver}
+Recibe el grafo de conflictos y el listado de salones. Separa subgrafos por tipo de salón y aplica el algoritmo de coloreo seleccionado. Devuelve un mapeo de vértices a salones.
+
+\begin{lstlisting}[language=TypeScript,caption={Ejecución del solucionador global}]
+const input = SchedulerDataLoader.build().getData();
+const { graph } = new ConflictGraphBuilder(input).build();
+const algoritmo = new DSatur<GrupoData>(graph, input.salones.map(s => s.id));
+const horario = new ScheduleBuilder(graph, input.salones).buildHorario(algoritmo);
+\end{lstlisting}
+
+\subsection{ScheduleService}
+Singleton que mantiene en memoria el resultado del cálculo global para evitar recomputar en cada solicitud. Provee métodos para obtener \texttt{getHorarioGlobal()} y \texttt{getGrafoInfo()}.
+
+\begin{lstlisting}[language=TypeScript,caption={Servicio global en memoria}]
+async getHorarioGlobal(): Promise<HorarioSemanal> {
+  if (this.horarioGlobal) return this.horarioGlobal;
+
+  const input = SchedulerDataLoader.build().getData();
+  const { graph } = new ConflictGraphBuilder(input).build();
+  const algoritmo = new DSatur<GrupoData>(graph, input.salones.map(s => s.id));
+  const horario = new ScheduleBuilder(graph, input.salones).buildHorario(algoritmo);
+
+  this.horarioGlobal = horario;
+  return horario;
+}
+\end{lstlisting}
+
+\subsection{StudentScheduleSolver}
+Genera horarios personalizados para un estudiante a partir del horario global y los grupos elegidos. Integra Dijkstra y backtracking según disponibilidad.
+
+\begin{lstlisting}[language=TypeScript,caption={Creación del horario estudiantil}]
+async createSchedule(horario: HorarioSemanal, salones: SalonInput[], request: StudentScheduleRequest) {
+  const solver = new StudentScheduleSolver(request);
+  const resultado = solver.execute();
+  this.horariosEstudiantes.set(request.estudianteId, resultado);
+  return resultado;
+}
+\end{lstlisting}
+
+\section{Rutas y controladores principales}
+
+Rutas expuestas:
+\begin{itemize}[leftmargin=1.5cm]
+  \item GET /schedule
+  \item GET /schedule/grafo
+  \item POST /student/schedule
+  \item GET /student/schedule/:estudianteId
+  \item GET /student/schedules
+\end{itemize}
+
+\section{Consideraciones de diseño}
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item Separación clara entre construcción del grafo (lógica) y la API (exposición).
+  \item Caché en memoria para mejorar latencia en consultas repetidas.
+  \item Modularidad para poder reemplazar algoritmos de coloreo sin tocar la capa de datos.
+\end{itemize}

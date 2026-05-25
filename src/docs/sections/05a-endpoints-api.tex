@@ -1,0 +1,158 @@
+\chapter{API y endpoints}
+
+\section{Visión general}
+
+La API expone el horario global, la información del grafo y los horarios personalizados de estudiantes. Todas las respuestas usan JSON y la capa de servicio mantiene en memoria el horario global ya calculado.
+
+\section{GET /schedule}
+
+\textbf{Request:}
+\begin{lstlisting}[language=Bash]
+GET /schedule
+\end{lstlisting}
+
+\textbf{Response:}
+\begin{lstlisting}[language=JSON,caption={Respuesta de /schedule}]
+{
+  "success": true,
+  "data": {
+    "horario": [
+      {
+        "grupo": "SIS-ALG-G1",
+        "materia": "Álgebra",
+        "semestre": 1,
+        "franja": "Lun-A1",
+        "horario": "Lunes 08:00-10:00",
+        "salon": "A101",
+        "salonDetalle": {
+          "id": "A101",
+          "tipo": "normal",
+          "capacidad": 40,
+          "piso": 1,
+          "sede": "Principal"
+        },
+        "tipoSalon": "normal",
+        "capacidad": 40,
+        "color": "A101"
+      }
+    ],
+    "grafo": {
+      "vertices": 108,
+      "aristas": 1243
+    }
+  }
+}
+\end{lstlisting}
+
+\section{GET /schedule/grafo}
+
+\textbf{Request:}
+\begin{lstlisting}[language=Bash]
+GET /schedule/grafo
+\end{lstlisting}
+
+\textbf{Response:}
+\begin{lstlisting}[language=JSON,caption={Respuesta de /schedule/grafo}]
+{
+  "success": true,
+  "data": {
+    "vertices": 108,
+    "aristas": 1243
+  }
+}
+\end{lstlisting}
+
+\section{POST /student/schedule}
+
+\textbf{Request:}
+\begin{lstlisting}[language=JSON,caption={Body de /student/schedule}]
+{
+  "estudianteId": "EST-20221020084",
+  "materias": ["SIS-ALG", "SIS-BD1", "SIS-PROG"]
+}
+\end{lstlisting}
+
+\textbf{Response:}
+\begin{lstlisting}[language=JSON,caption={Respuesta de /student/schedule}]
+{
+  "success": true,
+  "data": {
+    "estudianteId": "EST-20221020084",
+    "bloques": [
+      {
+        "materiaId": "SIS-ALG",
+        "nombreMateria": "Álgebra",
+        "grupo": "SIS-ALG-G1",
+        "dia": "Lunes",
+        "horaInicio": "08:00",
+        "horaFin": "10:00",
+        "salon": "A101",
+        "sede": "Principal",
+        "piso": 1,
+        "tipoSalon": "normal",
+        "bloque": 1
+      }
+    ],
+    "metricas": {
+      "totalBloques": 3,
+      "cambiosDeSede": 1,
+      "costoTotal": 4,
+      "sedesUsadas": ["Principal"],
+      "materiasNoAsignadas": []
+    }
+  }
+}
+\end{lstlisting}
+
+\section{GET /student/schedule/:estudianteId}
+
+\textbf{Request:}
+\begin{lstlisting}[language=Bash]
+GET /student/schedule/EST-20221020084
+\end{lstlisting}
+
+\textbf{Response:}
+\begin{lstlisting}[language=JSON,caption={Respuesta de /student/schedule/:estudianteId}]
+{
+  "success": true,
+  "data": {
+    "estudianteId": "EST-20221020084",
+    "bloques": [/* ... */],
+    "metricas": { /* ... */ }
+  }
+}
+\end{lstlisting}
+
+\section{GET /student/schedules}
+
+\textbf{Request:}
+\begin{lstlisting}[language=Bash]
+GET /student/schedules
+\end{lstlisting}
+
+\textbf{Response:}
+\begin{lstlisting}[language=JSON,caption={Respuesta de /student/schedules}]
+{
+  "success": true,
+  "data": {
+    "total": 1,
+    "estudiantes": [
+      {
+        "estudianteId": "EST-20221020084",
+        "totalBloques": 3,
+        "costoTotal": 4,
+        "cambiosDeSede": 1,
+        "sedesUsadas": ["Principal"],
+        "materiasNoAsignadas": []
+      }
+    ]
+  }
+}
+\end{lstlisting}
+
+\section{Formato de respuesta}
+
+Todas las rutas siguen la estructura:
+\begin{lstlisting}[language=TypeScript]
+interface ApiResponse<T> { success: boolean; data?: T; error?: string }
+\end{lstlisting}

@@ -1,0 +1,37 @@
+% Preamble minimal para compilación del informe
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\graphicspath{{figuras/}}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
+% Definir lenguaje TypeScript como JavaScript base
+\lstdefinelanguage{TypeScript}{
+  language=JavaScript,
+  morekeywords={interface,type,export,extends,implements,readonly,public,private,protected}
+}
+
+% Títulos y encabezados
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\bfseries\Large}{\filcenter\chaptername\ \thechapter}{1ex}{\filcenter}
+
+% Otros paquetes útiles
+\usepackage{longtable}
+\usepackage{enumitem}
+

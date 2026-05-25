@@ -104,12 +104,12 @@ Kruskal/Prim	Árboles mínimos	Para conectividad
 Dijkstra/Floyd	Caminos mínimos	Para métricas
 Métricas de Éxito
 
-    ✅ Número de salones utilizados ≤ 50
+     Número de salones utilizados ≤ 50
 
-    ✅ Todas las materias cumplen máximo 2 horas por día
+     Todas las materias cumplen máximo 2 horas por día
 
-    ✅ Sin conflictos (mismo semestre/mismo profesor en misma franja)
+     Sin conflictos (mismo semestre/mismo profesor en misma franja)
 
-    ✅ Todas las materias de laboratorio en salones tipo laboratorio
+     Todas las materias de laboratorio en salones tipo laboratorio
 
-    ✅ Materias tipo B correctamente asignadas
+     Materias tipo B correctamente asignadas

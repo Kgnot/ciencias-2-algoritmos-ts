@@ -1,0 +1,32 @@
+\chapter{Interfaz de usuario y visualización}
+
+\section{Arquitectura del frontend}
+
+La interfaz es una SPA React que consume la API para obtener el horario global y generar horarios estudiantiles. Componentes clave: \texttt{ScheduleApp}, \texttt{SchedulePage}, \texttt{StudentsPage}. Hooks: \texttt{useSchedule}, \texttt{useStudents}.
+
+\section{Placeholders para capturas}
+
+Colocar las imágenes en la carpeta \texttt{figuras/} con los nombres exactos:
+
+\begin{enumerate}[leftmargin=1.5cm]
+  \item \texttt{frontend-horario-global.png}: vista de la matriz días×franjas.
+  \item \texttt{frontend-formulario-estudiante.png}: formulario de selección de grupos.
+  \item \texttt{frontend-horario-estudiante.png}: horario generado para estudiante.
+  \item \texttt{flujo-algoritmos.png}: diagrama del flujo ejecución (datos→grafo→coloreo→horario; rama estudiantil con Dijkstra).
+\end{enumerate}
+
+\section{Ejemplo de hook (resumen)}
+\begin{lstlisting}[language=TypeScript,caption={Hook useSchedule (resumen)}]
+export const useSchedule = () => {
+  const [horario, setHorario] = useState([]);
+  useEffect(() => {
+    fetch('/schedule').then(r => r.json()).then(j => setHorario(j.data.horario));
+  }, []);
+  return { horario };
+};
+\end{lstlisting}
+
+\section{Flujo de interacción}
+
+Usuario selecciona pestaña "Horario Global" o "Horarios Estudiantiles"; para generar un horario estudiantil se envía un POST a \texttt{/student/schedule} y la respuesta se renderiza en la interfaz con métricas.
+

@@ -1,0 +1,12 @@
+\chapter{Contexto general del repositorio}
+
+El código se organiza en tres bloques funcionales:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item \texttt{src/algoritmos}: implementaciones de algoritmos de grafos reutilizables (coloreo, caminos mínimos, flujo, MST, recorridos).
+  \item \texttt{src/estructuras}: tipos y estructuras de soporte (\texttt{Vertex}, \texttt{Edge}, \texttt{Graph}, proyecciones, \texttt{PriorityQueue}).
+  \item \texttt{src/universidad-proyecto}: solución aplicada con cargadores de datos, constructor de grafo de conflictos, solucionadores, API y frontend.
+\end{itemize}
+
+La separación permite reutilizar algoritmos y estructuras en otros problemas y facilita la comprobación experimental de distintas heurísticas sobre la misma instancia.
+

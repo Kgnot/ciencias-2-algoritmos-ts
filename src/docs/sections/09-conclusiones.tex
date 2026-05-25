@@ -1,0 +1,12 @@
+\chapter{Conclusiones}
+
+La solución presentada provee un pipeline reproducible para asignación de salones y generación de horarios basado en grafos y heurísticas. Los hallazgos principales son:
+
+\begin{itemize}[leftmargin=1.5cm]
+  \item la combinación de coloreo global y Dijkstra para casos estudiantiles permite cubrir tanto la asignación masiva como necesidades individuales;
+  \item D-Satur produce coloraciones compactas pero con mayor costo computacional; Welsh‑Powell y voraz son alternativas útiles para comparación y reducción de tiempo;
+  \item la arquitectura separada facilita evaluar y reemplazar heurísticas sin afectar la API ni el frontend.
+\end{itemize}
+
+Tareas pendientes para completar entregables: añadir el escenario simulado, recolectar métricas en los 3 escenarios y subir capturas del frontend.
+
