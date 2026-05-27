@@ -27,6 +27,7 @@ export class VertexFactory {
             franja: franja,
             salon: null,
             bloque: bloque,
+            profesor: materia.profesor,
         };
 
         const vertexId = `${materia.id}-G${grupo}-B${bloque}`;

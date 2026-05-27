@@ -58,6 +58,7 @@ export class ConflictGraphBuilder {
     private createConflictEdges(): void {
         EdgeCreator.connectByFranja(this.vertices, this.graph);
         EdgeCreator.connectSameGroupSameDay(this.vertices, this.graph);
+        EdgeCreator.connectByProfesor(this.vertices, this.graph);
     }
 
     // Getters

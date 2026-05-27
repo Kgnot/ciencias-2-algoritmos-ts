@@ -79,4 +79,46 @@ export class EdgeCreator {
             }
         }
     }
+
+    /*
+     * Conecta pares de bloques dictados por el mismo profesor en la misma franja.
+     * Un profesor no puede estar en dos salones simultáneamente, por lo que estos
+     * bloques no pueden compartir salón. Si el dataset provoca solapamientos (el
+     * mismo profesor aparece en demasiadas materias), el coloreo asigna salones
+     * distintos y garantiza que el conflicto quede registrado en el grafo aunque
+     * la asignación de franjas no lo haya podido evitar.
+     */
+    static connectByProfesor(
+        vertices: Vertex<GrupoData>[],
+        graph: Graph<GrupoData>
+    ): void {
+        // Agrupar por (profesor, franja)
+        const byProfesorSlot = new Map<string, Vertex<GrupoData>[]>();
+
+        for (const v of vertices) {
+            const data = v.getValue();
+            if (!data.franja) continue;
+            const key = `${data.profesor}::${data.franja.id}`;
+            if (!byProfesorSlot.has(key)) byProfesorSlot.set(key, []);
+            byProfesorSlot.get(key)!.push(v);
+        }
+
+        // Conectar todos contra todos dentro de cada grupo (profesor, franja)
+        // Se evitan duplicados con un Set de pares ya añadidos.
+        const added = new Set<string>();
+
+        for (const group of byProfesorSlot.values()) {
+            if (group.length < 2) continue;
+            for (let i = 0; i < group.length; i++) {
+                for (let j = i + 1; j < group.length; j++) {
+                    const a = group[i]!;
+                    const b = group[j]!;
+                    const edgeKey = [a.id, b.id].sort().join('|');
+                    if (added.has(edgeKey)) continue;
+                    added.add(edgeKey);
+                    graph.addEdge(new Edge(a, b, 1, false, 1));
+                }
+            }
+        }
+    }
 }

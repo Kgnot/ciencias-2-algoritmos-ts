@@ -11,6 +11,70 @@ El problema se modela como un problema de coloreo de grafos, donde:
 
     Colores = salones físicos disponibles
 
+---
+
+Modelado Formal del Grafo de Conflictos
+========================================
+
+Sea G = (V, E) un grafo no dirigido de conflictos donde:
+
+V — Conjunto de vértices
+------------------------
+Cada vértice v ∈ V representa un bloque de clase individual.
+Un grupo de materia con N créditos genera exactamente N vértices (bloque = 2 horas).
+
+Cada vértice almacena los siguientes atributos:
+  materiaId  : identificador único de la materia  (ej. "SIS-MAT1")
+  grupo      : número de grupo                    (ej. "1", "2", ...)
+  bloque     : índice dentro de la materia        (0 … N-1)
+  franja     : día + hora de inicio + hora de fin (asignada antes del coloreo)
+  tipoSalon  : "normal" | "laboratorio"
+  semestre   : semestre académico al que pertenece
+  profesor   : nombre del docente que imparte la materia
+  salon      : salón asignado (null antes del coloreo; resultado del coloreo)
+
+E — Conjunto de aristas
+-----------------------
+Existe una arista {u, v} ∈ E si y solo si los bloques u y v NO pueden compartir salón.
+Se definen tres familias de aristas, cada una modelando una causa de conflicto distinta:
+
+  1. Conflicto por franja simultánea  (EdgeCreator.connectByFranja)
+     Condición : franja(u) = franja(v)  →  mismo día y misma hora
+     Causa     : un salón solo alberga una clase a la vez.
+
+  2. Conflicto de grupo en el mismo día  (EdgeCreator.connectSameGroupSameDay)
+     Condición : materiaId(u) = materiaId(v)  ∧  grupo(u) = grupo(v)  ∧  día(u) = día(v)
+     Causa     : un grupo no puede tener dos bloques de la misma materia en el mismo día.
+
+  3. Conflicto de profesor simultáneo  (EdgeCreator.connectByProfesor)
+     Condición : profesor(u) = profesor(v)  ∧  franja(u) = franja(v)
+     Causa     : un profesor no puede dictar clase en dos salones al mismo tiempo.
+                 En la fase de asignación de franjas se intenta evitar este caso
+                 (restricción blanda), pero si el dataset lo fuerza, el grafo lo captura
+                 y el coloreo garantiza salones distintos.
+
+Pesos de aristas
+----------------
+Todas las aristas tienen peso w = 1 (conflicto binario: existe o no existe).
+En un grafo de conflictos para coloreo, el objetivo es minimizar el número de colores
+(salones), no optimizar una función de costo sobre aristas. El peso uniforme es la
+representación semánticamente correcta para este problema.
+
+Colores
+-------
+color ≡ id de salón físico  (ej. "S101", "L201").
+El coloreo asigna a cada vértice un salón tal que ningún par de vértices adyacentes
+comparta el mismo salón. Los subgrafos de salones normales y laboratorios se colorean
+por separado para respetar la restricción de tipo de salón.
+
+Complejidad
+-----------
+El coloreo de grafos es NP-completo en el caso general.
+Los algoritmos heurísticos utilizados (D-Satur, Welsh-Powell, Greedy) producen
+soluciones válidas en tiempo polinomial sin garantía de optimalidad global.
+
+---
+
 Datos de Entrada
 
     60 materias distribuidas en 10 semestres
@@ -38,7 +102,7 @@ Dos bloques de clase NO pueden asignarse al mismo salón si:
 
    Una misma materia NO puede tener más de 2 horas (1 bloque) el mismo día
 
-        Es decir, los bloques de una materia de 4 créditos deben distribuirse en al menos 4 días diferentes
+        Es decir, los bloques de una materia de 4 créditos deben distribuirse en 4 días diferentes
 
 3. Restricciones de Salones
 
@@ -72,36 +136,60 @@ Objetivos
 
 Enfoque de Solución
 
-    Construcción del grafo de conflictos (ConflictGraphBuilder)
+    Paso 1 — Construcción del grafo de conflictos (ConflictGraphBuilder)
 
         Expandir cada grupo de materia en N bloques (N = créditos)
 
         Asignar franjas horarias distribuidas en diferentes días
+        (TimeSlotAllocator: restricción blanda de profesor en primer paso,
+         fallback sin restricción en segundo paso)
 
-        Detectar conflictos (mismo semestre o mismo profesor con horarios solapados)
+        Crear aristas de conflicto (EdgeCreator):
+          - connectByFranja        → misma franja horaria
+          - connectSameGroupSameDay → mismo grupo, mismo día
+          - connectByProfesor       → mismo profesor, misma franja
 
-    Coloreo del grafo usando Algoritmo D-Satur
+    Paso 2 — Descomposición en componentes conexas (ConnectedComponents, BFS)
 
-        Prioriza vértices con mayor saturación (más restricciones)
+        Ejecutar BFS sobre el subgrafo de conflictos para identificar
+        todos sus componentes conexas (O(V + E))
 
-        Minimiza el número de colores (salones)
+        Bloques en componentes distintas no tienen conflicto entre sí:
+        pueden reutilizar los mismos salones en franjas no solapadas
 
-    Post-procesamiento
+        Registrar: número de componentes, tamaños, densidad
 
-        Unificar el mismo salón para todos los bloques de un mismo grupo
+    Paso 3 — Coloreo por componente (D-Satur / Welsh-Powell / Greedy)
 
-        Validar restricción de máximo 2 horas por día
+        Colorear cada componente independientemente con el algoritmo elegido
+
+        El coloreo de cada componente comienza desde el salón de menor índice,
+        maximizando la reutilización de salones entre componentes
+
+        D-Satur: prioriza vértices con mayor saturación (más vecinos coloreados)
+        Welsh-Powell: ordena por grado descendente, asigna color compatible
+        Greedy: orden de procesamiento, primer color disponible (baseline)
+
+    Paso 4 — Post-procesamiento
+
+        Validar que ningún bloque use salones de tipo incorrecto
+
+        Validar restricción de máximo 2 horas por día por materia
 
         Generar horario semanal legible
 
-Algoritmos Disponibles para Comparación
-Algoritmo	Uso	Calidad
-D-Satur	Coloreo principal	Óptimo para grafos medianos
-Welsh-Powell	Coloreo alternativo	Bueno, más rápido
-Greedy	Baseline	Rápido, menor calidad
-Ford-Fulkerson	Flujo máximo	Para asignación de salones
-Kruskal/Prim	Árboles mínimos	Para conectividad
-Dijkstra/Floyd	Caminos mínimos	Para métricas
+Algoritmos en el Pipeline
+Algoritmo               Tipo                  Fase       Rol
+ConnectedComponents     Traversal/BFS         Pre-proc.  Descompone el grafo; habilita reutilización de salones entre componentes
+D-Satur                 Coloreo heurístico    Coloreo    Algoritmo principal; prioriza por saturación
+Welsh-Powell            Coloreo heurístico    Coloreo    Alternativa; ordena por grado descendente
+Greedy (Voraz)          Coloreo heurístico    Coloreo    Baseline; orden de inserción
+Dijkstra                Caminos mínimos       Estudiante Optimiza el horario personal de cada estudiante (minimiza cambios de sede/piso)
+Backtracking            Búsqueda exhaustiva   Estudiante Fallback para cubrir materias no asignadas por Dijkstra
+
+Algoritmos implementados y disponibles para extensión
+Ford-Fulkerson          Flujo máximo          Extensión  Validación de capacidad de salones (ver sección Sugerencias)
+Edmonds-Karp            Flujo máximo (BFS)    Extensión  Variante de Ford-Fulkerson con garantía polinomial
 Métricas de Éxito
 
     ✅ Número de salones utilizados ≤ 50

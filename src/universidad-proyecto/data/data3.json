@@ -1,0 +1,33 @@
+{
+  "materias": [
+    {"id": "SIS3-MAT1",  "nombre": "Matematicas I",            "semestre": 1, "creditos": 4, "grupos": 3, "profesor": "Dr. Ramos",  "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-FIS1",  "nombre": "Fisica I",                 "semestre": 1, "creditos": 4, "grupos": 2, "profesor": "Dr. Vega",   "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-PRG1",  "nombre": "Programacion I",           "semestre": 1, "creditos": 4, "grupos": 2, "profesor": "Dr. García", "tipo": "laboratorio", "carrera": "Sistemas"},
+    {"id": "SIS3-CAL1",  "nombre": "Calculo I",                "semestre": 1, "creditos": 2, "grupos": 3, "profesor": "Dr. Ramos",  "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-INGL1", "nombre": "Ingles I",                 "semestre": 1, "creditos": 2, "grupos": 2, "profesor": "Mtra. Soto", "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-INTRO", "nombre": "Introduccion Ingenieria",  "semestre": 1, "creditos": 2, "grupos": 2, "profesor": "Dr. Díaz",   "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-MAT2",  "nombre": "Matematicas II",           "semestre": 2, "creditos": 4, "grupos": 3, "profesor": "Dr. Ramos",  "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-FIS2",  "nombre": "Fisica II",                "semestre": 2, "creditos": 4, "grupos": 2, "profesor": "Dr. Vega",   "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-PRG2",  "nombre": "Programacion II",          "semestre": 2, "creditos": 4, "grupos": 2, "profesor": "Dr. García", "tipo": "laboratorio", "carrera": "Sistemas"},
+    {"id": "SIS3-CAL2",  "nombre": "Calculo II",               "semestre": 2, "creditos": 2, "grupos": 3, "profesor": "Dr. Ramos",  "tipo": "normal",      "carrera": "Sistemas"},
+    {"id": "SIS3-BD1",   "nombre": "Bases de Datos",           "semestre": 2, "creditos": 4, "grupos": 2, "profesor": "Dr. Torres", "tipo": "laboratorio", "carrera": "Sistemas"},
+    {"id": "SIS3-ALG1",  "nombre": "Algoritmos",               "semestre": 2, "creditos": 4, "grupos": 2, "profesor": "Dr. Díaz",   "tipo": "normal",      "carrera": "Sistemas"}
+  ],
+  "salones": [
+    {"id": "S001", "tipo": "normal",      "capacidad": 40, "piso": 1, "sede": "A"},
+    {"id": "S002", "tipo": "normal",      "capacidad": 38, "piso": 1, "sede": "A"},
+    {"id": "S003", "tipo": "normal",      "capacidad": 35, "piso": 2, "sede": "A"},
+    {"id": "S004", "tipo": "normal",      "capacidad": 40, "piso": 2, "sede": "A"},
+    {"id": "S005", "tipo": "normal",      "capacidad": 37, "piso": 3, "sede": "A"},
+    {"id": "S006", "tipo": "normal",      "capacidad": 36, "piso": 3, "sede": "A"},
+    {"id": "S007", "tipo": "normal",      "capacidad": 38, "piso": 1, "sede": "B"},
+    {"id": "S008", "tipo": "normal",      "capacidad": 35, "piso": 1, "sede": "B"},
+    {"id": "L001", "tipo": "laboratorio", "capacidad": 20, "piso": 1, "sede": "A"},
+    {"id": "L002", "tipo": "laboratorio", "capacidad": 21, "piso": 2, "sede": "A"},
+    {"id": "L003", "tipo": "laboratorio", "capacidad": 20, "piso": 3, "sede": "A"}
+  ],
+  "franjas": {
+    "tipoA": 6,
+    "tipoB": 0
+  }
+}

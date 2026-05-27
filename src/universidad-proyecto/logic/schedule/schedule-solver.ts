@@ -9,6 +9,7 @@ import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur";
 import {WelshPowell} from "../../../algoritmos/coloreado/Whelsh-Powell/whelsh-powell";
 import {ColoreadorVoraz} from "../../../algoritmos/coloreado/coloreado-voraz/coloreado-voraz";
 import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract";
+import {ConnectedComponents} from "../../../algoritmos/dfs/connected-components";
 
 
 export class ScheduleSolver {
@@ -32,12 +33,12 @@ export class ScheduleSolver {
         const colorMap = new Map<VertexID, string>();
 
         if (normalGraph.getVertex().length > 0) {
-            const colors = this.colorear(normalGraph, normalSalones,CLASSROOM_TYPE.NORMAL);
+            const colors = this.colorear(normalGraph, normalSalones, CLASSROOM_TYPE.NORMAL);
             for (const [id, color] of colors) colorMap.set(id, color);
         }
 
         if (labGraph.getVertex().length > 0) {
-            const colors = this.colorear(labGraph, labSalones,CLASSROOM_TYPE.LABORATORIO);
+            const colors = this.colorear(labGraph, labSalones, CLASSROOM_TYPE.LABORATORIO);
             for (const [id, color] of colors) colorMap.set(id, color);
         }
 
@@ -53,9 +54,8 @@ export class ScheduleSolver {
                 `\nAgrega más salones del tipo correspondiente al input.`
             );
         }
-        // ahora rellenamos el contex global:
+
         this.globalContext.setGraph(this.graph);
-        console.log("grafo: ", this.graph.getVertexById("SIS-MAT1-G1-B0"));
         this.globalContext.setSubGraph(CLASSROOM_TYPE.NORMAL, normalGraph);
         this.globalContext.setSubGraph(CLASSROOM_TYPE.LABORATORIO, labGraph);
         this.globalContext.setColorMap(colorMap);
@@ -84,46 +84,99 @@ export class ScheduleSolver {
         return subgraph;
     }
 
+    /**
+     * Two-phase coloring pipeline:
+     *
+     * Phase 1 — BFS (ConnectedComponents): decomposes the conflict subgraph into
+     * independent components. Blocks in different components have no conflict path
+     * between them, so each component can be colored starting from classroom 1,
+     * maximizing classroom reuse across non-conflicting parts of the schedule.
+     *
+     * Phase 2 — Graph Coloring (D-Satur / Welsh-Powell / Greedy): colors each
+     * component independently with the chosen algorithm. Because components are
+     * isolated, the coloring of one component never forces the next one to use
+     * higher-numbered classrooms.
+     */
     private colorear(
         graph: Graph<GrupoData>,
         salones: string[],
         tipo: CLASSROOM_TYPE
     ): Map<VertexID, string> {
-        let algorithmInstance: ColoredGraphAlgorithm<GrupoData>;
+        // Phase 1: BFS decomposition into connected components
+        const components = new ConnectedComponents(graph);
+        console.log(
+            `[${tipo}] Componentes conexas: ${components.getCount()}, ` +
+            `tamaños: [${components.getSizes().join(", ")}]`
+        );
 
-        // Detectar el tipo de algoritmo usando instanceof
-        if (this.algorithm instanceof DSatur) {
-            algorithmInstance = new DSatur(graph, salones);
-        } else if (this.algorithm instanceof WelshPowell) {
-            algorithmInstance = new WelshPowell(graph, salones);
-        } else if (this.algorithm instanceof ColoreadorVoraz) {
-            algorithmInstance = new ColoreadorVoraz(graph, salones);
-        } else {
-            algorithmInstance = new DSatur(graph, salones);
-        }
-
-        const colorMap: Map<VertexID, COLOR | string> = algorithmInstance.getColors();
         const result = new Map<VertexID, string>();
 
-        for (const [id, color] of colorMap) {
-            if (color !== "white" && color !== "WHITE") {
-                result.set(id, color as string);
-        // TODO, si hay error es aqui xd
-                // propagamos al grafo original
-                const originalVertex = this.graph.getVertexById(id);
-                // if (originalVertex.getValue().tipoSalon !== tipo) continue;
-                originalVertex.setColor(color);
+        // Phase 2: color each component independently
+        for (const componentIds of components.getComponents()) {
+            const componentGraph = this.buildComponentSubgraph(graph, componentIds);
+            const componentColors = this.runAlgorithm(componentGraph, salones);
 
-                // También puedes guardar el salón en los datos
-                const data = originalVertex.getValue();
-                const salon = this.salones.find(s => s.id === color);
-                if (salon) {
-                    data.salon = salon;
+            for (const [id, color] of componentColors) {
+                if (color !== COLOR.WHITE && color !== "WHITE") {
+                    result.set(id, color as string);
                 }
             }
         }
-        console.log("[RESULTADO] coloreado de grafos : " + result.get("SIS-CAL1-G1-B0"));
+
+        // Propagate colors back to the original full graph and attach salon objects
+        for (const [id, color] of result) {
+            const originalVertex = this.graph.getVertexById(id);
+            originalVertex.setColor(color);
+            const data = originalVertex.getValue();
+            const salon = this.salones.find(s => s.id === color);
+            if (salon) data.salon = salon;
+        }
 
         return result;
+    }
+
+    private buildComponentSubgraph(
+        graph: Graph<GrupoData>,
+        componentIds: VertexID[]
+    ): Graph<GrupoData> {
+        const idSet = new Set(componentIds.map(id => String(id)));
+        const subgraph = new Graph<GrupoData>(false);
+        const vertexMap = new Map<string, Vertex<GrupoData>>();
+
+        for (const v of graph.getVertex()) {
+            if (!idSet.has(v.id)) continue;
+            const copy = new Vertex<GrupoData>(v.id, v.getValue());
+            subgraph.addVertex(copy);
+            vertexMap.set(copy.id, copy);
+        }
+
+        for (const e of graph.getUniqueEdges()) {
+            const fromV = vertexMap.get(e.from.id);
+            const toV = vertexMap.get(e.to.id);
+            if (!fromV || !toV) continue;
+            subgraph.addEdge(new Edge(fromV, toV, e.weight, e.directed, e.maxFlow));
+        }
+
+        return subgraph;
+    }
+
+    // Dispatches to the correct algorithm type for the given component graph.
+    private runAlgorithm(
+        componentGraph: Graph<GrupoData>,
+        salones: string[]
+    ): Map<VertexID, COLOR | string> {
+        let instance: ColoredGraphAlgorithm<GrupoData>;
+
+        if (this.algorithm instanceof DSatur) {
+            instance = new DSatur(componentGraph, salones);
+        } else if (this.algorithm instanceof WelshPowell) {
+            instance = new WelshPowell(componentGraph, salones);
+        } else if (this.algorithm instanceof ColoreadorVoraz) {
+            instance = new ColoreadorVoraz(componentGraph, salones);
+        } else {
+            instance = new DSatur(componentGraph, salones);
+        }
+
+        return instance.getColors();
     }
 }

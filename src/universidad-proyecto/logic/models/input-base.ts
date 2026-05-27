@@ -12,6 +12,7 @@ export interface MateriaInput {
     grupos: number;
     tipo: TipoSalon;
     carrera: Carrera;
+    profesor: string;
 }
 
 export interface SalonInput {

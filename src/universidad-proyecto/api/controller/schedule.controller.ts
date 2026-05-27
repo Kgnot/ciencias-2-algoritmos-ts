@@ -7,18 +7,12 @@ export const ScheduleController = {
     async getHorario(_req: Request, res: Response): Promise<void> {
         try {
             const horario = await scheduleService.getHorarioGlobal();
-            const grafo = await scheduleService.getGrafoInfo();
-            res.json({
-                success: true,
-                data: {
-                    horario,
-                    grafo
-                }
-            });
+            const grafo   = await scheduleService.getGrafoInfo();
+            res.json({ success: true, data: { horario, grafo } });
         } catch (error) {
             res.status(500).json({
                 success: false,
-                error: error instanceof Error ? error.message : 'Error al obtener horario'
+                error: error instanceof Error ? error.message : "Error al obtener horario"
             });
         }
     },
@@ -30,7 +24,31 @@ export const ScheduleController = {
         } catch (error) {
             res.status(500).json({
                 success: false,
-                error: error instanceof Error ? error.message : 'Error al obtener información del grafo'
+                error: error instanceof Error ? error.message : "Error al obtener información del grafo"
+            });
+        }
+    },
+
+    async getGraphData(_req: Request, res: Response): Promise<void> {
+        try {
+            const data = await scheduleService.getGraphData();
+            res.json({ success: true, data });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error instanceof Error ? error.message : "Error al obtener datos del grafo"
+            });
+        }
+    },
+
+    async getAlgorithmComparison(_req: Request, res: Response): Promise<void> {
+        try {
+            const data = await scheduleService.getAlgorithmComparison();
+            res.json({ success: true, data });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error instanceof Error ? error.message : "Error al comparar algoritmos"
             });
         }
     }

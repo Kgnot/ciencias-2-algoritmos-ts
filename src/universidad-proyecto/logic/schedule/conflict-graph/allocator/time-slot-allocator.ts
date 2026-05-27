@@ -29,6 +29,10 @@ export class TimeSlotAllocator {
 
     private heavyDayLimit = 2;
     private heavyPerDayCounter = new Map<string, number>();
+    // Maps each professor to the set of franja IDs they are already teaching.
+    // Used as a soft constraint: avoids scheduling the same professor in two
+    // simultaneous slots when the dataset permits it.
+    private professorSlots = new Map<string, Set<string>>();
 
     private readonly checker: AllocatorConstraintChecker;
 
@@ -159,6 +163,7 @@ export class TimeSlotAllocator {
             this.graph.addVertex(vertex);
             this.vertices.push(vertex);
             this.occupancy.occupy(franja.id, materia.tipo);
+            this.occupyProfesor(materia.profesor, franja.id);
 
             return franja;
         }
@@ -177,18 +182,21 @@ export class TimeSlotAllocator {
         const start = (offset + block) % Math.max(slotsOfDay.length, 1);
         const limit = materia.tipo === "laboratorio" ? this.labLimit : this.normalLimit;
 
-        // Primera pasada: strict=true (preferencias blandas activas)
+        // Primera pasada: strict=true, con restricción de profesor (soft constraint).
+        // Evita que el mismo profesor dicte dos clases simultáneas cuando el dataset lo permite.
         for (let i = 0; i < slotsOfDay.length; i++) {
             const slot = slotsOfDay[(start + i) % slotsOfDay.length]!;
             if (
                 this.occupancy.hasCapacity(slot.id, materia.tipo, limit) &&
+                this.isProfesorFree(materia.profesor, slot.id) &&
                 this.checker.checkSlot(slot, materia, assigned, true)
             ) {
                 return slot;
             }
         }
 
-        // Segunda pasada: strict=false (solo reglas duras)
+        // Segunda pasada: strict=false, sin restricción de profesor.
+        // Fallback para datasets con profesores sobreasignados (conflicto queda en el grafo).
         for (let i = 0; i < slotsOfDay.length; i++) {
             const slot = slotsOfDay[(start + i) % slotsOfDay.length]!;
             if (
@@ -200,5 +208,14 @@ export class TimeSlotAllocator {
         }
 
         return null;
+    }
+
+    private isProfesorFree(profesor: string, franjaId: string): boolean {
+        return !(this.professorSlots.get(profesor)?.has(franjaId) ?? false);
+    }
+
+    private occupyProfesor(profesor: string, franjaId: string): void {
+        if (!this.professorSlots.has(profesor)) this.professorSlots.set(profesor, new Set());
+        this.professorSlots.get(profesor)!.add(franjaId);
     }
 }

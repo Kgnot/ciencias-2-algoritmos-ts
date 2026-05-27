@@ -3,6 +3,7 @@ import {useSchedule} from "./hooks/useSchedule";
 import DayTabs from "./component/day-tabs/DayTabs.tsx";
 import TimeSlot from "./component/time-slot/TimeSlot.tsx";
 import StudentsPage from "./StudentsPage";
+import GraphAnalysisPage from "./GraphAnalysisPage";
 
 const IconUsers = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -32,7 +33,7 @@ const IconRefresh = () => (
 export default function ScheduleApp() {
     const {data, loading, error, refetch} = useSchedule();
     const [activeDay, setActiveDay] = useState<string>("");
-    const [view, setView] = useState<"schedule" | "students">("schedule");
+    const [view, setView] = useState<"schedule" | "students" | "graph">("schedule");
 
     const days = data ? Object.keys(data.horario) : [];
 
@@ -66,7 +67,7 @@ export default function ScheduleApp() {
             <header className="schedule-app__header">
                 <div className="schedule-app__header-left">
                     <h1 className="schedule-app__title">
-                        {view === "schedule" ? "Horario" : "Estudiantes"}
+                        {view === "schedule" ? "Horario" : view === "students" ? "Estudiantes" : "Análisis de Grafo"}
                     </h1>
                     {view === "schedule" && data && (
                         <span className="schedule-app__meta">
@@ -79,11 +80,22 @@ export default function ScheduleApp() {
 
                 <div className="schedule-app__header-actions">
                     <button
-                        className={`topbar-toggle${view === "students" ? " topbar-toggle--active" : ""}`}
-                        onClick={() => setView(view === "schedule" ? "students" : "schedule")}
+                        className={`topbar-toggle${view === "schedule" ? " topbar-toggle--active" : ""}`}
+                        onClick={() => setView("schedule")}
                     >
-                        {view === "schedule" ? <IconUsers /> : <IconCalendar />}
-                        {view === "schedule" ? "Estudiantes" : "Horario"}
+                        <IconCalendar /> Horario
+                    </button>
+                    <button
+                        className={`topbar-toggle${view === "students" ? " topbar-toggle--active" : ""}`}
+                        onClick={() => setView("students")}
+                    >
+                        <IconUsers /> Estudiantes
+                    </button>
+                    <button
+                        className={`topbar-toggle${view === "graph" ? " topbar-toggle--active" : ""}`}
+                        onClick={() => setView("graph")}
+                    >
+                        Análisis
                     </button>
 
                     {view === "schedule" && (
@@ -96,6 +108,8 @@ export default function ScheduleApp() {
 
             {view === "students" ? (
                 <StudentsPage />
+            ) : view === "graph" ? (
+                <GraphAnalysisPage />
             ) : (
                 <>
                     <DayTabs days={days} activeDay={resolvedDay} onSelect={setActiveDay} />

@@ -12,4 +12,5 @@ export interface GrupoData {
     franja: FranjaHoraria | null;
     salon: SalonInput | null;
     bloque: number;          // 0, 1, 2, 3 para materias de varios bloques
+    profesor: string;
 }

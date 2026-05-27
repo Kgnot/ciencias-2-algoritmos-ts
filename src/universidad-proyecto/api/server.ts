@@ -32,6 +32,8 @@ export class SchedulerApiServer {
             console.log(`   GET  /api/health`);
             console.log(`   GET  /api/schedule`);
             console.log(`   GET  /api/schedule/grafo`);
+            console.log(`   GET  /api/schedule/graph-data`);
+            console.log(`   GET  /api/schedule/algorithm-comparison`);
             console.log(`   POST /api/student/schedule`);
             console.log(`   GET  /api/student/schedule/:estudianteId`);
             console.log(`   GET  /api/student/schedules\n`);
