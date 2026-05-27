@@ -373,15 +373,15 @@ This is a violation of the polymorphism that the abstract class `ColoredGraphAlg
 
 2. ~~**[Critical] Define and implement 3 evaluation scenarios**~~ **— RESOLVED.** `data3.json` created (stress test, 1 career, 11 classrooms, 6 franjas). `compare-scenarios.ts` evaluates all 3 scenarios × 3 algorithms with timing, colors used, and validity. Run: `npm run compare:scenarios`.
 
-3. **[Critical] Add quantitative metrics**: execution time per algorithm, percentage of classrooms utilized, number of conflicts resolved (zero conflicts in final assignment vs. baseline naive assignment).
+3. ~~**[Critical] Add quantitative metrics**~~ **— RESOLVED.** `compare-scenarios.ts` now reports: execution time per algorithm, percentage of classrooms utilized (`colors/totalSalones × 100`), and conflicts resolved vs. naive round-robin baseline (`resolved / baseline`). New `computeScenarioMetrics()` computes the baseline once per scenario.
 
 4. ~~**[High] Add graph visualization**~~ **— RESOLVED.** Interactive Cytoscape.js conflict graph added with before/after toggle, semester filter, node detail panel, and classroom legend. Algorithm comparison chart and stats dashboard also added. Accessible via the "Análisis" tab in the React frontend.
 
-5. **[Medium] Expand DEFINICION.MD** into a proper specification document: add algorithm complexity justification and measurable success thresholds. (Formal graph model already added.)
+5. ~~**[Medium] Expand DEFINICION.MD**~~ **— RESOLVED.** `DEFINICION.MD` expanded from 205 to ~370 lines into a full specification document. New sections: algorithm selection justification (why D-Satur, why BFS pre-processing, why not exact/ILP/flow), complexity analysis table (O(V²) pipeline), 10 explicit system assumptions, 7 measurable success metrics with observed thresholds (e.g. 26/33 = 78.8% utilization, 0 conflicts in final assignment, < 30 ms for Escenario 1), experimental results table, and academic references.
 
-6. **[Medium] Remove algorithm coupling**: refactor `ScheduleSolver.runAlgorithm()` to use polymorphism instead of `instanceof` chains.
+6. ~~**[Medium] Remove algorithm coupling**~~ **— RESOLVED.** `ScheduleSolver` constructor now takes `AlgorithmFactory = (graph, salones) => ColoredGraphAlgorithm<GrupoData>` instead of a concrete instance. `runAlgorithm()` becomes a single line: `return this.algorithmFactory(componentGraph, salones).getColors()`. Callers (`scheduler-generator.ts`, `schedule.service.ts`) updated to pass `(g, s) => new DSatur(g, s)`. Unused `DSatur`/`WelshPowell`/`ColoreadorVoraz` imports removed from `schedule-solver.ts`.
 
-7. **[Low] Clean up debug artifacts**: remove hardcoded vertex IDs from console.log, remove `// TODO xd` comments, and gate verbose logging behind an env flag.
+7. ~~**[Low] Clean up debug artifacts**~~ **— RESOLVED.** Removed: `[Allocator] heavyDayLimit calculado` console.log from `time-slot-allocator.ts`; `[${tipo}] Componentes conexas` console.log from `schedule-solver.ts`; `[Dijkstra] SKIP` console.log from `dijkstra.strategy.ts`. Kept: `console.warn` for incomplete block allocation (meaningful data-quality signal, not debug noise).
 
 ---
 

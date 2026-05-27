@@ -2,8 +2,7 @@ import type {Graph} from "../../../estructuras/graph/graph";
 import type {GrupoData} from "../models/grupo-data.model";
 import type {DiaSemana} from "../models/franja-horaria";
 import type {SalonInput} from "../models/input-base";
-import {ScheduleSolver} from "./schedule-solver";
-import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract";
+import {ScheduleSolver, type AlgorithmFactory} from "./schedule-solver";
 
 export interface HorarioClase {
     vertexId: string;
@@ -28,8 +27,8 @@ export class ScheduleBuilder {
     ) {
     }
 
-    public buildHorario(algorithm: ColoredGraphAlgorithm<GrupoData>): HorarioSemanal {
-        const solver = new ScheduleSolver(this.graph, this.salones, algorithm);
+    public buildHorario(algorithmFactory: AlgorithmFactory): HorarioSemanal {
+        const solver = new ScheduleSolver(this.graph, this.salones, algorithmFactory);
         const salonMap = solver.execute();
         const salonById = new Map(this.salones.map(salon => [salon.id, salon] as const));
 

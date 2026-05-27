@@ -95,9 +95,7 @@ export class TimeSlotAllocator {
         let maxPressure = 0;
         for (const p of pressureMap.values()) maxPressure = Math.max(maxPressure, p);
 
-        const result = Math.max(Math.ceil(maxPressure / this.days.length), 2);
-        console.log(`[Allocator] heavyDayLimit calculado: ${result} (presión máx: ${maxPressure})`);
-        return result;
+        return Math.max(Math.ceil(maxPressure / this.days.length), 2);
     }
 
     // Asignación por materia → grupo → bloque

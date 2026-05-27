@@ -57,11 +57,8 @@ export class DijkstraStrategy extends ScheduleStrategy {
                 const bloqueKey = this.builder.buildKey(bloque);
                 if (seleccion.has(bloqueKey)) continue;
 
-                const {passes, failedConstraint} = checker.check(bloque, confirmadosHoy, grupoElegido);
-                if (!passes) {
-                    console.log(`[Dijkstra] SKIP ${bloque.grupo} → ${failedConstraint}`);
-                    continue;
-                }
+                const {passes} = checker.check(bloque, confirmadosHoy, grupoElegido);
+                if (!passes) continue;
 
                 const materiaId = this.getMateriaId(bloque);
                 if (!grupoElegido.has(materiaId)) grupoElegido.set(materiaId, bloque.grupo);

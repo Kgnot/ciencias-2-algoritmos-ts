@@ -144,8 +144,7 @@ export class ScheduleService {
 
         const input = SchedulerDataLoader.build().getData();
         const { graph } = new ConflictGraphBuilder(input).build();
-        const algoritmo = new DSatur<GrupoData>(graph, input.salones.map(s => s.id));
-        const horario = new ScheduleBuilder(graph, input.salones).buildHorario(algoritmo);
+        const horario = new ScheduleBuilder(graph, input.salones).buildHorario((g, s) => new DSatur<GrupoData>(g, s));
 
         this.horarioGlobal = horario;
         return horario;

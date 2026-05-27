@@ -69,10 +69,8 @@ export async function generarHorario(): Promise<HorarioReporte> {
     const scheduleInput = loader.getData();
     const {graph} = new ConflictGraphBuilder(scheduleInput).build();
 
-    const coloredAlgorithm = new DSatur(graph, scheduleInput.salones.map(s => s.id)); // coloreamos con los salones
-
     const scheduleBuilder = new ScheduleBuilder(graph, scheduleInput.salones);
-    const horario = scheduleBuilder.buildHorario(coloredAlgorithm);
+    const horario = scheduleBuilder.buildHorario((g, s) => new DSatur(g, s));
 
     return {
         grafo: {

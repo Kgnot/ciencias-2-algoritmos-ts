@@ -5,11 +5,12 @@ import {COLOR, Vertex, type VertexID} from "../../../estructuras/vertex";
 import {Edge} from "../../../estructuras/edge";
 import {GlobalContext} from "../global.context";
 import {CLASSROOM_TYPE} from "../models/classroom.types";
-import {DSatur} from "../../../algoritmos/coloreado/D-Satur/d-satur";
-import {WelshPowell} from "../../../algoritmos/coloreado/Whelsh-Powell/whelsh-powell";
-import {ColoreadorVoraz} from "../../../algoritmos/coloreado/coloreado-voraz/coloreado-voraz";
 import type {ColoredGraphAlgorithm} from "../../../algoritmos/coloreado/coloreado.abstract";
 import {ConnectedComponents} from "../../../algoritmos/dfs/connected-components";
+
+// Factory type: creates a fresh algorithm instance for a given (sub)graph and salon list.
+// Using a factory avoids instanceof checks — the caller decides which algorithm to use.
+export type AlgorithmFactory = (graph: Graph<GrupoData>, salones: string[]) => ColoredGraphAlgorithm<GrupoData>;
 
 
 export class ScheduleSolver {
@@ -19,7 +20,7 @@ export class ScheduleSolver {
     constructor(
         private readonly graph: Graph<GrupoData>,
         private readonly salones: SalonInput[],
-        private readonly algorithm: ColoredGraphAlgorithm<GrupoData>
+        private readonly algorithmFactory: AlgorithmFactory
     ) {
     }
 
@@ -104,10 +105,6 @@ export class ScheduleSolver {
     ): Map<VertexID, string> {
         // Phase 1: BFS decomposition into connected components
         const components = new ConnectedComponents(graph);
-        console.log(
-            `[${tipo}] Componentes conexas: ${components.getCount()}, ` +
-            `tamaños: [${components.getSizes().join(", ")}]`
-        );
 
         const result = new Map<VertexID, string>();
 
@@ -160,23 +157,10 @@ export class ScheduleSolver {
         return subgraph;
     }
 
-    // Dispatches to the correct algorithm type for the given component graph.
     private runAlgorithm(
         componentGraph: Graph<GrupoData>,
         salones: string[]
     ): Map<VertexID, COLOR | string> {
-        let instance: ColoredGraphAlgorithm<GrupoData>;
-
-        if (this.algorithm instanceof DSatur) {
-            instance = new DSatur(componentGraph, salones);
-        } else if (this.algorithm instanceof WelshPowell) {
-            instance = new WelshPowell(componentGraph, salones);
-        } else if (this.algorithm instanceof ColoreadorVoraz) {
-            instance = new ColoreadorVoraz(componentGraph, salones);
-        } else {
-            instance = new DSatur(componentGraph, salones);
-        }
-
-        return instance.getColors();
+        return this.algorithmFactory(componentGraph, salones).getColors();
     }
 }
